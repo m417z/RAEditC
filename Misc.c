@@ -24,16 +24,16 @@ REG_T SetFont(DWORD hMem, DWORD lpRafont)
 	eax = SelectObject(hDC, ((EDIT *)ebx)->fnt.hFont);
 	temp1 = eax;
 	// Get height & width
-	eax = GetTextExtentPoint32(hDC, &szX, 1, &pt);
+	eax = GetTextExtentPoint32(hDC, szX, 1, &pt);
 	eax = pt.x;
 	((EDIT *)ebx)->fntinfo.fntwt = eax;
 	eax = pt.y;
 	eax += ((EDIT *)ebx)->fntinfo.linespace;
 	((EDIT *)ebx)->fntinfo.fntht = eax;
 	// Test if monospaced font
-	eax = GetTextExtentPoint32(hDC, &szW, 1, &pt);
+	eax = GetTextExtentPoint32(hDC, szW, 1, &pt);
 	temp2 = pt.x;
-	eax = GetTextExtentPoint32(hDC, &szI, 1, &pt);
+	eax = GetTextExtentPoint32(hDC, szI, 1, &pt);
 	eax = temp2;
 	if(eax==pt.x)
 	{
@@ -44,7 +44,7 @@ REG_T SetFont(DWORD hMem, DWORD lpRafont)
 		((EDIT *)ebx)->fntinfo.monospace = FALSE;
 	} // endif
 	// Get space width
-	eax = GetTextExtentPoint32(hDC, &szSpace, 1, &pt);
+	eax = GetTextExtentPoint32(hDC, szSpace, 1, &pt);
 	eax = pt.x;
 	((EDIT *)ebx)->fntinfo.spcwt = eax;
 	// Get tab width
@@ -58,7 +58,7 @@ REG_T SetFont(DWORD hMem, DWORD lpRafont)
 	rect.top = 0;
 	rect.right = 0;
 	rect.bottom = 0;
-	eax = DrawTextEx(hDC, &szTab, 1, &rect, DT_EDITCONTROL | DT_CALCRECT | DT_SINGLELINE | DT_NOPREFIX | DT_EXPANDTABS | DT_TABSTOP, &dtp);
+	eax = DrawTextEx(hDC, szTab, 1, &rect, DT_EDITCONTROL | DT_CALCRECT | DT_SINGLELINE | DT_NOPREFIX | DT_EXPANDTABS | DT_TABSTOP, &dtp);
 	eax = rect.right;
 	((EDIT *)ebx)->fntinfo.tabwt = eax;
 	// Check if DBCS
@@ -76,7 +76,7 @@ REG_T SetFont(DWORD hMem, DWORD lpRafont)
 	} // endif
 	// Check if italic has same height
 	eax = SelectObject(hDC, ((EDIT *)ebx)->fnt.hIFont);
-	eax = GetTextExtentPoint32(hDC, &szX, 1, &pt);
+	eax = GetTextExtentPoint32(hDC, szX, 1, &pt);
 	eax = pt.y;
 	eax += ((EDIT *)ebx)->fntinfo.linespace;
 	eax -= ((EDIT *)ebx)->fntinfo.fntht;

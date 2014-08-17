@@ -14,7 +14,6 @@ DLL_EXPORT BOOL APIENTRY DllMain(HINSTANCE hInst, DWORD reason, LPVOID reserved1
 
 	if(reason==DLL_PROCESS_ATTACH)
 	{
-DebugBreak();
 		InstallRAEdit(hInst, TRUE);
 	}
 	else if(reason==DLL_PROCESS_DETACH)
@@ -49,7 +48,7 @@ REG_T GetDef(DWORD nInx)
 		eax = LoadBitmap(hInstance, IDB_RAEDITBUTTON);
 		ccdef.hbmp = eax;
 		// Return pointer to inited struct
-		eax = &ccdef;
+		eax = ccdef;
 	}
 	else
 	{
@@ -71,7 +70,7 @@ REG_T GetDefEx(DWORD nInx)
 		eax = LoadBitmap(hInstance, IDB_RAEDITBUTTON);
 		ccdefex.hbmp = eax;
 		// Return pointer to inited struct
-		eax = &ccdefex;
+		eax = ccdefex;
 	}
 	else
 	{

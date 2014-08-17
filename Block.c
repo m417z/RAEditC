@@ -405,13 +405,13 @@ anon_12:
 	edi *= 4;
 	if(edi<esi)
 	{
-		eax = IsLine(ebx, nLine, &szInclude);
+		eax = IsLine(ebx, nLine, szInclude);
 		eax++;
 		if(eax!=0)
 		{
 			goto anon_12;
 		} // endif
-		eax = IsLine(ebx, nLine, &szIncludelib);
+		eax = IsLine(ebx, nLine, szIncludelib);
 		eax++;
 		if(eax!=0)
 		{
@@ -667,7 +667,7 @@ REG_T TestBlockStart(DWORD hMem, DWORD nLine)
 		esi += ((EDIT *)ebx)->hChars;
 		if(!(((CHARS *)esi)->state&STATE_NOBLOCK))
 		{
-			esi = &blockdefs;
+			esi = blockdefs;
 			edi = esi+32*4;
 			while(*(DWORD *)esi)
 			{
@@ -701,7 +701,7 @@ REG_T TestBlockEnd(DWORD hMem, DWORD nLine)
 	DWORD lpSecond;
 
 	ebx = hMem;
-	esi = &blockdefs;
+	esi = blockdefs;
 	edi = esi+32*4;
 	while(*(DWORD *)esi)
 	{
@@ -1510,7 +1510,7 @@ REG_T SetCommentBlocks(DWORD hMem, DWORD lpStart, DWORD lpEnd)
 	}
 	else
 	{
-		eax = lstrcmpi(lpStart, &szComment);
+		eax = lstrcmpi(lpStart, szComment);
 		edx = lpEnd;
 		if(!eax && *(WORD *)edx=='-')
 		{
