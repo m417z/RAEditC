@@ -1,0 +1,44 @@
+# depslib dependency file v1.0
+1408279610 source:c:\users\rammichael\desktop\raeditc\block.c
+	<windows.h>
+	"Data.h"
+
+1408266988 c:\users\rammichael\desktop\raeditc\block.h
+	<windows.h>
+
+1408273247 c:\users\rammichael\desktop\raeditc\data.h
+	"RegisterTypes.h"
+	"include/RAEdit.h"
+
+1408278226 c:\users\rammichael\desktop\raeditc\registertypes.h
+	<windows.h>
+
+1408270632 c:\users\rammichael\desktop\raeditc\include\raedit.h
+	<windows.h>
+	<richedit.h>
+
+1408279610 source:c:\users\rammichael\desktop\raeditc\clipboard.c
+	<windows.h>
+	"Data.h"
+
+1408272325 source:c:\users\rammichael\desktop\raeditc\data.c
+	"Data.h"
+
+1408279610 source:c:\users\rammichael\desktop\raeditc\edit.c
+	<windows.h>
+	"Data.h"
+
+1408266419 source:c:\users\rammichael\desktop\raeditc\main.cpp
+	"main.h"
+
+1385320478 c:\users\rammichael\desktop\raeditc\main.h
+	<windows.h>
+
+1408280348 source:c:\users\rammichael\desktop\raeditc\memory.c
+	<windows.h>
+	"Data.h"
+
+1408280538 source:c:\users\rammichael\desktop\raeditc\misc.c
+	<windows.h>
+	"Data.h"
+
