@@ -99,7 +99,7 @@ REG_T IDropTarget_DragEnter(REG_T pthis, REG_T lpDataObject, REG_T grfKeyState, 
 		edx = eax;
 		eax = ScreenToClient(edx, &pt);
 		eax = temp1;
-		eax = ChildWindowFromPoint(eax, pt.x, pt.y);
+		eax = ChildWindowFromPoint(eax, pt);
 		ebx = eax;
 		eax = GetWindowLong(ebx, 0);
 		if(eax)
@@ -164,7 +164,7 @@ REG_T IDropTarget_DragOver(REG_T pthis, REG_T grfKeyState, POINT pt, REG_T lpdwE
 		edx = eax;
 		eax = ScreenToClient(edx, &pt);
 		eax = temp1;
-		eax = ChildWindowFromPoint(eax, pt.x, pt.y);
+		eax = ChildWindowFromPoint(eax, pt);
 		ebx = eax;
 		eax = GetWindowLong(ebx, 0);
 		if(eax)

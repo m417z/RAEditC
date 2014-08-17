@@ -38,7 +38,7 @@ REG_T GetTopFromYp(DWORD hMem, DWORD hWin, DWORD yp)
 		cp = 0;
 		if(eax)
 		{
-			edx = [esi+ecx*sizeof(LINE)].LINE.rpChars;
+			edx = ((LINE *)(esi+ecx*sizeof(LINE)))->rpChars;
 Nxt1:
 			edx = ((CHARS *)(edi+edx))->len;
 			cp += edx;
@@ -46,7 +46,7 @@ Nxt1:
 			if(edx<((EDIT *)ebx)->rpLineFree)
 			{
 				ecx++;
-				edx = [esi+ecx*sizeof(LINE)].LINE.rpChars;
+				edx = ((LINE *)(esi+ecx*sizeof(LINE)))->rpChars;
 				if(((CHARS *)(edi+edx))->state&STATE_HIDDEN)
 				{
 					goto Nxt1;
@@ -80,7 +80,7 @@ Nxt2:
 				goto anon_1;
 			} // endif
 			ecx--;
-			edx = [esi+ecx*sizeof(LINE)].LINE.rpChars;
+			edx = ((LINE *)(esi+ecx*sizeof(LINE)))->rpChars;
 			temp2 = eax;
 			eax = ((CHARS *)(edi+edx))->len;
 			cp -= eax;
@@ -233,7 +233,7 @@ REG_T GetCpFromLine(DWORD hMem, DWORD nLine)
 		eax = ((EDIT *)ebx)->edtb.topcp;
 		while(ecx<nLine)
 		{
-			edx = [esi+ecx*sizeof(LINE)].LINE.rpChars;
+			edx = ((LINE *)(esi+ecx*sizeof(LINE)))->rpChars;
 			eax += ((CHARS *)(edi+edx))->len;
 			ecx++;
 		} // endw
@@ -245,7 +245,7 @@ REG_T GetCpFromLine(DWORD hMem, DWORD nLine)
 		while(ecx>nLine)
 		{
 			ecx--;
-			edx = [esi+ecx*sizeof(LINE)].LINE.rpChars;
+			edx = ((LINE *)(esi+ecx*sizeof(LINE)))->rpChars;
 			eax -= ((CHARS *)(edi+edx))->len;
 		} // endw
 	} // endif
@@ -273,7 +273,7 @@ REG_T GetLineFromCp(DWORD hMem, DWORD cp)
 			{
 				break;
 			}
-			edx = [esi+ecx*sizeof(LINE)].LINE.rpChars;
+			edx = ((LINE *)(esi+ecx*sizeof(LINE)))->rpChars;
 			eax += ((CHARS *)(edi+edx))->len;
 			ecx++;
 		} // endw
@@ -297,7 +297,7 @@ REG_T GetLineFromCp(DWORD hMem, DWORD cp)
 		while(eax>cp)
 		{
 			ecx--;
-			edx = [esi+ecx*sizeof(LINE)].LINE.rpChars;
+			edx = ((LINE *)(esi+ecx*sizeof(LINE)))->rpChars;
 			eax -= ((CHARS *)(edi+edx))->len;
 		} // endw
 	} // endif
@@ -331,7 +331,7 @@ REG_T GetYpFromLine(DWORD hMem, DWORD nLine)
 		ebx = edx;
 		while(ecx<nLine)
 		{
-			edx = [esi+ecx*sizeof(LINE)].LINE.rpChars;
+			edx = ((LINE *)(esi+ecx*sizeof(LINE)))->rpChars;
 			if(((CHARS *)(edi+edx))->state&STATE_HIDDEN)
 			{
 				goto anon_4;
@@ -350,13 +350,13 @@ anon_4:
 		while(ecx>nLine)
 		{
 			ecx--;
-			edx = [esi+ecx*sizeof(LINE)].LINE.rpChars;
+			edx = ((LINE *)(esi+ecx*sizeof(LINE)))->rpChars;
 			if(((CHARS *)(edi+edx))->state&STATE_HIDDEN)
 			{
 				goto anon_5;
 			} // endif
 			eax -= ebx;
-anon_5:
+anon_5: ;
 		} // endw
 	} // endif
 	return eax;
@@ -395,13 +395,13 @@ REG_T GetLineFromYp(DWORD hMem, DWORD y)
 			{
 				break;
 			} // endif
-			edx = [esi+ecx*sizeof(LINE)].LINE.rpChars;
+			edx = ((LINE *)(esi+ecx*sizeof(LINE)))->rpChars;
 			if(((CHARS *)(edi+edx))->state&STATE_HIDDEN)
 			{
 				goto anon_6;
 			} // endif
 			eax += ebx;
-anon_6:
+anon_6: ;
 		} // endw
 	}
 	else
@@ -413,13 +413,13 @@ anon_6:
 		while(eax>y)
 		{
 			ecx--;
-			edx = [esi+ecx*sizeof(LINE)].LINE.rpChars;
+			edx = ((LINE *)(esi+ecx*sizeof(LINE)))->rpChars;
 			if(((CHARS *)(edi+edx))->state&STATE_HIDDEN)
 			{
 				goto anon_7;
 			} // endif
 			eax -= ebx;
-anon_7:
+anon_7: ;
 		} // endw
 	} // endif
 	eax = ecx;
@@ -897,7 +897,7 @@ REG_T SetCaretVisible(DWORD hWin, DWORD cpy)
 anon_10:
 		ecx--;
 		eax = ((EDIT *)ebx)->hLine;
-		edx = [eax+ecx*sizeof(LINE)].LINE.rpChars;
+		edx = ((LINE *)(eax+ecx*sizeof(LINE)))->rpChars;
 		edx += ((EDIT *)ebx)->hChars;
 		eax = ((CHARS *)edx)->state;
 		eax &= STATE_BMMASK;

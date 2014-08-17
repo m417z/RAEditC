@@ -1,0 +1,24 @@
+#define VERINF1 1
+VERINF1 VERSIONINFO
+FILEVERSION 1,2,0,785
+PRODUCTVERSION 1,2,0,785
+FILEOS 0x00000004
+FILETYPE 0x00000002
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "040904E4"
+    BEGIN
+      VALUE "FileVersion", "1.2.0.785\0"
+      VALUE "FileDescription", "Code edit control\0"
+      VALUE "InternalName", "RAEdit\0"
+      VALUE "LegalCopyright", "KetilO (C) 2002 - 2008\0"
+      VALUE "OriginalFilename", "RAEdit.dll\0"
+      VALUE "ProductVersion", "1.2.0.785\0"
+    END
+  END
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x0409, 0x04E4
+  END
+END

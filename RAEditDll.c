@@ -14,6 +14,7 @@ DLL_EXPORT BOOL APIENTRY DllMain(HINSTANCE hInst, DWORD reason, LPVOID reserved1
 
 	if(reason==DLL_PROCESS_ATTACH)
 	{
+DebugBreak();
 		InstallRAEdit(hInst, TRUE);
 	}
 	else if(reason==DLL_PROCESS_DETACH)
@@ -24,6 +25,8 @@ DLL_EXPORT BOOL APIENTRY DllMain(HINSTANCE hInst, DWORD reason, LPVOID reserved1
 	return eax;
 
 } // DllEntry
+
+/* // TODO
 
 // NOTE: RadASM 1.2.0.5 uses this method.
 // In RadASM.ini section [CustCtrl], x=CustCtrl.dll,y
@@ -78,3 +81,4 @@ REG_T GetDefEx(DWORD nInx)
 
 } // GetDefEx
 
+*/

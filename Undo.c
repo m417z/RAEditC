@@ -349,12 +349,13 @@ REG_T SaveUndo(DWORD hMem, DWORD nFun, DWORD cp, DWORD lp, DWORD cb)
 
 } // SaveUndo
 
-REG_T Undo(DWORD hMem, DWORD hWin)
+REG_T Undo(RAEDT *raedt, DWORD hMem, DWORD hWin)
 {
-	REG_T eax = 0, ecx, edx, ebx;
+	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 	POINT pt;
 
+    esi = raedt;
 	ebx = hMem;
 	if(!(((EDIT *)ebx)->nMode&MODE_BLOCK))
 	{
@@ -376,13 +377,14 @@ REG_T Undo(DWORD hMem, DWORD hWin)
 
 } // Undo
 
-REG_T Redo(DWORD hMem, DWORD hWin)
+REG_T Redo(RAEDT *raedt, DWORD hMem, DWORD hWin)
 {
-	REG_T eax = 0, ecx, edx, ebx;
+	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 	POINT pt;
 	RECT oldrects[2];
 
+    esi = raedt;
 	ebx = hMem;
 	if(!(((EDIT *)ebx)->nMode&MODE_BLOCK))
 	{

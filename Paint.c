@@ -2,6 +2,9 @@
 #include <commctrl.h>
 #include "Data.h"
 
+typedef REG_T (* BOOKMARKPAINTCALLBACKPROTO)(HWND hWnd, DWORD line);
+typedef BOOKMARKPAINTCALLBACKPROTO BOOKMARKPAINTCALLBACKPTR;
+
 REG_T DrawLine(DWORD hMem, DWORD lpChars, DWORD nLine, DWORD cp, DWORD hDC, DWORD lpRect)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;

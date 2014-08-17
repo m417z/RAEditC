@@ -1,5 +1,12 @@
 #include <windows.h>
+#include <commctrl.h>
 #include "Data.h"
+
+#define EM_SETIMESTATUS 0x00d8
+#define EM_GETIMESTATUS 0x00d9
+
+REG_T RAEditProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam);
+REG_T RAWndProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 REG_T TimerProc(DWORD hWin, DWORD uMsg, DWORD idEvent, DWORD dwTime)
 {
@@ -22,9 +29,9 @@ REG_T TimerProc(DWORD hWin, DWORD uMsg, DWORD idEvent, DWORD dwTime)
 } // TimerProc
 
 // Create a windowclass for the user control
-REG_T InstallRAEdit(HINSTANCE hInst, DWORD fGlobal)
+void WINAPI InstallRAEdit(HINSTANCE hInst, BOOL fGlobal)
 {
-	REG_T eax = 0, ecx, edx;
+	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 	WNDCLASSEX wc;
 	DWORD hBmp;
@@ -125,26 +132,26 @@ REG_T InstallRAEdit(HINSTANCE hInst, DWORD fGlobal)
 		ebx++;
 	} // endw
 	ebx = temp1;
-	return eax;
+	return;
 
 } // InstallRAEdit
 
-REG_T UnInstallRAEdit(void)
+void WINAPI UnInstallRAEdit(void)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 
-	eax = DestroyCursor(hHSCur);
-	eax = DestroyCursor(hSelCur);
-	eax = ImageList_Destroy(hIml);
-	eax = DeleteObject(hBmpLnr);
-	eax = DeleteObject(hBmpCol);
-	eax = DeleteObject(hBmpExp);
-	eax = DeleteObject(hBmpLck);
-	eax = DeleteObject(hBrTlt);
-	eax = GetProcessHeap();
-	eax = HeapFree(eax, 0, hWrdMem);
-	return eax;
+	DestroyCursor(hHSCur);
+	DestroyCursor(hSelCur);
+	ImageList_Destroy(hIml);
+	DeleteObject(hBmpLnr);
+	DeleteObject(hBmpCol);
+	DeleteObject(hBmpExp);
+	DeleteObject(hBmpLck);
+	DeleteObject(hBrTlt);
+	GetProcessHeap();
+	HeapFree(eax, 0, hWrdMem);
+	return;
 
 } // UnInstallRAEdit
 
@@ -152,7 +159,7 @@ REG_T UnInstallRAEdit(void)
 // Prefix ~		Word is case converted
 // Suffix +		Hilites rest of line with comment color
 // Suffix -		Hilites rest of line with text color
-// 
+//
 // nColor			gggg0sff cccccccc cccccccc cccccccc
 // g=Word group, s=Case sensitive, f=Font style, c=color
 REG_T SetHiliteWords(DWORD nColor, DWORD lpWords)
@@ -185,7 +192,7 @@ REG_T SetHiliteWords(DWORD nColor, DWORD lpWords)
 	{
 NxtWrd:
 		fEnd = 0;
-		if((BYTE)nColor[3] & 4)
+		if(((BYTE *)(&nColor))[3] & 4)
 		{
 			// group is case sensitive. Toggles meaning of '^'
 			fEnd |= 3;
@@ -1505,7 +1512,7 @@ anon_4:
 			if(fControl && !fShift)
 			{
 				// End, split
-				eax = 1ffH;
+				eax = 0x1ff;
 				if(((EDIT *)ebx)->fsplitt)
 				{
 					eax = 0;
@@ -2082,14 +2089,14 @@ REG_T RAEditProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			// Ctrl+Z, Undo
 			nUndoid++;
-			eax = Undo(ebx, hWin);
+			eax = Undo(esi, ebx, hWin);
 			nUndoid++;
 		}
 		else if(edx==0x59 && fControl && !fShift && !fAlt)
 		{
 			// Ctrl+Y, Redo
 			nUndoid++;
-			eax = Redo(ebx, hWin);
+			eax = Redo(esi, ebx, hWin);
 			nUndoid++;
 		}
 		else if(edx==0x08 && eax==0x0E)
@@ -2630,6 +2637,7 @@ anon_5:
 			} // endif
 			if(eax>3 || edx>3)
 			{
+				/* // TODO
 				fOnSel = 0;
 				peff = 0;
 				eax = LoadCursor(0, IDC_ARROW);
@@ -2685,6 +2693,7 @@ anon_5:
 					eax = SetCaretVisible(hWin, ((RAEDT *)esi)->cpy);
 				} // endif
 				hDragSourceMem = 0;
+				*/
 			} // endif
 		}
 		else
@@ -3212,7 +3221,7 @@ anon_5:
 						goto anon_6;
 					} // endif
 					((RAEDT *)esi)->cpy = eax;
-anon_6:
+anon_6: ;
 				} // endif
 				eax = temp1;
 				eax -= ((RAEDT *)esi)->cpy;
@@ -3478,6 +3487,11 @@ ExDef:
 	eax = DefWindowProc(hWin, uMsg, wParam, lParam);
 Ex:
 	return eax;
+
+ErrBeep:
+    eax = MessageBeep(MB_ICONHAND);
+    eax = 0;
+    return eax;
 
 	void SetBlock(void)
 	{
@@ -4624,7 +4638,7 @@ anon_7:
 			eax += ((EDIT *)ebx)->linenrwt;
 			if(eax<=pt.x)
 			{
-				eax = ChildWindowFromPoint(hWin, pt.x, pt.y);
+				eax = ChildWindowFromPoint(hWin, pt);
 				if(eax==((EDIT *)ebx)->edta.hwnd)
 				{
 					esi = &((EDIT *)ebx)->edta;
@@ -5397,7 +5411,7 @@ anon_7:
 			// wParam=0
 			// lParam=0
 			nUndoid++;
-			eax = Redo(ebx, ((RAEDT *)esi)->hwnd);
+			eax = Redo(esi, ebx, ((RAEDT *)esi)->hwnd);
 			nUndoid++;
 			return eax;
 
@@ -5888,7 +5902,7 @@ anon_8:
 			// wParam=0
 			// lParam=0
 			nUndoid++;
-			eax = Undo(ebx, ((RAEDT *)esi)->hwnd);
+			eax = Undo(esi, ebx, ((RAEDT *)esi)->hwnd);
 			nUndoid++;
 			return eax;
 
@@ -6296,19 +6310,23 @@ anon_8:
 
 		eax = SetWindowPos(((EDIT *)ebx)->hsta, HWND_TOP, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOSIZE); // SWP_NOREPOSITION
 		eax = SetWindowPos(((EDIT *)ebx)->hsbtn, HWND_TOP, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOSIZE); // SWP_NOREPOSITION
+		/* // TODO
 		if(((EDIT *)ebx)->fstyle&STYLE_DRAGDROP)
 		{
 			eax = RegisterDragDrop(((EDIT *)ebx)->edta.hwnd, &pIDropTarget);
 			eax = RegisterDragDrop(((EDIT *)ebx)->edtb.hwnd, &pIDropTarget);
 		} // endif
+		*/
 	}
 	else if(eax==WM_DESTROY)
 	{
+		/* // TODO
 		if(((EDIT *)ebx)->fstyle&STYLE_DRAGDROP)
 		{
 			eax = RevokeDragDrop(((EDIT *)ebx)->edta.hwnd);
 			eax = RevokeDragDrop(((EDIT *)ebx)->edtb.hwnd);
 		} // endif
+		*/
 		eax = SetWindowLong(hWin, 0, 0);
 		eax = DestroyWindow(((EDIT *)ebx)->htt);
 		eax = DestroyWindow(((EDIT *)ebx)->hsbtn);
@@ -6609,9 +6627,9 @@ ErrBeep:
 		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 		ti.cbSize = sizeof(TOOLINFO);
 		ti.uFlags = TTF_IDISHWND | TTF_SUBCLASS;
-		ti.hWnd = 0;
+		ti.hwnd = 0;
 		ti.uId = eax;
-		ti.hInst = 0;
+		ti.hinst = 0;
 		ti.lpszText = edx;
 		eax = SendMessage(((EDIT *)ebx)->htt, TTM_DELTOOL, NULL, &ti);
 		eax = SendMessage(((EDIT *)ebx)->htt, TTM_ADDTOOL, NULL, &ti);

@@ -1,6 +1,9 @@
 #include <windows.h>
 #include "Data.h"
 
+typedef REG_T (* EDITSTREAMCALLBACKPROTO)(DWORD dwCookie, DWORD pbBuff, DWORD cb, DWORD pcb);
+typedef EDITSTREAMCALLBACKPROTO EDITSTREAMCALLBACKPTR;
+
 REG_T FindTheText(DWORD hMem, DWORD pFind, DWORD fMC, DWORD fWW, DWORD fWhiteSpace, DWORD cpMin, DWORD cpMax, DWORD fDir)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
@@ -22,8 +25,8 @@ REG_T FindTheText(DWORD hMem, DWORD pFind, DWORD fMC, DWORD fWW, DWORD fWhiteSpa
 	lnlen = esi;
 	while(esi<16)
 	{
-		lpFind[esi*4] = 0;
-		len[esi*4] = 0;
+		lpFind[esi] = 0;
+		len[esi] = 0;
 		esi++;
 	} // endw
 	esi = pFind;
@@ -41,10 +44,10 @@ REG_T FindTheText(DWORD hMem, DWORD pFind, DWORD fMC, DWORD fWW, DWORD fWhiteSpa
 			*(BYTE *)edi = 0;
 			edi++;
 			ecx++;
-			len[edx*4] = ecx;
+			len[edx] = ecx;
 			ecx = 0;
 			edx++;
-			lpFind[edx*4] = edi;
+			lpFind[edx] = edi;
 			edi--;
 			ecx--;
 		} // endif
@@ -53,7 +56,7 @@ REG_T FindTheText(DWORD hMem, DWORD pFind, DWORD fMC, DWORD fWW, DWORD fWhiteSpa
 		ecx++;
 	} // endw
 	*(BYTE *)edi = 0;
-	len[edx*4] = ecx;
+	len[edx] = ecx;
 	ebx = hMem;
 	if(fDir==1)
 	{
@@ -69,7 +72,7 @@ REG_T FindTheText(DWORD hMem, DWORD pFind, DWORD fMC, DWORD fWW, DWORD fWhiteSpa
 			nIgnore = 0;
 			temp1 = nLine;
 			esi = 0;
-			while(len[esi*4])
+			while(len[esi])
 			{
 				TstLnDown();
 				if(eax==-1)
@@ -112,7 +115,7 @@ REG_T FindTheText(DWORD hMem, DWORD pFind, DWORD fMC, DWORD fWW, DWORD fWhiteSpa
 			nIgnore = 0;
 			temp1 = nLine;
 			esi = 0;
-			while(len[esi*4])
+			while(len[esi])
 			{
 				TstLnUp();
 				if(eax==-1)
@@ -156,7 +159,7 @@ REG_T FindTheText(DWORD hMem, DWORD pFind, DWORD fMC, DWORD fWW, DWORD fWhiteSpa
 		prev = 1;
 		temp1 = ecx;
 		temp2 = esi;
-		esi = lpFind[esi*4];
+		esi = lpFind[esi];
 		esi--;
 		ecx--;
 TstFind1:
@@ -255,7 +258,7 @@ TstFind2:
 				lnlen = eax;
 			} // endif
 Nxt:
-			eax = len[esi*4];
+			eax = len[esi];
 			eax += ecx;
 			if(eax<=((CHARS *)edi)->len)
 			{
@@ -794,7 +797,7 @@ Nxt:
 			while(ecx<((CHARS *)edi)->len)
 			{
 				edx = 0;
-				if(RBYTE_LOW(eax)==[edi+ecx+sizeof(CHARS)])
+				if(RBYTE_LOW(eax)==*(BYTE *)(edi+ecx+sizeof(CHARS)))
 				{
 					break;
 				} // endif
@@ -838,7 +841,7 @@ Nf:
 		ecx++;
 		while(ecx<((CHARS *)edi)->len)
 		{
-			if(RBYTE_LOW(eax)==[edi+ecx+sizeof(CHARS)])
+			if(RBYTE_LOW(eax)==*(BYTE *)(edi+ecx+sizeof(CHARS)))
 			{
 				break;
 			} // endif

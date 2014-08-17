@@ -1,19 +1,19 @@
 # depslib dependency file v1.0
-1408279610 source:c:\users\rammichael\desktop\raeditc\block.c
+1408314104 source:c:\users\rammichael\desktop\raeditc\block.c
 	<windows.h>
 	"Data.h"
 
 1408266988 c:\users\rammichael\desktop\raeditc\block.h
 	<windows.h>
 
-1408273247 c:\users\rammichael\desktop\raeditc\data.h
+1408312595 c:\users\rammichael\desktop\raeditc\data.h
 	"RegisterTypes.h"
 	"include/RAEdit.h"
 
 1408278226 c:\users\rammichael\desktop\raeditc\registertypes.h
 	<windows.h>
 
-1408270632 c:\users\rammichael\desktop\raeditc\include\raedit.h
+1408312144 c:\users\rammichael\desktop\raeditc\include\raedit.h
 	<windows.h>
 	<richedit.h>
 
@@ -21,7 +21,7 @@
 	<windows.h>
 	"Data.h"
 
-1408272325 source:c:\users\rammichael\desktop\raeditc\data.c
+1408310679 source:c:\users\rammichael\desktop\raeditc\data.c
 	"Data.h"
 
 1408279610 source:c:\users\rammichael\desktop\raeditc\edit.c
@@ -41,4 +41,34 @@
 1408280538 source:c:\users\rammichael\desktop\raeditc\misc.c
 	<windows.h>
 	"Data.h"
+
+1408313173 source:c:\users\rammichael\desktop\raeditc\raedit.c
+	<windows.h>
+	<commctrl.h>
+	"Data.h"
+
+1408312266 source:c:\users\rammichael\desktop\raeditc\raeditdll.c
+	<windows.h>
+	"Data.h"
+
+1408314104 source:c:\users\rammichael\desktop\raeditc\function.c
+	<windows.h>
+	"Data.h"
+
+1408312815 source:c:\users\rammichael\desktop\raeditc\paint.c
+	<windows.h>
+	<commctrl.h>
+	"Data.h"
+
+1408313002 source:c:\users\rammichael\desktop\raeditc\position.c
+	<windows.h>
+	"Data.h"
+
+1408313210 source:c:\users\rammichael\desktop\raeditc\undo.c
+	<windows.h>
+	"Data.h"
+
+1180225730 source:c:\users\rammichael\desktop\raeditc\res\raeditres.rc
+
+1408313911 source:c:\users\rammichael\desktop\raeditc\res\raeditver.rc
 

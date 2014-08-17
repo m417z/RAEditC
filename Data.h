@@ -219,6 +219,9 @@ extern char *szMemFailSyntax	;
 extern char *szGlobalFail		;
 extern char *szHeapFail		;
 
+extern char *szRAEditClass		;
+extern char *szEditClassName		;
+
 // .data
 
 extern BYTE CharTabInit[];

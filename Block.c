@@ -789,7 +789,7 @@ REG_T CollapseGetEnd(DWORD hMem, DWORD nLine)
 	if(eax!=-1)
 	{
 		edx = nNest;
-		Nest[edx*4] = eax;
+		Nest[edx] = eax;
 		if(((RABLOCKDEF *)eax)->flag&BD_SEGMENTBLOCK)
 		{
 			edi++;
@@ -850,7 +850,7 @@ REG_T CollapseGetEnd(DWORD hMem, DWORD nLine)
 						if(!(((RABLOCKDEF *)eax)->flag&BD_SEGMENTBLOCK))
 						{
 							edx = nNest;
-							Nest[edx*4] = eax;
+							Nest[edx] = eax;
 							nNest++;
 						} // endif
 					}
@@ -861,7 +861,7 @@ REG_T CollapseGetEnd(DWORD hMem, DWORD nLine)
 						{
 							edx = nNest;
 							edx--;
-							if(eax!=Nest[edx*4])
+							if(eax!=Nest[edx])
 							{
 								eax = 0;
 								eax--;
