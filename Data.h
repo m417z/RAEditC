@@ -195,36 +195,36 @@ typedef struct tagEDIT EDIT;
 
 // .const
 
-extern char *szScrollBar		;
-extern char *szStatic			;
-extern char *szButton			;
-extern char *szToolTips		;
+extern char *szScrollBar;
+extern char *szStatic;
+extern char *szButton;
+extern char *szToolTips;
 
-extern char *szToolTip			;
-extern char *szSplitterBar		;
-extern char *szLineNumber		;
-extern char *szExpand			;
-extern char *szCollapse		;
-extern char *szLock			;
-extern char *szChanged			;
+extern char *szToolTip;
+extern char *szSplitterBar;
+extern char *szLineNumber;
+extern char *szExpand;
+extern char *szCollapse;
+extern char *szLock;
+extern char *szChanged;
 
-extern char *szX				;
-extern char *szW				;
-extern char *szI				;
-extern char *szSpace			;
-extern char *szTab				;
-extern char *szComment			;
-extern char *szInclude			;
-extern char *szIncludelib		;
-extern char *szMemFailLine		;
-extern char *szMemFailChar		;
-extern char *szMemFailUndo		;
-extern char *szMemFailSyntax	;
-extern char *szGlobalFail		;
-extern char *szHeapFail		;
+extern char *szX;
+extern char *szW;
+extern char *szI;
+extern char *szSpace;
+extern char *szTab;
+extern char *szComment;
+extern char *szInclude;
+extern char *szIncludelib;
+extern char *szMemFailLine;
+extern char *szMemFailChar;
+extern char *szMemFailUndo;
+extern char *szMemFailSyntax;
+extern char *szGlobalFail;
+extern char *szHeapFail;
 
-extern char *szRAEditClass		;
-extern char *szEditClassName		;
+extern char *szRAEditClass;
+extern char *szEditClassName;
 
 // .data
 

@@ -2,23 +2,23 @@
 
 // .const
 
-char *szScrollBar		=		"ScrollBar";
+char *szScrollBar		=	"ScrollBar";
 char *szStatic			=	"Static";
 char *szButton			=	"Button";
-char *szToolTips		=		"Tooltips_class32";
+char *szToolTips		=	"Tooltips_class32";
 
 char *szToolTip			=	"RAEdit control";
 char *szSplitterBar		=	"Splitter Bar";
 char *szLineNumber		=	"Show/Hide Linenumbers";
 char *szExpand			=	"Expand all";
-char *szCollapse		=		"Collapse all";
-char *szLock			=		"Lock/Unlock Tab";
+char *szCollapse		=	"Collapse all";
+char *szLock			=	"Lock/Unlock Tab";
 char *szChanged			=	"Changed state";
 
-char *szX				=		"X";
-char *szW				=		"W";
-char *szI				=		"I";
-char *szSpace			=		" ";
+char *szX				=	"X";
+char *szW				=	"W";
+char *szI				=	"I";
+char *szSpace			=	" ";
 char *szTab				=	"\t";
 char *szComment			=	"comment +";
 char *szInclude			=	"include";
@@ -26,9 +26,9 @@ char *szIncludelib		=	"includelib";
 char *szMemFailLine		=	"Memory allocation failed! (Line)";
 char *szMemFailChar		=	"Memory allocation failed! (Char)";
 char *szMemFailUndo		=	"Memory allocation failed! (Undo)";
-char *szMemFailSyntax	=		"Memory allocation failed! (Syntax)";
+char *szMemFailSyntax	=	"Memory allocation failed! (Syntax)";
 char *szGlobalFail		=	"GlobalAlloc failed.";
-char *szHeapFail		=		"HeapAlloc failed.";
+char *szHeapFail		=	"HeapAlloc failed.";
 
 char *szRAEditClass	    =   "RAEdit";
 char *szEditClassName	=   "RAEditChild";
@@ -106,7 +106,7 @@ BYTE CaseTab[] = {
 	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,		// F0
 };
 
-char szLine[32] =					"Ln: ";
+char szLine[32] = "Ln: ";
 
 // data?
 
