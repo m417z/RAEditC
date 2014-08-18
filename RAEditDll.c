@@ -7,7 +7,7 @@
     #define DLL_EXPORT __declspec(dllimport)
 #endif
 
-BOOL WINAPI DllMain(HINSTANCE hInst, DWORD reason, LPVOID reserved1)
+DLL_EXPORT BOOL WINAPI DllMain(HINSTANCE hInst, DWORD reason, LPVOID reserved1)
 {
 	REG_T eax = 0;
 
