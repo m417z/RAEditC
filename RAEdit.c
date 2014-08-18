@@ -1,5 +1,7 @@
 #include "RAEdit.h"
 
+#include "DragDrop.h"
+
 #define EM_SETIMESTATUS 0x00d8
 #define EM_GETIMESTATUS 0x00d9
 
@@ -2621,7 +2623,6 @@ anon_5:
 			} // endif
 			if(eax>3 || edx>3)
 			{
-				/* // TODO
 				fOnSel = 0;
 				peff = 0;
 				eax = LoadCursor(0, IDC_ARROW);
@@ -2639,7 +2640,7 @@ anon_5:
 				} // endif
 				cpDragSource.cpMin = eax;
 				cpDragSource.cpMax = edx;
-				eax = DoDragDrop(pIDataObject, pIDropSource, DROPEFFECT_COPY | DROPEFFECT_MOVE, &peff);
+				eax = DoDragDrop(&DataObject, &DropSource, DROPEFFECT_COPY | DROPEFFECT_MOVE, &peff);
 				eax = peff;
 				if(eax==DROPEFFECT_MOVE && !(((EDIT *)ebx)->fstyle & STYLE_READONLY))
 				{
@@ -2677,7 +2678,6 @@ anon_5:
 					eax = SetCaretVisible(hWin, ((RAEDT *)esi)->cpy);
 				} // endif
 				hDragSourceMem = 0;
-				*/
 			} // endif
 		}
 		else
@@ -6280,23 +6280,19 @@ anon_8:
 
 		eax = SetWindowPos(((EDIT *)ebx)->hsta, HWND_TOP, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOSIZE); // SWP_NOREPOSITION
 		eax = SetWindowPos(((EDIT *)ebx)->hsbtn, HWND_TOP, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOSIZE); // SWP_NOREPOSITION
-		/* // TODO
 		if(((EDIT *)ebx)->fstyle&STYLE_DRAGDROP)
 		{
-			eax = RegisterDragDrop(((EDIT *)ebx)->edta.hwnd, &pIDropTarget);
-			eax = RegisterDragDrop(((EDIT *)ebx)->edtb.hwnd, &pIDropTarget);
+			eax = RegisterDragDrop(((EDIT *)ebx)->edta.hwnd, &DropTarget);
+			eax = RegisterDragDrop(((EDIT *)ebx)->edtb.hwnd, &DropTarget);
 		} // endif
-		*/
 	}
 	else if(eax==WM_DESTROY)
 	{
-		/* // TODO
 		if(((EDIT *)ebx)->fstyle&STYLE_DRAGDROP)
 		{
 			eax = RevokeDragDrop(((EDIT *)ebx)->edta.hwnd);
 			eax = RevokeDragDrop(((EDIT *)ebx)->edtb.hwnd);
 		} // endif
-		*/
 		eax = SetWindowLong(hWin, 0, 0);
 		eax = DestroyWindow(((EDIT *)ebx)->htt);
 		eax = DestroyWindow(((EDIT *)ebx)->hsbtn);

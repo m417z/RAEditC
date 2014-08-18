@@ -1,38 +1,71 @@
-#include <windows.h>
-#include "Data.h"
+#include "DragDrop.h"
 
-//REG_T IsEqualGUID(REG_T rguid1, REG_T rguid2)                                                                 ;
-REG_T IDropTarget_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObject)                                       ;
-REG_T IDropTarget_AddRef(REG_T pthis)                                                                           ;
-REG_T IDropTarget_Release(REG_T pthis)                                                                          ;
-REG_T IDropTarget_DragEnter(REG_T pthis, REG_T lpDataObject, REG_T grfKeyState, POINT pt, REG_T lpdwEffect)     ;
-REG_T IDropTarget_DragOver(REG_T pthis, REG_T grfKeyState, POINT pt, REG_T lpdwEffect)                          ;
-REG_T IDropTarget_DragLeave(REG_T pthis)                                                                        ;
-REG_T IDropTarget_Drop(REG_T pthis, REG_T lpDataObject, REG_T grfKeyState, POINT pt, REG_T lpdwEffect)          ;
-REG_T IDropSource_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObject)                                       ;
-REG_T IDropSource_AddRef(REG_T pthis)                                                                           ;
-REG_T IDropSource_Release(REG_T pthis)                                                                          ;
-REG_T IDropSource_QueryContinueDrag(REG_T pthis, REG_T fEscapePressed, REG_T grfKeyState)                       ;
-REG_T IDropSource_GiveFeedback(REG_T pthis, REG_T dwEffect)                                                     ;
-REG_T IDO_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObject)                                               ;
-REG_T IDO_AddRef(REG_T pthis)                                                                                   ;
-REG_T IDO_Release(REG_T pthis)                                                                                  ;
-REG_T IDO_GetData(REG_T pthis, REG_T pFormatetc, REG_T pmedium)                                                 ;
-REG_T IDO_GetDataHere(REG_T pthis, REG_T pFormatetc, REG_T pmedium)                                             ;
-REG_T IDO_QueryGetData(REG_T pthis, REG_T pFormatetc)                                                           ;
-REG_T IDO_GetCanonicalFormatEtc(REG_T pthis, REG_T pFormatetcIn, REG_T pFormatetcOut)                           ;
-REG_T IDO_SetData(REG_T pthis, REG_T pFormatetc, REG_T pmedium, REG_T fRelease)                                 ;
-REG_T IDO_EnumFormatEtc(REG_T pthis, REG_T dwDirection, REG_T ppenumFormatetc)                                  ;
-REG_T IDO_DAdvise(REG_T pthis, REG_T pFormatetc, REG_T advf, REG_T pAdvSink, REG_T pdwConnection)               ;
-REG_T IDO_DUnadvise(REG_T pthis, REG_T dwConnection)                                                            ;
-REG_T IDO_EnumDAdvise(REG_T pthis, REG_T ppenumAdvise)                                                          ;
-REG_T IEnumFORMATETC_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObject)                                    ;
-REG_T IEnumFORMATETC_AddRef(REG_T pthis)                                                                        ;
-REG_T IEnumFORMATETC_Release(REG_T pthis)                                                                       ;
-REG_T IEnumFORMATETC_Next(REG_T pthis, REG_T celt, REG_T rgelt, REG_T pceltFetched)                             ;
-REG_T IEnumFORMATETC_Skip(REG_T pthis, REG_T celt)                                                              ;
-REG_T IEnumFORMATETC_Reset(REG_T pthis)                                                                         ;
-REG_T IEnumFORMATETC_Clone(REG_T pthis, REG_T ppenum)                                                           ;
+// IDropTarget
+
+static const IDropTargetVtbl vtIDropTarget = {
+    IDropTarget_QueryInterface,
+    IDropTarget_AddRef,
+    IDropTarget_Release,
+    IDropTarget_DragEnter,
+    IDropTarget_DragOver,
+    IDropTarget_DragLeave,
+    IDropTarget_Drop
+};
+
+IDropTargetImpl DropTarget = { &vtIDropTarget, 0, 0, 0, 0 };
+
+// IDropSource
+
+static const IDropSourceVtbl vtIDropSource = {
+    IDropSource_QueryInterface,
+    IDropSource_AddRef,
+    IDropSource_Release,
+    IDropSource_QueryContinueDrag,
+    IDropSource_GiveFeedback
+};
+
+IDropSourceImpl DropSource = { &vtIDropSource, 0 };
+
+// IDataObject
+
+static const IDataObjectVtbl vtIDataObject = {
+    IDO_QueryInterface,
+    IDO_AddRef,
+    IDO_Release,
+    IDO_GetData,
+    IDO_GetDataHere,
+    IDO_QueryGetData,
+    IDO_GetCanonicalFormatEtc,
+    IDO_SetData,
+    IDO_EnumFormatEtc,
+    IDO_DAdvise,
+    IDO_DUnadvise,
+    IDO_EnumDAdvise
+};
+
+IDataObjectImpl DataObject = { &vtIDataObject, 0 };
+
+// IEnumFORMATETC
+
+static const IEnumFORMATETCVtbl vtIEnumFORMATETCVtbl = {
+    IEnumFORMATETC_QueryInterface,
+    IEnumFORMATETC_AddRef,
+    IEnumFORMATETC_Release,
+    IEnumFORMATETC_Next,
+    IEnumFORMATETC_Skip,
+    IEnumFORMATETC_Reset,
+    IEnumFORMATETC_Clone
+};
+
+typedef struct
+{
+    const IEnumFORMATETCVtbl *lpVtbl;
+	DWORD refcount;
+	DWORD ifmt;
+	DWORD ifmtmax;
+} IEnumFORMATETCImpl;
+
+static IEnumFORMATETCImpl EnumFORMATETC = { &vtIEnumFORMATETCVtbl, 0, 0, 1 };
 
 /*
 REG_T IsEqualGUID(REG_T rguid1, REG_T rguid2)
@@ -50,24 +83,24 @@ REG_T IsEqualGUID(REG_T rguid1, REG_T rguid2)
 } // IsEqualGUID
 */
 // IDropTarget methods
-REG_T IDropTarget_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObject)
+REG_T WINAPI IDropTarget_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObject)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 
 	// PrintText 'IDropTarget_QueryInterface'
-	eax = IsEqualGUID(iid, IID_IDropTarget);
+	eax = IsEqualGUID(iid, &IID_IDropTarget);
 	if(!eax)
 	{
-		eax = IsEqualGUID(iid, IID_IUnknown);
+		eax = IsEqualGUID(iid, &IID_IUnknown);
 	} // endif
 	edx = ppvObject;
 	if(eax)
 	{
 		eax = pthis;
 		*(DWORD *)edx = eax;
-		edx = *(DWORD *)eax;
-		eax = ((IDropTarget *)edx)->lpVtbl->AddRef(eax);
+		edx = eax;
+		eax = ((IDropTargetImpl *)edx)->lpVtbl->AddRef(eax);
 		eax = S_OK;
 	}
 	else
@@ -79,38 +112,38 @@ REG_T IDropTarget_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObject)
 
 } // IDropTarget_QueryInterface
 
-REG_T IDropTarget_AddRef(REG_T pthis)
+REG_T WINAPI IDropTarget_AddRef(REG_T pthis)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 
 	// PrintText 'IDropTarget_AddRef'
 	eax = pthis;
-	edx = *(DWORD *)eax;
-	((IDropTarget *)edx)->refcount++;
-	eax = ((IDropTarget *)edx)->refcount;
+	edx = eax;
+	((IDropTargetImpl *)edx)->refcount++;
+	eax = ((IDropTargetImpl *)edx)->refcount;
 	return eax;
 
 } // IDropTarget_AddRef
 
-REG_T IDropTarget_Release(REG_T pthis)
+REG_T WINAPI IDropTarget_Release(REG_T pthis)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 
 	// PrintText 'IDropTarget_Release'
 	eax = pthis;
-	edx = *(DWORD *)eax;
-	if(((IDropTarget *)edx)->refcount)
+	edx = eax;
+	if(((IDropTargetImpl *)edx)->refcount)
 	{
-		((IDropTarget *)edx)->refcount--;
+		((IDropTargetImpl *)edx)->refcount--;
 	} // endif
-	eax = ((IDropTarget *)edx)->refcount;
+	eax = ((IDropTargetImpl *)edx)->refcount;
 	return eax;
 
 } // IDropTarget_Release
 
-REG_T IDropTarget_DragEnter(REG_T pthis, REG_T lpDataObject, REG_T grfKeyState, POINT pt, REG_T lpdwEffect)
+REG_T WINAPI IDropTarget_DragEnter(REG_T pthis, REG_T lpDataObject, REG_T grfKeyState, POINT pt, REG_T lpdwEffect)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -121,14 +154,13 @@ REG_T IDropTarget_DragEnter(REG_T pthis, REG_T lpDataObject, REG_T grfKeyState, 
 	esi = lpDataObject;
 	ebx = lpdwEffect;
 	edi = pthis;
-	edi = *(DWORD *)edi;
 
 	*(DWORD *)ebx = DROPEFFECT_NONE;
-	((IDropTarget *)edi)->valid = FALSE;
+	((IDropTargetImpl *)edi)->valid = FALSE;
 	eax = E_INVALIDARG;
 	if(esi)
 	{
-		eax = WindowFromPoint(pt.x, pt.y);
+		eax = WindowFromPoint(pt);
 		temp1 = eax;
 		edx = eax;
 		eax = ScreenToClient(edx, &pt);
@@ -138,17 +170,17 @@ REG_T IDropTarget_DragEnter(REG_T pthis, REG_T lpDataObject, REG_T grfKeyState, 
 		eax = GetWindowLong(ebx, 0);
 		if(eax)
 		{
-			((IDropTarget *)edi)->hwnd = ebx;
+			((IDropTargetImpl *)edi)->hwnd = ebx;
 			ebx = eax;
 			if(!(((EDIT *)ebx)->fstyle & STYLE_READONLY))
 			{
 				fmte.cfFormat = CF_TEXT;
-				fmte.lptd = NULL;
+				fmte.ptd = NULL;
 				fmte.dwAspect = DVASPECT_CONTENT;
 				fmte.lindex = -1;
 				fmte.tymed = TYMED_HGLOBAL;
-				edx = *(DWORD *)esi;
-				eax = ((IDataObject *)edx)->GetData(esi, &fmte, &medium);
+				edx = esi;
+				eax = ((IDataObjectImpl *)edx)->lpVtbl->GetData(esi, &fmte, &medium);
 				if(eax==S_OK)
 				{
 					ebx = lpdwEffect;
@@ -160,12 +192,12 @@ REG_T IDropTarget_DragEnter(REG_T pthis, REG_T lpDataObject, REG_T grfKeyState, 
 					{
 						*(DWORD *)ebx = DROPEFFECT_MOVE;
 					} // endif
-					((IDropTarget *)edi)->valid = TRUE;
+					((IDropTargetImpl *)edi)->valid = TRUE;
 					eax = medium.pUnkForRelease;
 					if(eax)
 					{
-						edx = *(DWORD *)eax;
-						eax = ((IDataObject *)edx)->lpVtbl->Release(eax);
+						edx = eax;
+						eax = ((IDataObjectImpl *)edx)->lpVtbl->Release(eax);
 					}
 					else
 					{
@@ -180,7 +212,7 @@ REG_T IDropTarget_DragEnter(REG_T pthis, REG_T lpDataObject, REG_T grfKeyState, 
 
 } // IDropTarget_DragEnter
 
-REG_T IDropTarget_DragOver(REG_T pthis, REG_T grfKeyState, POINT pt, REG_T lpdwEffect)
+REG_T WINAPI IDropTarget_DragOver(REG_T pthis, REG_T grfKeyState, POINT pt, REG_T lpdwEffect)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -188,12 +220,11 @@ REG_T IDropTarget_DragOver(REG_T pthis, REG_T grfKeyState, POINT pt, REG_T lpdwE
 
 	// PrintText 'IDropTarget_DragOver'
 	edi = pthis;
-	edi = *(DWORD *)edi;
 	edx = lpdwEffect;
 	*(DWORD *)edx = DROPEFFECT_NONE;
-	if(((IDropTarget *)edi)->valid)
+	if(((IDropTargetImpl *)edi)->valid)
 	{
-		eax = WindowFromPoint(pt.x, pt.y);
+		eax = WindowFromPoint(pt);
 		temp1 = eax;
 		edx = eax;
 		eax = ScreenToClient(edx, &pt);
@@ -203,10 +234,10 @@ REG_T IDropTarget_DragOver(REG_T pthis, REG_T grfKeyState, POINT pt, REG_T lpdwE
 		eax = GetWindowLong(ebx, 0);
 		if(eax)
 		{
-			((IDropTarget *)edi)->hwnd = ebx;
+			((IDropTargetImpl *)edi)->hwnd = ebx;
 			ebx = eax;
-			eax = SetFocus(((IDropTarget *)edi)->hwnd);
-			eax = ((IDropTarget *)edi)->hwnd;
+			eax = SetFocus(((IDropTargetImpl *)edi)->hwnd);
+			eax = ((IDropTargetImpl *)edi)->hwnd;
 			if(eax==((EDIT *)ebx)->edta.hwnd)
 			{
 				esi = &((EDIT *)ebx)->edta;
@@ -215,18 +246,18 @@ REG_T IDropTarget_DragOver(REG_T pthis, REG_T grfKeyState, POINT pt, REG_T lpdwE
 			{
 				esi = &((EDIT *)ebx)->edtb;
 			} // endif
-			eax = GetClientRect(((IDropTarget *)edi)->hwnd, &rect);
+			eax = GetClientRect(((IDropTargetImpl *)edi)->hwnd, &rect);
 			ecx = ((EDIT *)ebx)->fntinfo.fntht;
 			ecx /= 2;
 			eax = pt.y;
 			edx = eax+ecx;
 			if(eax<ecx)
 			{
-				eax = SendMessage(((IDropTarget *)edi)->hwnd, WM_VSCROLL, SB_LINEUP, ((RAEDT *)esi)->hvscroll);
+				eax = SendMessage(((IDropTargetImpl *)edi)->hwnd, WM_VSCROLL, SB_LINEUP, ((RAEDT *)esi)->hvscroll);
 			}
 			else if(edx>rect.bottom)
 			{
-				eax = SendMessage(((IDropTarget *)edi)->hwnd, WM_VSCROLL, SB_LINEDOWN, ((RAEDT *)esi)->hvscroll);
+				eax = SendMessage(((IDropTargetImpl *)edi)->hwnd, WM_VSCROLL, SB_LINEDOWN, ((RAEDT *)esi)->hvscroll);
 			}
 			else
 			{
@@ -236,23 +267,23 @@ REG_T IDropTarget_DragOver(REG_T pthis, REG_T grfKeyState, POINT pt, REG_T lpdwE
 				ecx += ((EDIT *)ebx)->linenrwt;
 				if(eax<ecx)
 				{
-					eax = SendMessage(((IDropTarget *)edi)->hwnd, WM_HSCROLL, SB_LINEUP, ((EDIT *)ebx)->hhscroll);
+					eax = SendMessage(((IDropTargetImpl *)edi)->hwnd, WM_HSCROLL, SB_LINEUP, ((EDIT *)ebx)->hhscroll);
 				}
 				else if(edx>rect.right)
 				{
-					eax = SendMessage(((IDropTarget *)edi)->hwnd, WM_HSCROLL, SB_LINEDOWN, ((EDIT *)ebx)->hhscroll);
+					eax = SendMessage(((IDropTargetImpl *)edi)->hwnd, WM_HSCROLL, SB_LINEDOWN, ((EDIT *)ebx)->hhscroll);
 				} // endif
 			} // endif
 			eax = GetCharFromPos(ebx, ((RAEDT *)esi)->cpy, pt.x, pt.y);
 			edx = eax;
-			((IDropTarget *)edi)->cp = eax;
+			((IDropTargetImpl *)edi)->cp = eax;
 			eax = GetPosFromChar(ebx, edx, &pt);
 			eax = pt.x;
 			eax -= ((EDIT *)ebx)->cpx;
 			edx = pt.y;
 			edx -= ((RAEDT *)esi)->cpy;
 			eax = SetCaretPos(eax, edx);
-			eax = ShowCaret(((IDropTarget *)edi)->hwnd);
+			eax = ShowCaret(((IDropTargetImpl *)edi)->hwnd);
 			((EDIT *)ebx)->fCaretHide = FALSE;
 			edx = lpdwEffect;
 			if(grfKeyState & MK_CONTROL)
@@ -270,34 +301,33 @@ REG_T IDropTarget_DragOver(REG_T pthis, REG_T grfKeyState, POINT pt, REG_T lpdwE
 
 } // IDropTarget_DragOver
 
-REG_T IDropTarget_DragLeave(REG_T pthis)
+REG_T WINAPI IDropTarget_DragLeave(REG_T pthis)
 {
 	REG_T eax = 0, ecx, edx, ebx, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 
 	// PrintText 'IDropTarget_DragLeave'
 	edi = pthis;
-	edi = *(DWORD *)edi;
-	if(((IDropTarget *)edi)->hwnd)
+	if(((IDropTargetImpl *)edi)->hwnd)
 	{
-		eax = GetWindowLong(((IDropTarget *)edi)->hwnd, 0);
+		eax = GetWindowLong(((IDropTargetImpl *)edi)->hwnd, 0);
 		if(eax)
 		{
 			ebx = eax;
 			if(!((EDIT *)ebx)->fCaretHide)
 			{
-				eax = HideCaret(((IDropTarget *)edi)->hwnd);
+				eax = HideCaret(((IDropTargetImpl *)edi)->hwnd);
 				((EDIT *)ebx)->fCaretHide = TRUE;
 			} // endif
 		} // endif
-		((IDropTarget *)edi)->hwnd = 0;
+		((IDropTargetImpl *)edi)->hwnd = 0;
 	} // endif
 	eax = S_OK;
 	return eax;
 
 } // IDropTarget_DragLeave
 
-REG_T IDropTarget_Drop(REG_T pthis, REG_T lpDataObject, REG_T grfKeyState, POINT pt, REG_T lpdwEffect)
+REG_T WINAPI IDropTarget_Drop(REG_T pthis, REG_T lpDataObject, REG_T grfKeyState, POINT pt, REG_T lpdwEffect)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -308,27 +338,26 @@ REG_T IDropTarget_Drop(REG_T pthis, REG_T lpDataObject, REG_T grfKeyState, POINT
 	esi = lpDataObject;
 	ebx = lpdwEffect;
 	edi = pthis;
-	edi = *(DWORD *)edi;
 	eax = E_INVALIDARG;
 	*(DWORD *)ebx = DROPEFFECT_NONE;
-	((IDropTarget *)edi)->valid = FALSE;
-	if(esi && ((IDropTarget *)edi)->hwnd)
+	((IDropTargetImpl *)edi)->valid = FALSE;
+	if(esi && ((IDropTargetImpl *)edi)->hwnd)
 	{
-		eax = GetWindowLong(((IDropTarget *)edi)->hwnd, 0);
+		eax = GetWindowLong(((IDropTargetImpl *)edi)->hwnd, 0);
 		if(eax)
 		{
 			ebx = eax;
 			fmte.cfFormat = CF_TEXT;
-			fmte.lptd = NULL;
+			fmte.ptd = NULL;
 			fmte.dwAspect = DVASPECT_CONTENT;
 			fmte.lindex = -1;
 			fmte.tymed = TYMED_HGLOBAL;
-			edx = *(DWORD *)esi;
-			eax = ((IDataObject *)edx)->GetData(esi, &fmte, &medium);
+			edx = esi;
+			eax = ((IDataObjectImpl *)edx)->lpVtbl->GetData(esi, &fmte, &medium);
 			if(eax==S_OK)
 			{
-				eax = ((IDropTarget *)edi)->cp;
-				edx = ((IDropTarget *)edi)->hwnd;
+				eax = ((IDropTargetImpl *)edi)->cp;
+				edx = ((IDropTargetImpl *)edi)->hwnd;
 				edx = hDragWin;
 				// Test if Drop is on top of Drag
 				if((edx!=((EDIT *)ebx)->edta.hwnd && edx!=((EDIT *)ebx)->edtb.hwnd) || eax<=cpDragSource.cpMin || eax>=cpDragSource.cpMax)
@@ -342,7 +371,7 @@ REG_T IDropTarget_Drop(REG_T pthis, REG_T lpDataObject, REG_T grfKeyState, POINT
 						cpDragSource.cpMin += ecx;
 						cpDragSource.cpMax += ecx;
 					} // endif
-					eax = Paste(ebx, ((IDropTarget *)edi)->hwnd, medium.hGlobal);
+					eax = Paste(ebx, ((IDropTargetImpl *)edi)->hwnd, medium.hGlobal);
 					edx = lpdwEffect;
 					if(grfKeyState & MK_CONTROL)
 					{
@@ -353,18 +382,18 @@ REG_T IDropTarget_Drop(REG_T pthis, REG_T lpDataObject, REG_T grfKeyState, POINT
 						*(DWORD *)edx = DROPEFFECT_MOVE;
 					} // endif
 				} // endif
-				((IDropTarget *)edi)->valid = TRUE;
+				((IDropTargetImpl *)edi)->valid = TRUE;
 				eax = medium.pUnkForRelease;
 				if(eax)
 				{
-					edx = *(DWORD *)eax;
-					eax = ((IDataObject *)edx)->lpVtbl->Release(eax);
+					edx = eax;
+					eax = ((IDataObjectImpl *)edx)->lpVtbl->Release(eax);
 				}
 				else
 				{
 					eax = GlobalFree(medium.hGlobal);
 				} // endif
-				eax = ((IDropTarget *)edi)->DragLeave(pthis);
+				eax = ((IDropTargetImpl *)edi)->lpVtbl->DragLeave(pthis);
 				eax = S_OK;
 			} // endif
 		}
@@ -378,24 +407,24 @@ REG_T IDropTarget_Drop(REG_T pthis, REG_T lpDataObject, REG_T grfKeyState, POINT
 } // IDropTarget_Drop
 
 // IDropSource methods
-REG_T IDropSource_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObject)
+REG_T WINAPI IDropSource_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObject)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 
 	// PrintText 'IDropSource_QueryInterface'
-	eax = IsEqualGUID(iid, IID_IDropSource);
+	eax = IsEqualGUID(iid, &IID_IDropSource);
 	if(!eax)
 	{
-		eax = IsEqualGUID(iid, IID_IUnknown);
+		eax = IsEqualGUID(iid, &IID_IUnknown);
 	} // endif
 	edx = ppvObject;
 	if(eax)
 	{
 		eax = pthis;
 		*(DWORD *)edx = eax;
-		edx = *(DWORD *)eax;
-		eax = ((IDropSource *)edx)->lpVtbl->AddRef(eax);
+		edx = eax;
+		eax = ((IDropSourceImpl *)edx)->lpVtbl->AddRef(eax);
 		eax = S_OK;
 	}
 	else
@@ -407,38 +436,38 @@ REG_T IDropSource_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObject)
 
 } // IDropSource_QueryInterface
 
-REG_T IDropSource_AddRef(REG_T pthis)
+REG_T WINAPI IDropSource_AddRef(REG_T pthis)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 
 	// PrintText 'IDropSource_AddRef'
 	eax = pthis;
-	edx = *(DWORD *)eax;
-	((IDropSource *)edx)->refcount++;
-	eax = ((IDropSource *)edx)->refcount;
+	edx = eax;
+	((IDropSourceImpl *)edx)->refcount++;
+	eax = ((IDropSourceImpl *)edx)->refcount;
 	return eax;
 
 } // IDropSource_AddRef
 
-REG_T IDropSource_Release(REG_T pthis)
+REG_T WINAPI IDropSource_Release(REG_T pthis)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 
 	// PrintText 'IDropSource_Release'
 	eax = pthis;
-	edx = *(DWORD *)eax;
-	if(((IDropTarget *)edx)->refcount)
+	edx = eax;
+	if(((IDropTargetImpl *)edx)->refcount)
 	{
-		((IDropTarget *)edx)->refcount--;
+		((IDropTargetImpl *)edx)->refcount--;
 	} // endif
-	eax = ((IDropTarget *)edx)->refcount;
+	eax = ((IDropTargetImpl *)edx)->refcount;
 	return eax;
 
 } // IDropSource_Release
 
-REG_T IDropSource_QueryContinueDrag(REG_T pthis, REG_T fEscapePressed, REG_T grfKeyState)
+REG_T WINAPI IDropSource_QueryContinueDrag(REG_T pthis, REG_T fEscapePressed, REG_T grfKeyState)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -460,7 +489,7 @@ REG_T IDropSource_QueryContinueDrag(REG_T pthis, REG_T fEscapePressed, REG_T grf
 
 } // IDropSource_QueryContinueDrag
 
-REG_T IDropSource_GiveFeedback(REG_T pthis, REG_T dwEffect)
+REG_T WINAPI IDropSource_GiveFeedback(REG_T pthis, REG_T dwEffect)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -472,24 +501,24 @@ REG_T IDropSource_GiveFeedback(REG_T pthis, REG_T dwEffect)
 } // IDropSource_GiveFeedback
 
 // IDataObject methods
-REG_T IDO_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObject)
+REG_T WINAPI IDO_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObject)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 
 	// PrintText 'IDataObject_QueryInterface'
-	eax = IsEqualGUID(iid, IID_IDataObject);
+	eax = IsEqualGUID(iid, &IID_IDataObject);
 	if(!eax)
 	{
-		eax = IsEqualGUID(iid, IID_IUnknown);
+		eax = IsEqualGUID(iid, &IID_IUnknown);
 	} // endif
 	edx = ppvObject;
 	if(eax)
 	{
 		eax = pthis;
 		*(DWORD *)edx = eax;
-		edx = *(DWORD *)eax;
-		eax = ((IDataObject *)edx)->lpVtbl->AddRef(eax);
+		edx = eax;
+		eax = ((IDataObjectImpl *)edx)->lpVtbl->AddRef(eax);
 		eax = S_OK;
 	}
 	else
@@ -501,38 +530,38 @@ REG_T IDO_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObject)
 
 } // IDO_QueryInterface
 
-REG_T IDO_AddRef(REG_T pthis)
+REG_T WINAPI IDO_AddRef(REG_T pthis)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 
 	// PrintText 'IDataObject_AddRef'
 	eax = pthis;
-	edx = *(DWORD *)eax;
-	((IDataObject *)edx)->refcount++;
-	eax = ((IDataObject *)edx)->refcount;
+	edx = eax;
+	((IDataObjectImpl *)edx)->refcount++;
+	eax = ((IDataObjectImpl *)edx)->refcount;
 	return eax;
 
 } // IDO_AddRef
 
-REG_T IDO_Release(REG_T pthis)
+REG_T WINAPI IDO_Release(REG_T pthis)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 
 	// PrintText 'IDataObject_Release'
 	eax = pthis;
-	edx = *(DWORD *)eax;
-	if(((IDataObject *)edx)->refcount)
+	edx = eax;
+	if(((IDataObjectImpl *)edx)->refcount)
 	{
-		((IDataObject *)edx)->refcount--;
+		((IDataObjectImpl *)edx)->refcount--;
 	} // endif
-	eax = ((IDataObject *)edx)->refcount;
+	eax = ((IDataObjectImpl *)edx)->refcount;
 	return eax;
 
 } // IDO_Release
 
-REG_T IDO_GetData(REG_T pthis, REG_T pFormatetc, REG_T pmedium)
+REG_T WINAPI IDO_GetData(REG_T pthis, REG_T pFormatetc, REG_T pmedium)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -592,7 +621,7 @@ REG_T IDO_GetData(REG_T pthis, REG_T pFormatetc, REG_T pmedium)
 
 } // IDO_GetData
 
-REG_T IDO_GetDataHere(REG_T pthis, REG_T pFormatetc, REG_T pmedium)
+REG_T WINAPI IDO_GetDataHere(REG_T pthis, REG_T pFormatetc, REG_T pmedium)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -603,7 +632,7 @@ REG_T IDO_GetDataHere(REG_T pthis, REG_T pFormatetc, REG_T pmedium)
 
 } // IDO_GetDataHere
 
-REG_T IDO_QueryGetData(REG_T pthis, REG_T pFormatetc)
+REG_T WINAPI IDO_QueryGetData(REG_T pthis, REG_T pFormatetc)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -643,7 +672,7 @@ REG_T IDO_QueryGetData(REG_T pthis, REG_T pFormatetc)
 
 } // IDO_QueryGetData
 
-REG_T IDO_GetCanonicalFormatEtc(REG_T pthis, REG_T pFormatetcIn, REG_T pFormatetcOut)
+REG_T WINAPI IDO_GetCanonicalFormatEtc(REG_T pthis, REG_T pFormatetcIn, REG_T pFormatetcOut)
 {
 	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -659,13 +688,13 @@ REG_T IDO_GetCanonicalFormatEtc(REG_T pthis, REG_T pFormatetcIn, REG_T pFormatet
 		esi++;
 		ecx--;
 	}
-	((FORMATETC *)edi)->lptd = NULL;
+	((FORMATETC *)edi)->ptd = NULL;
 	eax = DATA_S_SAMEFORMATETC;
 	return eax;
 
 } // IDO_GetCanonicalFormatEtc
 
-REG_T IDO_SetData(REG_T pthis, REG_T pFormatetc, REG_T pmedium, REG_T fRelease)
+REG_T WINAPI IDO_SetData(REG_T pthis, REG_T pFormatetc, REG_T pmedium, REG_T fRelease)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -676,7 +705,7 @@ REG_T IDO_SetData(REG_T pthis, REG_T pFormatetc, REG_T pmedium, REG_T fRelease)
 
 } // IDO_SetData
 
-REG_T IDO_EnumFormatEtc(REG_T pthis, REG_T dwDirection, REG_T ppenumFormatetc)
+REG_T WINAPI IDO_EnumFormatEtc(REG_T pthis, REG_T dwDirection, REG_T ppenumFormatetc)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -684,7 +713,7 @@ REG_T IDO_EnumFormatEtc(REG_T pthis, REG_T dwDirection, REG_T ppenumFormatetc)
 	// PrintText 'IDataObject_EnumFormatEtc'
 	if(dwDirection==DATADIR_GET)
 	{
-		eax = pIEnumFORMATETC;
+		eax = &EnumFORMATETC;
 		edx = ppenumFormatetc;
 		*(DWORD *)edx = eax;
 		eax = S_OK;
@@ -697,7 +726,7 @@ REG_T IDO_EnumFormatEtc(REG_T pthis, REG_T dwDirection, REG_T ppenumFormatetc)
 
 } // IDO_EnumFormatEtc
 
-REG_T IDO_DAdvise(REG_T pthis, REG_T pFormatetc, REG_T advf, REG_T pAdvSink, REG_T pdwConnection)
+REG_T WINAPI IDO_DAdvise(REG_T pthis, REG_T pFormatetc, REG_T advf, REG_T pAdvSink, REG_T pdwConnection)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -708,7 +737,7 @@ REG_T IDO_DAdvise(REG_T pthis, REG_T pFormatetc, REG_T advf, REG_T pAdvSink, REG
 
 } // IDO_DAdvise
 
-REG_T IDO_DUnadvise(REG_T pthis, REG_T dwConnection)
+REG_T WINAPI IDO_DUnadvise(REG_T pthis, REG_T dwConnection)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -719,7 +748,7 @@ REG_T IDO_DUnadvise(REG_T pthis, REG_T dwConnection)
 
 } // IDO_DUnadvise
 
-REG_T IDO_EnumDAdvise(REG_T pthis, REG_T ppenumAdvise)
+REG_T WINAPI IDO_EnumDAdvise(REG_T pthis, REG_T ppenumAdvise)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -731,24 +760,24 @@ REG_T IDO_EnumDAdvise(REG_T pthis, REG_T ppenumAdvise)
 } // IDO_EnumDAdvise
 
 // IEnumFORMATETC	methods
-REG_T IEnumFORMATETC_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObject)
+REG_T WINAPI IEnumFORMATETC_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObject)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 
 	// PrintText 'IEnumFORMATETC_QueryInterface'
-	eax = IsEqualGUID(iid, IID_IEnumFORMATETC);
+	eax = IsEqualGUID(iid, &IID_IEnumFORMATETC);
 	if(!eax)
 	{
-		eax = IsEqualGUID(iid, IID_IUnknown);
+		eax = IsEqualGUID(iid, &IID_IUnknown);
 	} // endif
 	edx = ppvObject;
 	if(eax)
 	{
 		eax = pthis;
 		*(DWORD *)edx = eax;
-		edx = *(DWORD *)eax;
-		eax = ((IEnumFORMATETC *)edx)->lpVtbl->AddRef(eax);
+		edx = eax;
+		eax = ((IEnumFORMATETCImpl *)edx)->lpVtbl->AddRef(eax);
 		eax = S_OK;
 	}
 	else
@@ -760,42 +789,42 @@ REG_T IEnumFORMATETC_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObject)
 
 } // IEnumFORMATETC_QueryInterface
 
-REG_T IEnumFORMATETC_AddRef(REG_T pthis)
+REG_T WINAPI IEnumFORMATETC_AddRef(REG_T pthis)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 
 	// PrintText 'IEnumFORMATETC_AddRef'
 	eax = pthis;
-	edx = *(DWORD *)eax;
-	((IEnumFORMATETC *)edx)->refcount++;
-	eax = ((IEnumFORMATETC *)edx)->refcount;
+	edx = eax;
+	((IEnumFORMATETCImpl *)edx)->refcount++;
+	eax = ((IEnumFORMATETCImpl *)edx)->refcount;
 	return eax;
 
 } // IEnumFORMATETC_AddRef
 
-REG_T IEnumFORMATETC_Release(REG_T pthis)
+REG_T WINAPI IEnumFORMATETC_Release(REG_T pthis)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 
 	// PrintText 'IEnumFORMATETC_Release'
 	eax = pthis;
-	edx = *(DWORD *)eax;
-	if(((IEnumFORMATETC *)edx)->refcount)
+	edx = eax;
+	if(((IEnumFORMATETCImpl *)edx)->refcount)
 	{
-		((IEnumFORMATETC *)edx)->refcount--;
+		((IEnumFORMATETCImpl *)edx)->refcount--;
 	} // endif
-	if(!((IEnumFORMATETC *)edx)->refcount)
+	if(!((IEnumFORMATETCImpl *)edx)->refcount)
 	{
-		((IEnumFORMATETC *)edx)->ifmt = 0;
+		((IEnumFORMATETCImpl *)edx)->ifmt = 0;
 	} // endif
-	eax = ((IEnumFORMATETC *)edx)->refcount;
+	eax = ((IEnumFORMATETCImpl *)edx)->refcount;
 	return eax;
 
 } // IEnumFORMATETC_Release
 
-REG_T IEnumFORMATETC_Next(REG_T pthis, REG_T celt, REG_T rgelt, REG_T pceltFetched)
+REG_T WINAPI IEnumFORMATETC_Next(REG_T pthis, REG_T celt, REG_T rgelt, REG_T pceltFetched)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -803,16 +832,15 @@ REG_T IEnumFORMATETC_Next(REG_T pthis, REG_T celt, REG_T rgelt, REG_T pceltFetch
 	// PrintText 'IEnumFORMATETC_Next'
 	edx = 0;
 	eax = pthis;
-	eax = *(DWORD *)eax;
-	ecx = ((IEnumFORMATETC *)eax)->ifmt;
-	if(ecx<((IEnumFORMATETC *)eax)->ifmtmax)
+	ecx = ((IEnumFORMATETCImpl *)eax)->ifmt;
+	if(ecx<((IEnumFORMATETCImpl *)eax)->ifmtmax)
 	{
 		edx++;
 		ecx++;
-		((IEnumFORMATETC *)eax)->ifmt = ecx;
+		((IEnumFORMATETCImpl *)eax)->ifmt = ecx;
 		eax = rgelt;
 		((FORMATETC *)eax)->cfFormat = CF_TEXT;
-		((FORMATETC *)eax)->lptd = NULL;
+		((FORMATETC *)eax)->ptd = NULL;
 		((FORMATETC *)eax)->dwAspect = DVASPECT_CONTENT;
 		((FORMATETC *)eax)->lindex = -1;
 		((FORMATETC *)eax)->tymed = TYMED_HGLOBAL;
@@ -834,7 +862,7 @@ REG_T IEnumFORMATETC_Next(REG_T pthis, REG_T celt, REG_T rgelt, REG_T pceltFetch
 
 } // IEnumFORMATETC_Next
 
-REG_T IEnumFORMATETC_Skip(REG_T pthis, REG_T celt)
+REG_T WINAPI IEnumFORMATETC_Skip(REG_T pthis, REG_T celt)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -845,21 +873,21 @@ REG_T IEnumFORMATETC_Skip(REG_T pthis, REG_T celt)
 
 } // IEnumFORMATETC_Skip
 
-REG_T IEnumFORMATETC_Reset(REG_T pthis)
+REG_T WINAPI IEnumFORMATETC_Reset(REG_T pthis)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 
 	// PrintText 'IEnumFORMATETC_Reset'
 	eax = pthis;
-	edx = *(DWORD *)eax;
-	((IEnumFORMATETC *)edx)->ifmt = 0;
+	edx = eax;
+	((IEnumFORMATETCImpl *)edx)->ifmt = 0;
 	eax = S_OK;
 	return eax;
 
 } // IEnumFORMATETC_Reset
 
-REG_T IEnumFORMATETC_Clone(REG_T pthis, REG_T ppenum)
+REG_T WINAPI IEnumFORMATETC_Clone(REG_T pthis, REG_T ppenum)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
