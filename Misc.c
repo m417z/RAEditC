@@ -1,6 +1,7 @@
 #include "Misc.h"
 
 #include "Function.h"
+#include "Position.h"
 
 REG_T SetFont(DWORD hMem, DWORD lpRafont)
 {

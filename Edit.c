@@ -1,5 +1,11 @@
 #include "Edit.h"
 
+#include "Block.h"
+#include "Memory.h"
+#include "Misc.h"
+#include "Position.h"
+#include "Undo.h"
+
 REG_T InsertNewLine(DWORD hMem, DWORD nLine, DWORD nSize)
 {
 	REG_T eax = 0, ecx, ebx, esi, edi;

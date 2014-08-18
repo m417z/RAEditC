@@ -1,5 +1,8 @@
 #include "Position.h"
 
+#include "Block.h"
+#include "Misc.h"
+
 REG_T GetTopFromYp(DWORD hMem, DWORD hWin, DWORD yp)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;

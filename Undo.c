@@ -1,5 +1,10 @@
 #include "Undo.h"
 
+#include "Edit.h"
+#include "Function.h"
+#include "Memory.h"
+#include "Position.h"
+
 REG_T DoUndo(DWORD hMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, edi;
@@ -351,7 +356,6 @@ REG_T SaveUndo(DWORD hMem, DWORD nFun, DWORD cp, DWORD lp, DWORD cb)
 REG_T Undo(RAEDT *raedt, DWORD hMem, DWORD hWin)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
-	POINT pt;
 
     esi = raedt;
 	ebx = hMem;
@@ -378,8 +382,6 @@ REG_T Undo(RAEDT *raedt, DWORD hMem, DWORD hWin)
 REG_T Redo(RAEDT *raedt, DWORD hMem, DWORD hWin)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
-	POINT pt;
-	RECT oldrects[2];
 
     esi = raedt;
 	ebx = hMem;

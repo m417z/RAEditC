@@ -9,8 +9,7 @@
 
 BOOL WINAPI DllMain(HINSTANCE hInst, DWORD reason, LPVOID reserved1)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0;
 
 	if(reason==DLL_PROCESS_ATTACH)
 	{

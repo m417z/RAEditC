@@ -1,6 +1,11 @@
 #include "ClipBoard.h"
 
+#include "Edit.h"
+#include "Function.h"
 #include "Memory.h"
+#include "Misc.h"
+#include "Position.h"
+#include "Undo.h"
 
 REG_T SetClipData(LPSTR lpData, DWORD dwSize)
 {
@@ -434,7 +439,6 @@ anon_1:
 REG_T Paste(DWORD hMem, DWORD hWin, DWORD hData)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
-	POINT pt;
 	BLOCKRANGE blrg;
 
 	ebx = hMem;
@@ -477,7 +481,6 @@ REG_T Paste(DWORD hMem, DWORD hWin, DWORD hData)
 REG_T Cut(DWORD hMem, DWORD hWin)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
-	POINT pt;
 
 	ebx = hMem;
 	eax = hWin;

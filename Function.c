@@ -1,5 +1,11 @@
 #include "Function.h"
 
+#include "Edit.h"
+#include "Memory.h"
+#include "Misc.h"
+#include "Position.h"
+#include "Undo.h"
+
 typedef REG_T CALLBACK (* EDITSTREAMCALLBACKPROTO)(DWORD dwCookie, DWORD pbBuff, DWORD cb, DWORD pcb);
 typedef EDITSTREAMCALLBACKPROTO EDITSTREAMCALLBACKPTR;
 

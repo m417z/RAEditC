@@ -1,5 +1,10 @@
 #include "Paint.h"
 
+#include "Block.h"
+#include "Function.h"
+#include "Misc.h"
+#include "Position.h"
+
 typedef REG_T WINAPI (* BOOKMARKPAINTCALLBACKPROTO)(HWND hWnd, DWORD line);
 typedef BOOKMARKPAINTCALLBACKPROTO BOOKMARKPAINTCALLBACKPTR;
 
@@ -1470,7 +1475,6 @@ REG_T RAEditPaint(HWND hWin)
 	HDC mDC;
 	RECT rect;
 	RECT rect1;
-	RECT rect2;
 	DWORD cp;
 	BYTE buffer[32];
 	DWORD hRgn1;
@@ -1878,7 +1882,6 @@ REG_T RAEditPaintNoBuff(HWND hWin)
 	PAINTSTRUCT ps;
 	RECT rect;
 	RECT rect1;
-	RECT rect2;
 	DWORD cp;
 	BYTE buffer[32];
 	DWORD hRgn1;

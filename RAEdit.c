@@ -1,6 +1,15 @@
 #include "RAEdit.h"
 
+#include "ClipBoard.h"
+#include "Edit.h"
+#include "Block.h"
 #include "DragDrop.h"
+#include "Function.h"
+#include "Memory.h"
+#include "Misc.h"
+#include "Paint.h"
+#include "Position.h"
+#include "Undo.h"
 
 #define EM_SETIMESTATUS 0x00d8
 #define EM_GETIMESTATUS 0x00d9

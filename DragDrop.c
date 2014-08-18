@@ -1,5 +1,9 @@
 #include "DragDrop.h"
 
+#include "ClipBoard.h"
+#include "Memory.h"
+#include "Position.h"
+
 // IDropTarget
 
 static const IDropTargetVtbl vtIDropTarget = {
