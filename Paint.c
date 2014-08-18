@@ -6,7 +6,7 @@ typedef BOOKMARKPAINTCALLBACKPROTO BOOKMARKPAINTCALLBACKPTR;
 REG_T DrawLine(DWORD hMem, DWORD lpChars, DWORD nLine, DWORD cp, DWORD hDC, DWORD lpRect)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T temp1, temp2;
 	DRAWTEXTPARAMS dtp;
 	DWORD cpMin;
 	DWORD cpMax;
@@ -478,7 +478,6 @@ anon_1:
 
 	void SetBack(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 		if(eax!=((EDIT *)ebx)->clr.bckcol)
 		{
 			bCol = eax;
@@ -495,7 +494,7 @@ anon_1:
 
 	void DrawWord(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+		REG_T temp1, temp2, temp3, temp4;
 		temp1 = eax;
 		eax = TRANSPARENT;
 		if(fBack)
@@ -786,7 +785,7 @@ anon_1:
 
 	void DrawTabMarker(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+		REG_T temp1, temp2, temp3, temp4, temp5, temp6;
 		if(edi && !fChr)
 		{
 			temp1 = eax;
@@ -823,7 +822,6 @@ anon_1:
 
 	void ScanWord(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 		ecx = 0;
 		fNum = ecx;
 		GetWord();
@@ -857,7 +855,6 @@ anon_1:
 
 	void GetWord(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 		ecx = 0;
 		edx = CharTab;
 		if(*(WORD *)(edi+esi)=='h&')
@@ -893,7 +890,7 @@ anon_2:
 
 	void GetNum(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+		REG_T temp1;
 		temp1 = ebx;
 		ebx = 0;
 		ecx = 0;
@@ -954,7 +951,7 @@ anon_3:
 
 	void TestWord(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+		REG_T temp1;
 		temp1 = ebx;
 		eax = *(BYTE *)(esi+edi);
 		fLc = 0;
@@ -1008,7 +1005,7 @@ anon_4:
 
 	void CmpWord(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+		REG_T temp1, temp2, temp3;
 		temp1 = ecx;
 		temp2 = ebx;
 		temp3 = esi;
@@ -1065,7 +1062,7 @@ CmpWord2:
 
 	void SetCaseWord(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+		REG_T temp1, temp2, temp3;
 		temp1 = ecx;
 		temp2 = ebx;
 		temp3 = esi;
@@ -1088,7 +1085,7 @@ anon_6:
 
 	void BackFill(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+		REG_T temp1, temp2;
 		temp1 = rect.left;
 		temp2 = rect.right;
 		if((SDWORD)rect.left < 0)
@@ -1108,7 +1105,7 @@ anon_6:
 
 	void DrawCmntBack(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+		REG_T temp1, temp2, temp3;
 		if(((EDIT *)ebx)->fstyle&STYLE_HILITECOMMENT)
 		{
 			temp1 = eax;
@@ -1154,7 +1151,7 @@ anon_6:
 
 	void DrawSelBck(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+		REG_T temp1;
 		srect.left = 4096;
 		srect.right = 4096;
 		if(!(((EDIT *)ebx)->nMode&MODE_BLOCK))
@@ -1251,8 +1248,7 @@ anon_6:
 
 REG_T SetBlockMarkers(DWORD hMem, DWORD nLine, DWORD nMax)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, edx, ebx, esi, edi;
 	DWORD nLines;
 	DWORD nLnMax;
 	DWORD nLnSt;
@@ -1367,7 +1363,6 @@ Nxt:
 
 	void BlockRoot(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 
 BlockRootStart:
 		nLnSt = 0;
@@ -1414,8 +1409,7 @@ BlockRootStart:
 
 REG_T DrawChangedState(DWORD hMem, HDC hDC, DWORD lpLine, DWORD x, DWORD y)
 {
-	REG_T eax = 0, ecx, edx, ebx, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, ebx, edi;
 	HBRUSH hBr;
 	RECT rect;
 
@@ -1471,7 +1465,7 @@ REG_T DrawChangedState(DWORD hMem, HDC hDC, DWORD lpLine, DWORD x, DWORD y)
 REG_T RAEditPaint(HWND hWin)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T temp1, temp2, temp3, temp4;
 	PAINTSTRUCT ps;
 	HDC mDC;
 	RECT rect;
@@ -1804,7 +1798,7 @@ anon_9:
 
 	void DrawBlockMarker(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+		REG_T temp1;
 		eax = DrawChangedState(ebx, mDC, edi, ps.rcPaint.left, rect1.top);
 		if(((CHARS *)edi)->state&STATE_BLOCK)
 		{
@@ -1848,7 +1842,6 @@ anon_9:
 
 	void DrawPageBreak(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 		ecx = ((EDIT *)ebx)->nPageBreak;
 		if(ecx)
 		{
@@ -1881,7 +1874,7 @@ anon_9:
 REG_T RAEditPaintNoBuff(HWND hWin)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T temp1, temp2, temp3;
 	PAINTSTRUCT ps;
 	RECT rect;
 	RECT rect1;
@@ -2181,7 +2174,7 @@ anon_11:
 
 	void DrawBlockMarker(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+		REG_T temp1;
 		eax = DrawChangedState(ebx, ps.hdc, edi, 0, rect1.top);
 		if(((CHARS *)edi)->state&STATE_BLOCK)
 		{
@@ -2219,7 +2212,6 @@ anon_11:
 
 	void DrawPageBreak(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 		ecx = ((EDIT *)ebx)->nPageBreak;
 		if(ecx)
 		{

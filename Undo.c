@@ -3,7 +3,7 @@
 REG_T DoUndo(DWORD hMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T temp1, temp2, temp3;
 	DWORD undoid;
 
 	ebx = hMem;
@@ -133,7 +133,7 @@ Nxt:
 REG_T DoRedo(DWORD hMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T temp1, temp2, temp3;
 	DWORD undoid;
 
 	ebx = hMem;
@@ -276,7 +276,7 @@ Nxt:
 REG_T SaveUndo(DWORD hMem, DWORD nFun, DWORD cp, DWORD lp, DWORD cb)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T temp1;
 
 	if(!fNoSaveUndo)
 	{
@@ -351,7 +351,6 @@ REG_T SaveUndo(DWORD hMem, DWORD nFun, DWORD cp, DWORD lp, DWORD cb)
 REG_T Undo(RAEDT *raedt, DWORD hMem, DWORD hWin)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 	POINT pt;
 
     esi = raedt;
@@ -379,7 +378,6 @@ REG_T Undo(RAEDT *raedt, DWORD hMem, DWORD hWin)
 REG_T Redo(RAEDT *raedt, DWORD hMem, DWORD hWin)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 	POINT pt;
 	RECT oldrects[2];
 
@@ -408,7 +406,6 @@ REG_T Redo(RAEDT *raedt, DWORD hMem, DWORD hWin)
 REG_T GetUndo(DWORD hMem, DWORD nCount, DWORD lpMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 	DWORD rpstart;
 	DWORD rpend;
 
@@ -466,7 +463,6 @@ REG_T GetUndo(DWORD hMem, DWORD nCount, DWORD lpMem)
 
 	void GetHeader(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 		ecx = 0;
 		while(ecx<sizeof(RAUNDO))
 		{
@@ -484,7 +480,6 @@ REG_T GetUndo(DWORD hMem, DWORD nCount, DWORD lpMem)
 
 	void GetData(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 		ecx = 0;
 		while(ecx<((RAUNDO *)(esi+edx))->cb)
 		{
@@ -502,7 +497,6 @@ REG_T GetUndo(DWORD hMem, DWORD nCount, DWORD lpMem)
 REG_T SetUndo(DWORD hMem, DWORD nSize, DWORD lpMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 
 	ebx = hMem;
 	eax = ExpandUndoMem(ebx, nSize);

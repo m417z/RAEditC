@@ -2,8 +2,7 @@
 
 REG_T xGlobalAlloc(DWORD t, DWORD s)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0;
 
 	s >>= 3;
 	s++;
@@ -20,8 +19,7 @@ REG_T xGlobalAlloc(DWORD t, DWORD s)
 
 REG_T xHeapAlloc(DWORD h, DWORD t, DWORD s)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0;
 
 	s >>= 3;
 	s++;
@@ -38,8 +36,8 @@ REG_T xHeapAlloc(DWORD h, DWORD t, DWORD s)
 
 REG_T ExpandLineMem(DWORD hMem)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, ecx, ebx, esi, edi;
+	REG_T temp1;
 
 	ebx = hMem;
 	eax = ((EDIT *)ebx)->rpLineFree;
@@ -84,7 +82,7 @@ REG_T ExpandLineMem(DWORD hMem)
 REG_T GarbageCollection(DWORD lpEdit, DWORD lpLine, DWORD lpSrc, DWORD lpDst)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T temp1;
 
 	eax = lpLine;
 	ebx = lpEdit;
@@ -134,8 +132,7 @@ anon_1:
 
 REG_T ExpandCharMem(DWORD hMem, DWORD nLen)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, ebx, esi, edi;
 
 	ebx = hMem;
 	eax = nLen;
@@ -174,8 +171,8 @@ REG_T ExpandCharMem(DWORD hMem, DWORD nLen)
 
 REG_T ExpandUndoMem(DWORD hMem, DWORD cb)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, ecx, ebx, esi, edi;
+	REG_T temp1;
 
 	ebx = hMem;
 	eax = ((EDIT *)ebx)->rpUndo;
@@ -222,8 +219,8 @@ REG_T ExpandUndoMem(DWORD hMem, DWORD cb)
 
 REG_T ExpandWordMem(void)
 {
-	REG_T eax = 0, ecx, edx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, ecx, esi, edi;
+	REG_T temp1;
 
 	eax = cbWrdMem;
 	eax -= rpWrdFree;

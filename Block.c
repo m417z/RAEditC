@@ -6,7 +6,7 @@
 REG_T GetBlock(DWORD hMem, DWORD nLine, DWORD lpBlockDef)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T temp1;
 	DWORD nLines;
 	BYTE buffer[256];
 	DWORD nNest;
@@ -178,7 +178,7 @@ anon_4:
 
 	void TestBlock(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+		REG_T temp1, temp2;
 		nLines = 0;
 		edi = nLine;
 		while(TRUE)
@@ -293,7 +293,6 @@ anon_5:
 
 	void SkipWhSp(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 		ecx--;
 anon_6:
 		ecx++;
@@ -317,7 +316,6 @@ anon_7:
 
 	void SkipWrd(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 		ecx--;
 anon_8:
 		ecx++;
@@ -345,7 +343,6 @@ anon_9:
 
 	void CopyWrd(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 anon_10:
 		if(ecx>=((CHARS *)edi)->len)
 		{
@@ -378,8 +375,7 @@ anon_11:
 
 REG_T SetBlocks(DWORD hMem, DWORD lpLnrg, DWORD lpBlockDef)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, edx, ebx, esi, edi;
 	DWORD nLine;
 
 	ebx = hMem;
@@ -538,8 +534,7 @@ anon_12:
 
 REG_T IsBlockDefEqual(DWORD lpRABLOCKDEF1, DWORD lpRABLOCKDEF2)
 {
-	REG_T eax = 0, ecx, edx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, edx, esi, edi;
 
 	esi = lpRABLOCKDEF1;
 	edi = lpRABLOCKDEF2;
@@ -618,8 +613,7 @@ NotEq:
 
 REG_T IsInBlock(DWORD hMem, DWORD nLine, DWORD lpBlockDef)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, ebx, esi, edi;
 
 	ebx = hMem;
 	edi = nLine;
@@ -656,8 +650,7 @@ anon_13:
 
 REG_T TestBlockStart(DWORD hMem, DWORD nLine)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, ebx, esi, edi;
 
 	ebx = hMem;
 	esi = nLine;
@@ -698,8 +691,7 @@ Ex:
 
 REG_T TestBlockEnd(DWORD hMem, DWORD nLine)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, edx, ebx, esi, edi;
 	DWORD lpSecond;
 
 	ebx = hMem;
@@ -773,8 +765,7 @@ Ex:
 
 REG_T CollapseGetEnd(DWORD hMem, DWORD nLine)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, edx, ebx, esi, edi;
 	DWORD nLines;
 	DWORD nNest;
 	DWORD nMax;
@@ -892,7 +883,7 @@ Ex:
 REG_T Collapse(DWORD hMem, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T temp1;
 	DWORD nLines;
 	DWORD nNest;
 	DWORD nMax;
@@ -1168,7 +1159,6 @@ Ex:
 REG_T CollapseAll(DWORD hMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 
 	ebx = hMem;
 	eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin, &ecx, &edx);
@@ -1195,7 +1185,7 @@ anon_14:
 REG_T Expand(DWORD hMem, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T temp1, temp2;
 
 	ebx = hMem;
 	temp1 = ((EDIT *)ebx)->nHidden;
@@ -1297,8 +1287,7 @@ Ex:
 
 REG_T ExpandAll(DWORD hMem)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, ebx, esi, edi;
 
 	ebx = hMem;
 	esi = 0;
@@ -1324,8 +1313,8 @@ anon_15:
 
 REG_T TestExpand(DWORD hMem, DWORD nLine)
 {
-	REG_T eax = 0, ecx, edx, ebx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, ebx;
+	REG_T temp1, temp2;
 
 	ebx = hMem;
 	temp1 = ((EDIT *)ebx)->nHidden;
@@ -1356,7 +1345,7 @@ anon_16:
 REG_T SetCommentBlocks(DWORD hMem, DWORD lpStart, DWORD lpEnd)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T temp1;
 	DWORD nLine;
 	DWORD nCmnt;
 	DWORD fCmnt;
@@ -1586,7 +1575,7 @@ REG_T SetCommentBlocks(DWORD hMem, DWORD lpStart, DWORD lpEnd)
 
 	void TestWrd(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+		REG_T temp1, temp2;
 		temp1 = ecx;
 		temp2 = edx;
 		ecx--;
@@ -1643,7 +1632,6 @@ anon_18:
 
 	void IsLineStart(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 		ecx = 0;
 		ecx--;
 		eax = ecx;
@@ -1692,7 +1680,6 @@ anon_20:
 
 	void IsLineEnd(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 		while(ecx<((CHARS *)esi)->len)
 		{
 			TestWrd();
@@ -1711,7 +1698,6 @@ anon_20:
 REG_T SetChangedState(DWORD hMem, DWORD fUpdate)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 	DWORD nLine;
 	DWORD fChanged;
 

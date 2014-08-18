@@ -2,8 +2,8 @@
 
 REG_T InsertNewLine(DWORD hMem, DWORD nLine, DWORD nSize)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, ecx, ebx, esi, edi;
+	REG_T temp1;
 
 	ebx = hMem;
 	eax = nSize;
@@ -58,7 +58,6 @@ REG_T InsertNewLine(DWORD hMem, DWORD nLine, DWORD nSize)
 REG_T AddNewLine(DWORD hMem, DWORD lpLine, DWORD nSize)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 
 	ebx = hMem;
 	eax = ExpandLineMem(ebx);
@@ -98,7 +97,7 @@ REG_T AddNewLine(DWORD hMem, DWORD lpLine, DWORD nSize)
 REG_T ExpandCharLine(DWORD hMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T temp1, temp2;
 
 	ebx = hMem;
 	esi = ((EDIT *)ebx)->rpChars;
@@ -154,7 +153,6 @@ REG_T ExpandCharLine(DWORD hMem)
 REG_T DeleteLine(DWORD hMem, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 
 	ebx = hMem;
 	esi = ((EDIT *)ebx)->hLine;
@@ -188,7 +186,7 @@ REG_T DeleteLine(DWORD hMem, DWORD nLine)
 REG_T InsertChar(DWORD hMem, DWORD cp, DWORD nChr)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T temp1, temp2;
 
 	ebx = hMem;
 	eax = ExpandLineMem(ebx);
@@ -347,7 +345,7 @@ Ex:
 REG_T DeleteChar(DWORD hMem, DWORD cp)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T temp1, temp2, temp3;
 
 	ebx = hMem;
 	edx = cp;
@@ -485,8 +483,8 @@ REG_T DeleteChar(DWORD hMem, DWORD cp)
 
 REG_T DeleteSelection(DWORD hMem, DWORD cpMin, DWORD cpMax)
 {
-	REG_T eax = 0, ecx, edx, ebx, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, ebx, edi;
+	REG_T temp1, temp2;
 
 	ebx = hMem;
 	eax = cpMin;
@@ -540,8 +538,7 @@ REG_T DeleteSelection(DWORD hMem, DWORD cpMin, DWORD cpMax)
 
 REG_T DeleteSelectionBlock(DWORD hMem, DWORD lnMin, DWORD clMin, DWORD lnMax, DWORD clMax)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, edx, ebx, esi, edi;
 
 	ebx = hMem;
 	eax = clMin;
@@ -593,8 +590,7 @@ anon_1:
 
 REG_T EditInsert(DWORD hMem, DWORD cp, DWORD lpBuff)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, ebx, esi, edi;
 
 	ebx = hMem;
 	esi = lpBuff;

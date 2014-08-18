@@ -4,8 +4,8 @@
 
 REG_T SetFont(DWORD hMem, DWORD lpRafont)
 {
-	REG_T eax = 0, ecx, edx, ebx, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, edx, ebx;
+	REG_T temp1, temp2;
 	HDC hDC;
 	DRAWTEXTPARAMS dtp;
 	RECT rect;
@@ -91,8 +91,7 @@ REG_T SetFont(DWORD hMem, DWORD lpRafont)
 
 REG_T SetColor(DWORD hMem, DWORD lpRAColor)
 {
-	REG_T eax = 0, ecx, edx, ebx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, edx, ebx;
 
 	ebx = hMem;
 	edx = lpRAColor;
@@ -120,8 +119,7 @@ REG_T SetColor(DWORD hMem, DWORD lpRAColor)
 
 REG_T DestroyBrushes(DWORD hMem)
 {
-	REG_T eax = 0, ecx, edx, ebx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, ebx;
 
 	ebx = hMem;
 	eax = ((EDIT *)ebx)->br.hBrBck;
@@ -165,8 +163,7 @@ REG_T DestroyBrushes(DWORD hMem)
 
 REG_T CreateBrushes(DWORD hMem)
 {
-	REG_T eax = 0, ecx, edx, ebx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, ebx;
 
 	ebx = hMem;
 	eax = DestroyBrushes(ebx);
@@ -190,8 +187,7 @@ REG_T CreateBrushes(DWORD hMem)
 
 REG_T DwToAscii(DWORD dwVal, DWORD lpAscii)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, edx, ebx, esi, edi;
 
 	eax = dwVal;
 	edi = lpAscii;
@@ -234,8 +230,7 @@ anon_1:
 /*
 REG_T strlen(DWORD lpSource)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, edx;
 
 	eax = lpSource;
 	eax -= 4;
@@ -287,7 +282,6 @@ lb1:
 REG_T GetChar(DWORD hMem, DWORD cp)
 {
 	REG_T eax = 0, ecx, edx, ebx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 
 	ebx = hMem;
 	eax = GetCharPtr(ebx, cp, &ecx, &edx);
@@ -308,8 +302,7 @@ REG_T GetChar(DWORD hMem, DWORD cp)
 
 REG_T IsChar(BYTE ch)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0;
 
 	eax = ch;
 	eax = eax+CharTab;
@@ -321,7 +314,6 @@ REG_T IsChar(BYTE ch)
 REG_T IsCharLeadByte(DWORD hMem, DWORD cp)
 {
 	REG_T eax = 0, ecx, edx, ebx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 
 	ebx = hMem;
 	if(((EDIT *)ebx)->fntinfo.fDBCS)
@@ -362,7 +354,6 @@ REG_T IsCharLeadByte(DWORD hMem, DWORD cp)
 REG_T GetTextWidth(DWORD hMem, HDC hDC, DWORD lpText, DWORD nChars, DWORD lpRect)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 	DRAWTEXTPARAMS dtp;
 
 	ebx = hMem;
@@ -415,8 +406,8 @@ REG_T GetTextWidth(DWORD hMem, HDC hDC, DWORD lpText, DWORD nChars, DWORD lpRect
 
 REG_T GetBlockRange(DWORD lpSrc, DWORD lpDst)
 {
-	REG_T eax = 0, ecx, edx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, edx, esi, edi;
+	REG_T temp1;
 
 	esi = lpSrc;
 	edi = lpDst;
@@ -446,8 +437,7 @@ REG_T GetBlockRange(DWORD lpSrc, DWORD lpDst)
 
 REG_T GetBlockRects(DWORD hMem, DWORD lpRects)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, ecx, ebx, esi, edi;
 	BLOCKRANGE blrg;
 
 	auto void GetRect(void);
@@ -464,7 +454,6 @@ REG_T GetBlockRects(DWORD hMem, DWORD lpRects)
 
 	void GetRect(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 		eax = GetYpFromLine(ebx, blrg.lnMin);
 		eax -= ((RAEDT *)esi)->cpy;
 		((RECT *)edi)->top = eax;
@@ -495,8 +484,7 @@ REG_T GetBlockRects(DWORD hMem, DWORD lpRects)
 
 REG_T InvalidateBlock(DWORD hMem, DWORD lpOldRects)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, edx, ebx, esi, edi;
 	RECT newrects[2];
 	RECT rect;
 	DWORD wt;
@@ -527,7 +515,7 @@ REG_T InvalidateBlock(DWORD hMem, DWORD lpOldRects)
 
 	void DoRect(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+		REG_T temp1;
 		temp1 = ebx;
 		ebx = eax;
 		// Left part

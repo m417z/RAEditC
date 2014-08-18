@@ -70,8 +70,7 @@ static IEnumFORMATETCImpl EnumFORMATETC = { &vtIEnumFORMATETCVtbl, 0, 0, 1 };
 /*
 REG_T IsEqualGUID(REG_T rguid1, REG_T rguid2)
 {
-	REG_T eax = 0, ecx, edx, ecx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, ecx, ecx, esi, edi;
 
 	eax = 0;
 	esi = rguid1;
@@ -85,8 +84,7 @@ REG_T IsEqualGUID(REG_T rguid1, REG_T rguid2)
 // IDropTarget methods
 REG_T WINAPI IDropTarget_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObject)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, edx;
 
 	// PrintText 'IDropTarget_QueryInterface'
 	eax = IsEqualGUID(iid, &IID_IDropTarget);
@@ -114,8 +112,7 @@ REG_T WINAPI IDropTarget_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObject)
 
 REG_T WINAPI IDropTarget_AddRef(REG_T pthis)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, edx;
 
 	// PrintText 'IDropTarget_AddRef'
 	eax = pthis;
@@ -128,8 +125,7 @@ REG_T WINAPI IDropTarget_AddRef(REG_T pthis)
 
 REG_T WINAPI IDropTarget_Release(REG_T pthis)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, edx;
 
 	// PrintText 'IDropTarget_Release'
 	eax = pthis;
@@ -145,8 +141,8 @@ REG_T WINAPI IDropTarget_Release(REG_T pthis)
 
 REG_T WINAPI IDropTarget_DragEnter(REG_T pthis, REG_T lpDataObject, REG_T grfKeyState, POINT pt, REG_T lpdwEffect)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, edx, ebx, esi, edi;
+	REG_T temp1;
 	STGMEDIUM medium;
 	FORMATETC fmte;
 
@@ -215,7 +211,7 @@ REG_T WINAPI IDropTarget_DragEnter(REG_T pthis, REG_T lpDataObject, REG_T grfKey
 REG_T WINAPI IDropTarget_DragOver(REG_T pthis, REG_T grfKeyState, POINT pt, REG_T lpdwEffect)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T temp1;
 	RECT rect;
 
 	// PrintText 'IDropTarget_DragOver'
@@ -303,8 +299,7 @@ REG_T WINAPI IDropTarget_DragOver(REG_T pthis, REG_T grfKeyState, POINT pt, REG_
 
 REG_T WINAPI IDropTarget_DragLeave(REG_T pthis)
 {
-	REG_T eax = 0, ecx, edx, ebx, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, ebx, edi;
 
 	// PrintText 'IDropTarget_DragLeave'
 	edi = pthis;
@@ -330,7 +325,6 @@ REG_T WINAPI IDropTarget_DragLeave(REG_T pthis)
 REG_T WINAPI IDropTarget_Drop(REG_T pthis, REG_T lpDataObject, REG_T grfKeyState, POINT pt, REG_T lpdwEffect)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 	STGMEDIUM medium;
 	FORMATETC fmte;
 
@@ -409,8 +403,7 @@ REG_T WINAPI IDropTarget_Drop(REG_T pthis, REG_T lpDataObject, REG_T grfKeyState
 // IDropSource methods
 REG_T WINAPI IDropSource_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObject)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, edx;
 
 	// PrintText 'IDropSource_QueryInterface'
 	eax = IsEqualGUID(iid, &IID_IDropSource);
@@ -438,8 +431,7 @@ REG_T WINAPI IDropSource_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObject)
 
 REG_T WINAPI IDropSource_AddRef(REG_T pthis)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, edx;
 
 	// PrintText 'IDropSource_AddRef'
 	eax = pthis;
@@ -452,8 +444,7 @@ REG_T WINAPI IDropSource_AddRef(REG_T pthis)
 
 REG_T WINAPI IDropSource_Release(REG_T pthis)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, edx;
 
 	// PrintText 'IDropSource_Release'
 	eax = pthis;
@@ -469,8 +460,7 @@ REG_T WINAPI IDropSource_Release(REG_T pthis)
 
 REG_T WINAPI IDropSource_QueryContinueDrag(REG_T pthis, REG_T fEscapePressed, REG_T grfKeyState)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0;
 
 	// PrintText 'IDropSource_QueryContinueDrag'
 	if(fEscapePressed)
@@ -491,8 +481,7 @@ REG_T WINAPI IDropSource_QueryContinueDrag(REG_T pthis, REG_T fEscapePressed, RE
 
 REG_T WINAPI IDropSource_GiveFeedback(REG_T pthis, REG_T dwEffect)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0;
 
 	// PrintText 'IDropSource_GiveFeedback'
 	eax = DRAGDROP_S_USEDEFAULTCURSORS;
@@ -503,8 +492,7 @@ REG_T WINAPI IDropSource_GiveFeedback(REG_T pthis, REG_T dwEffect)
 // IDataObject methods
 REG_T WINAPI IDO_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObject)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, edx;
 
 	// PrintText 'IDataObject_QueryInterface'
 	eax = IsEqualGUID(iid, &IID_IDataObject);
@@ -532,8 +520,7 @@ REG_T WINAPI IDO_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObject)
 
 REG_T WINAPI IDO_AddRef(REG_T pthis)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, edx;
 
 	// PrintText 'IDataObject_AddRef'
 	eax = pthis;
@@ -546,8 +533,7 @@ REG_T WINAPI IDO_AddRef(REG_T pthis)
 
 REG_T WINAPI IDO_Release(REG_T pthis)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, edx;
 
 	// PrintText 'IDataObject_Release'
 	eax = pthis;
@@ -563,8 +549,7 @@ REG_T WINAPI IDO_Release(REG_T pthis)
 
 REG_T WINAPI IDO_GetData(REG_T pthis, REG_T pFormatetc, REG_T pmedium)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, edx, ebx, esi;
 	DWORD hCMem;
 
 	// PrintText 'IDataObject_GetData'
@@ -623,8 +608,7 @@ REG_T WINAPI IDO_GetData(REG_T pthis, REG_T pFormatetc, REG_T pmedium)
 
 REG_T WINAPI IDO_GetDataHere(REG_T pthis, REG_T pFormatetc, REG_T pmedium)
 {
-	REG_T eax = 0, ecx, edx, ebx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0;
 
 	// PrintText 'IDataObject_GetDataHere'
 	eax = E_NOTIMPL;
@@ -634,8 +618,7 @@ REG_T WINAPI IDO_GetDataHere(REG_T pthis, REG_T pFormatetc, REG_T pmedium)
 
 REG_T WINAPI IDO_QueryGetData(REG_T pthis, REG_T pFormatetc)
 {
-	REG_T eax = 0, ecx, edx, ebx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, ebx;
 
 	// PrintText 'IDataObject_QueryGetData'
 	ebx = pFormatetc;
@@ -674,8 +657,7 @@ REG_T WINAPI IDO_QueryGetData(REG_T pthis, REG_T pFormatetc)
 
 REG_T WINAPI IDO_GetCanonicalFormatEtc(REG_T pthis, REG_T pFormatetcIn, REG_T pFormatetcOut)
 {
-	REG_T eax = 0, ecx, edx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, ecx, esi, edi;
 
 	// PrintText 'IDataObject_GetCanonicalFormatEtc'
 	esi = pFormatetcIn;
@@ -696,8 +678,7 @@ REG_T WINAPI IDO_GetCanonicalFormatEtc(REG_T pthis, REG_T pFormatetcIn, REG_T pF
 
 REG_T WINAPI IDO_SetData(REG_T pthis, REG_T pFormatetc, REG_T pmedium, REG_T fRelease)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0;
 
 	// PrintText 'IDataObject_SetData'
 	eax = E_NOTIMPL;
@@ -707,8 +688,7 @@ REG_T WINAPI IDO_SetData(REG_T pthis, REG_T pFormatetc, REG_T pmedium, REG_T fRe
 
 REG_T WINAPI IDO_EnumFormatEtc(REG_T pthis, REG_T dwDirection, REG_T ppenumFormatetc)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, edx;
 
 	// PrintText 'IDataObject_EnumFormatEtc'
 	if(dwDirection==DATADIR_GET)
@@ -728,8 +708,7 @@ REG_T WINAPI IDO_EnumFormatEtc(REG_T pthis, REG_T dwDirection, REG_T ppenumForma
 
 REG_T WINAPI IDO_DAdvise(REG_T pthis, REG_T pFormatetc, REG_T advf, REG_T pAdvSink, REG_T pdwConnection)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0;
 
 	// PrintText 'IDataObject_DAdvise'
 	eax = E_NOTIMPL;
@@ -739,8 +718,7 @@ REG_T WINAPI IDO_DAdvise(REG_T pthis, REG_T pFormatetc, REG_T advf, REG_T pAdvSi
 
 REG_T WINAPI IDO_DUnadvise(REG_T pthis, REG_T dwConnection)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0;
 
 	// PrintText 'IDataObject_DUnadvise'
 	eax = E_NOTIMPL;
@@ -750,8 +728,7 @@ REG_T WINAPI IDO_DUnadvise(REG_T pthis, REG_T dwConnection)
 
 REG_T WINAPI IDO_EnumDAdvise(REG_T pthis, REG_T ppenumAdvise)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0;
 
 	// PrintText 'IDataObject_EnumDAdvise'
 	eax = E_NOTIMPL;
@@ -762,8 +739,7 @@ REG_T WINAPI IDO_EnumDAdvise(REG_T pthis, REG_T ppenumAdvise)
 // IEnumFORMATETC	methods
 REG_T WINAPI IEnumFORMATETC_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObject)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, edx;
 
 	// PrintText 'IEnumFORMATETC_QueryInterface'
 	eax = IsEqualGUID(iid, &IID_IEnumFORMATETC);
@@ -791,8 +767,7 @@ REG_T WINAPI IEnumFORMATETC_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObje
 
 REG_T WINAPI IEnumFORMATETC_AddRef(REG_T pthis)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, edx;
 
 	// PrintText 'IEnumFORMATETC_AddRef'
 	eax = pthis;
@@ -805,8 +780,7 @@ REG_T WINAPI IEnumFORMATETC_AddRef(REG_T pthis)
 
 REG_T WINAPI IEnumFORMATETC_Release(REG_T pthis)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, edx;
 
 	// PrintText 'IEnumFORMATETC_Release'
 	eax = pthis;
@@ -827,7 +801,6 @@ REG_T WINAPI IEnumFORMATETC_Release(REG_T pthis)
 REG_T WINAPI IEnumFORMATETC_Next(REG_T pthis, REG_T celt, REG_T rgelt, REG_T pceltFetched)
 {
 	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 
 	// PrintText 'IEnumFORMATETC_Next'
 	edx = 0;
@@ -864,8 +837,7 @@ REG_T WINAPI IEnumFORMATETC_Next(REG_T pthis, REG_T celt, REG_T rgelt, REG_T pce
 
 REG_T WINAPI IEnumFORMATETC_Skip(REG_T pthis, REG_T celt)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0;
 
 	// PrintText 'IEnumFORMATETC_Skip'
 	eax = E_NOTIMPL;
@@ -875,8 +847,7 @@ REG_T WINAPI IEnumFORMATETC_Skip(REG_T pthis, REG_T celt)
 
 REG_T WINAPI IEnumFORMATETC_Reset(REG_T pthis)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, edx;
 
 	// PrintText 'IEnumFORMATETC_Reset'
 	eax = pthis;
@@ -889,8 +860,7 @@ REG_T WINAPI IEnumFORMATETC_Reset(REG_T pthis)
 
 REG_T WINAPI IEnumFORMATETC_Clone(REG_T pthis, REG_T ppenum)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0;
 
 	// PrintText 'IEnumFORMATETC_Clone'
 	eax = E_NOTIMPL;

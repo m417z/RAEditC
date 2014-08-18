@@ -7,8 +7,7 @@
 
 REG_T TimerProc(DWORD hWin, DWORD uMsg, DWORD idEvent, DWORD dwTime)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0;
 
 	if(tmr1.hwnd)
 	{
@@ -28,8 +27,8 @@ REG_T TimerProc(DWORD hWin, DWORD uMsg, DWORD idEvent, DWORD dwTime)
 // Create a windowclass for the user control
 void WINAPI InstallRAEdit(HINSTANCE hInst, BOOL fGlobal)
 {
-	REG_T eax = 0, ecx, edx, ebx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, ebx;
+	REG_T temp1;
 	WNDCLASSEX wc;
 	DWORD hBmp;
 
@@ -133,8 +132,7 @@ void WINAPI InstallRAEdit(HINSTANCE hInst, BOOL fGlobal)
 
 void WINAPI UnInstallRAEdit(void)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0;
 
 	DestroyCursor(hHSCur);
 	DestroyCursor(hSelCur);
@@ -160,7 +158,7 @@ void WINAPI UnInstallRAEdit(void)
 REG_T SetHiliteWords(DWORD nColor, DWORD lpWords)
 {
 	REG_T eax = 0, ecx, edx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T temp1;
 	DWORD fEnd;
 	DWORD fEnd2;
 	DWORD len;
@@ -275,7 +273,6 @@ NxtChar:
 
 	void GetLen(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 		ecx = 0;
 anon_1:
 		RBYTE_LOW(eax) = *(BYTE *)(esi+ecx);
@@ -291,7 +288,7 @@ anon_1:
 
 	void TestWord(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+		REG_T temp1, temp2;
 		temp1 = edi;
 		GetLen();
 		eax = *(BYTE *)esi;
@@ -394,8 +391,7 @@ Ex:
 
 REG_T GetCharTabPtr(void)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0;
 
 	eax = CharTab;
 	return eax;
@@ -404,8 +400,7 @@ REG_T GetCharTabPtr(void)
 
 REG_T GetCharTabVal(DWORD nChar)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, edx;
 
 	edx = nChar;
 	edx &= 0x0FF;
@@ -416,8 +411,7 @@ REG_T GetCharTabVal(DWORD nChar)
 
 REG_T SetCharTabVal(DWORD nChar, DWORD nValue)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, edx;
 
 	edx = nChar;
 	edx &= 0x0FF;
@@ -429,8 +423,8 @@ REG_T SetCharTabVal(DWORD nChar, DWORD nValue)
 
 REG_T SetBlockDef(DWORD lpRABLOCKDEF)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, ecx, ebx, esi, edi;
+	REG_T temp1, temp2;
 
 	auto void TestString(void);
 
@@ -527,7 +521,7 @@ Ex:
 
 	void TestString(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+		REG_T temp1;
 		temp1 = ecx;
 		while(*(BYTE *)ecx)
 		{
@@ -548,8 +542,8 @@ Ex:
 
 REG_T SplittBtnProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	REG_T eax = 0, ecx, edx, ebx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, edx, ebx;
+	REG_T temp1;
 
 	eax = uMsg;
 	if(eax==WM_MOUSEMOVE)
@@ -591,8 +585,7 @@ REG_T SplittBtnProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 REG_T StateProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	REG_T eax = 0, ecx, edx, ebx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, ebx;
 	PAINTSTRUCT ps;
 	DWORD hBr;
 
@@ -632,8 +625,8 @@ REG_T StateProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 REG_T EditFunc(HWND hWin, UINT uMsg, DWORD fAlt, DWORD fShift, DWORD fControl)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, ecx, edx, ebx, esi;
+	REG_T temp1, temp2;
 	POINT pt;
 	DWORD cpOldMin;
 	DWORD cpOldMax;
@@ -1880,7 +1873,7 @@ ErrBeep:
 REG_T RAEditProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T temp1, temp2, temp3;
 	SCROLLINFO sinf;
 	POINT pt;
 	DWORD fAlt;
@@ -3477,7 +3470,6 @@ ErrBeep:
 
 	void SetBlock(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 		eax = GetBlockRects(ebx, &oldrects);
 		eax = pt.y;
 		if(R_SIGNED(eax) < 0)
@@ -3533,7 +3525,6 @@ ErrBeep:
 
 	void SetScroll(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 		sinf.cbSize = sizeof(sinf);
 		sinf.fMask = SIF_ALL;
 		sinf.nMin = 0;
@@ -3573,7 +3564,7 @@ ErrBeep:
 REG_T GetText(DWORD hMem, DWORD cpMin, DWORD cpMax, DWORD lpText, DWORD fLf)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T temp1;
 	DWORD nLf;
 
 	nLf = 0;
@@ -3639,8 +3630,8 @@ REG_T GetText(DWORD hMem, DWORD cpMin, DWORD cpMax, DWORD lpText, DWORD fLf)
 
 REG_T FakeToolTipProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0;
+	REG_T temp1;
 	PAINTSTRUCT ps;
 	BYTE buffer[16];
 	DWORD hFnt;
@@ -3673,8 +3664,7 @@ REG_T FakeToolTipProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 REG_T ConvTwipsToPixels(HDC hDC, DWORD fHorz, DWORD lSize)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0;
 
 	if(fHorz)
 	{
@@ -3684,10 +3674,6 @@ REG_T ConvTwipsToPixels(HDC hDC, DWORD fHorz, DWORD lSize)
 	{
 		eax = GetDeviceCaps(hDC, LOGPIXELSY);
 	} // endif
-	// mov		ecx,lSize
-	// mul		ecx
-	// mov		ecx,1440
-	// div		ecx
 	eax = MulDiv(lSize, 1440, eax);
 	return eax;
 
@@ -3697,7 +3683,7 @@ REG_T ConvTwipsToPixels(HDC hDC, DWORD fHorz, DWORD lSize)
 REG_T RAWndProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T temp1, temp2, temp3;
 	RECT rect;
 	POINT pt;
 	SCROLLINFO sinf;
@@ -6588,7 +6574,6 @@ ErrBeep:
 
 	void SetToolTip(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 		ti.cbSize = sizeof(TOOLINFO);
 		ti.uFlags = TTF_IDISHWND | TTF_SUBCLASS;
 		ti.hwnd = 0;
@@ -6603,7 +6588,6 @@ ErrBeep:
 
 	void SizeIt(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 		eax = ((EDIT *)ebx)->fsplitt;
 		if(eax)
 		{
@@ -6663,7 +6647,6 @@ ErrBeep:
 
 	void AllocMem(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 		eax = HeapCreate(HEAP_GENERATE_EXCEPTIONS, 256*1024, 0);
 		((EDIT *)ebx)->hHeap = eax;
 		// Line
@@ -6715,7 +6698,6 @@ ErrBeep:
 
 	void RelMem(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 		// Free memory
 		if(((EDIT *)ebx)->hHeap)
 		{

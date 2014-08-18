@@ -4,8 +4,7 @@
 
 REG_T SetClipData(LPSTR lpData, DWORD dwSize)
 {
-	REG_T eax = 0, ecx, edx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0;
 	HANDLE hMem;
 	DWORD pMem;
 
@@ -52,7 +51,7 @@ exit3:
 REG_T EditCopy(DWORD hMem, DWORD lpCMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T temp1;
 	DWORD cpMin;
 	DWORD cpMax;
 
@@ -103,8 +102,7 @@ REG_T EditCopy(DWORD hMem, DWORD lpCMem)
 
 REG_T EditCopyBlock(DWORD hMem, DWORD lpCMem)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, edx, ebx, esi;
 	BLOCKRANGE blrg;
 
 	auto void CopyBlockChar(void);
@@ -125,7 +123,6 @@ REG_T EditCopyBlock(DWORD hMem, DWORD lpCMem)
 
 	void CopyBlockChar(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 		eax = GetBlockCp(ebx, edx, eax);
 		eax = GetChar(ebx, eax);
 		if(eax==VK_RETURN || eax==VK_TAB)
@@ -140,7 +137,7 @@ REG_T EditCopyBlock(DWORD hMem, DWORD lpCMem)
 
 	void CopyBlockLine(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+		REG_T temp1, temp2;
 		eax = blrg.clMin;
 		while(eax<blrg.clMax)
 		{
@@ -163,7 +160,7 @@ REG_T EditCopyBlock(DWORD hMem, DWORD lpCMem)
 REG_T EditCopyNoLF(DWORD hMem, DWORD lpCMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T temp1;
 	DWORD cpMin;
 	DWORD cpMax;
 
@@ -209,8 +206,8 @@ REG_T EditCopyNoLF(DWORD hMem, DWORD lpCMem)
 
 REG_T Copy(DWORD hMem)
 {
-	REG_T eax = 0, ecx, edx, ebx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, edx, ebx;
+	REG_T temp1;
 	DWORD hCMem;
 
 	ebx = hMem;
@@ -261,7 +258,6 @@ REG_T Copy(DWORD hMem)
 REG_T EditPaste(DWORD hMem, DWORD hData)
 {
 	REG_T eax = 0, ecx, edx, ebx;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 
 	auto void InsertMem(void);
 
@@ -288,7 +284,7 @@ REG_T EditPaste(DWORD hMem, DWORD hData)
 
 	void InsertMem(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+		REG_T temp1, temp2, temp3, temp4;
 		temp1 = eax;
 		eax = GlobalLock(eax);
 		temp2 = ((EDIT *)ebx)->fOvr;
@@ -313,7 +309,6 @@ REG_T EditPaste(DWORD hMem, DWORD hData)
 REG_T EditPasteBlock(DWORD hMem, DWORD hData)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 	DWORD nSpc;
 	BLOCKRANGE blrg;
 
@@ -349,7 +344,7 @@ REG_T EditPasteBlock(DWORD hMem, DWORD hData)
 
 	void InsertMem(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+		REG_T temp1, temp2, temp3;
 		temp1 = eax;
 		eax = GlobalLock(eax);
 		esi = eax;
@@ -438,8 +433,7 @@ anon_1:
 
 REG_T Paste(DWORD hMem, DWORD hWin, DWORD hData)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, ecx, edx, ebx, esi;
 	POINT pt;
 	BLOCKRANGE blrg;
 
@@ -483,7 +477,6 @@ REG_T Paste(DWORD hMem, DWORD hWin, DWORD hData)
 REG_T Cut(DWORD hMem, DWORD hWin)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 	POINT pt;
 
 	ebx = hMem;
@@ -529,8 +522,8 @@ REG_T Cut(DWORD hMem, DWORD hWin)
 
 REG_T ConvertCase(DWORD hMem, DWORD nFunction)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T eax = 0, edx, ebx, edi;
+	REG_T temp1;
 
 	ebx = hMem;
 	nUndoid++;
@@ -565,7 +558,7 @@ REG_T ConvertCase(DWORD hMem, DWORD nFunction)
 REG_T ConvertIndent(DWORD hMem, DWORD nFunction)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
+	REG_T temp1;
 	DWORD hCMem;
 	DWORD hLMem;
 	DWORD cpst;
@@ -702,7 +695,6 @@ REG_T ConvertIndent(DWORD hMem, DWORD nFunction)
 
 	void NextLine(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 		while(*(BYTE *)edi && *(BYTE *)edi!=VK_RETURN)
 		{
 			edi++;
@@ -717,7 +709,6 @@ REG_T ConvertIndent(DWORD hMem, DWORD nFunction)
 
 	void GetIndent(void)
 	{
-		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 		edx = 0;
 		while(*(BYTE *)(edi+edx)==VK_SPACE || *(BYTE *)(edi+edx)==VK_TAB)
 		{
