@@ -47,6 +47,14 @@
 					<Add library="ole32" />
 				</Linker>
 			</Target>
+			<Target title="Release_static">
+				<Option output="bin/Release_static/RAEditC" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/Release_static/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+			</Target>
 		</Build>
 		<Unit filename="Block.c">
 			<Option compilerVar="CC" />
