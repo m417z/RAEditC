@@ -476,8 +476,6 @@ REG_T IsLine(DWORD hMem, DWORD nLine, DWORD lpszTest)
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	DWORD tmpesi;
 	DWORD fCmnt;
-	// LOCAL	espsave:DWORD
-	DWORD esisave;
 	DWORD notfound;
 
 	auto void TestLine(void);
@@ -488,39 +486,20 @@ REG_T IsLine(DWORD hMem, DWORD nLine, DWORD lpszTest)
 	auto void SkipWord(void);
 	auto void TestWord(void);
 
-	// mov		eax,esp
-	// sub		eax,4
-	// mov		espsave,eax
 	notfound = 0;
 	ebx = hMem;
 	edi = nLine;
 	edi *= 4;
 	esi = lpszTest;
+    eax = -1;
 	if(edi<((EDIT *)ebx)->rpLineFree && *(BYTE *)esi)
 	{
-		while(*(BYTE *)esi)
+		if(*(BYTE *)esi)
 		{
-			esisave = esi;
 			edi = nLine;
 			edi *= 4;
 			TestLine();
-			if(notfound!=0)
-			{
-				break;
-			} // endif
-			if(eax!=-1)
-			{
-				break;
-			} // endif
-			esi = esisave;
-			eax = strlen(esi);
-			esi = esi+eax+1;
-			eax = -1;
-		} // endw
-	}
-	else
-	{
-		eax = -1;
+		} // endif
 	} // endif
 	return eax;
 
@@ -933,7 +912,6 @@ SkipSpcStart:
 		} // endif
 		return;
 SkipSpcNf:
-		// mov		esp,espsave
 		notfound = 1;
 		return;
 
