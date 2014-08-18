@@ -4,6 +4,8 @@
 #include <windows.h>
 #include <richedit.h>
 
+#pragma pack(push, 1)
+
 // Default colors
 #define BCKCLR				0x00C0F0F0
 #define TXTCLR				0x00000000
@@ -302,6 +304,8 @@ struct tagBLOCKRANGE {
 	DWORD	clMax;						// Ending column
 };
 typedef struct tagBLOCKRANGE BLOCKRANGE;
+
+#pragma pack(pop)
 
 extern void WINAPI InstallRAEdit(HINSTANCE hInst, BOOL fGlobal);
 extern void WINAPI UnInstallRAEdit(void);

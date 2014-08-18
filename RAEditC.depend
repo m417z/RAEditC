@@ -8,14 +8,14 @@
 	<windows.h>
 	"Data.h"
 
-1408312595 c:\users\rammichael\desktop\raeditc\data.h
+1408327903 c:\users\rammichael\desktop\raeditc\data.h
 	"RegisterTypes.h"
 	"include/RAEdit.h"
 
 1408278226 c:\users\rammichael\desktop\raeditc\registertypes.h
 	<windows.h>
 
-1408312144 c:\users\rammichael\desktop\raeditc\include\raedit.h
+1408327544 c:\users\rammichael\desktop\raeditc\include\raedit.h
 	<windows.h>
 	<richedit.h>
 
@@ -42,25 +42,21 @@
 	"Misc.h"
 	"Function.h"
 
-1408318992 source:c:\users\rammichael\desktop\raeditc\raedit.c
-	<windows.h>
-	<commctrl.h>
-	"Data.h"
+1408325102 source:c:\users\rammichael\desktop\raeditc\raedit.c
+	"RAEdit.h"
 
 1408318992 source:c:\users\rammichael\desktop\raeditc\raeditdll.c
 	<windows.h>
 	"Data.h"
 
-1408319948 source:c:\users\rammichael\desktop\raeditc\function.c
-	<windows.h>
-	"Data.h"
+1408325102 source:c:\users\rammichael\desktop\raeditc\function.c
+	"Function.h"
 
-1408320898 source:c:\users\rammichael\desktop\raeditc\paint.c
+1408325102 source:c:\users\rammichael\desktop\raeditc\paint.c
 	"Paint.h"
 
-1408318992 source:c:\users\rammichael\desktop\raeditc\position.c
-	<windows.h>
-	"Data.h"
+1408325102 source:c:\users\rammichael\desktop\raeditc\position.c
+	"Position.h"
 
 1408324561 source:c:\users\rammichael\desktop\raeditc\undo.c
 	"Undo.h"
@@ -100,5 +96,10 @@
 
 1408320983 c:\users\rammichael\desktop\raeditc\undo.h
 	<windows.h>
+	"Data.h"
+
+1408320954 c:\users\rammichael\desktop\raeditc\raedit.h
+	<windows.h>
+	<commctrl.h>
 	"Data.h"
 

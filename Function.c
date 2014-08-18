@@ -9,8 +9,8 @@ __declspec(dllexport) REG_T FindTheText(DWORD hMem, DWORD pFind, DWORD fMC, DWOR
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 	DWORD nLine;
 	DWORD lnlen;
-	DWORD lpFind[15];
-	DWORD len[15];
+	DWORD lpFind[16];
+	DWORD len[16];
 	BYTE findbuff[512];
 	DWORD nIgnore;
 	DWORD prev;

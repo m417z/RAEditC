@@ -15,11 +15,13 @@
 				<Option createStaticLib="1" />
 				<Compiler>
 					<Add option="-Wall" />
-					<Add option="-DBUILD_DLL" />
 					<Add option="-g" />
+					<Add option="-DBUILD_DLL" />
 				</Compiler>
 				<Linker>
 					<Add library="user32" />
+					<Add library="comctl32" />
+					<Add library="gdi32" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -30,18 +32,74 @@
 				<Option createDefFile="1" />
 				<Option createStaticLib="1" />
 				<Compiler>
+					<Add option="-O2" />
 					<Add option="-Wall" />
 					<Add option="-DBUILD_DLL" />
-					<Add option="-O2" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
 					<Add library="user32" />
+					<Add library="comctl32" />
+					<Add library="gdi32" />
 				</Linker>
 			</Target>
 		</Build>
-		<Unit filename="main.cpp" />
-		<Unit filename="main.h" />
+		<Unit filename="Block.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Block.h" />
+		<Unit filename="ClipBoard.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ClipBoard.h" />
+		<Unit filename="Data.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Data.h" />
+		<Unit filename="Edit.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Edit.h" />
+		<Unit filename="Function.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Function.h" />
+		<Unit filename="Memory.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Memory.h" />
+		<Unit filename="Misc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Misc.h" />
+		<Unit filename="Paint.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Paint.h" />
+		<Unit filename="Position.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Position.h" />
+		<Unit filename="RAEdit.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="RAEdit.h" />
+		<Unit filename="RAEditDll.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="RAEditDll.h" />
+		<Unit filename="RegisterTypes.h" />
+		<Unit filename="Undo.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Undo.h" />
+		<Unit filename="include/RAEdit.h" />
+		<Unit filename="res/RAEditRes.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
+		<Unit filename="res/RAEditVer.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
 		<Extensions>
 			<code_completion />
 			<envvars />

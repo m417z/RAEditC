@@ -24,6 +24,8 @@
 #define UNDO_INSERTBLOCK		5
 #define UNDO_DELETEBLOCK		6
 
+#pragma pack(push, 1)
+
 struct tagTIMER {
 	DWORD hwnd;
 	DWORD umsg;
@@ -179,6 +181,8 @@ struct tagEDIT {
 	DWORD lastline;
 };
 typedef struct tagEDIT EDIT;
+
+#pragma pack(pop)
 
 #define IDB_RAEDITBUTTON		100
 #define IDC_HSPLITTCUR			101
