@@ -22,7 +22,6 @@ __declspec(dllexport) REG_T GetTopFromYp(DWORD hMem, DWORD hWin, DWORD yp)
 	temp3 = edx;
 	edi = ((EDIT *)ebx)->fntinfo.fntht;
 	eax = yp;
-	// xor		edx,edx
 	eax /= edi;
 	eax *= edi;
 	yp = eax;
@@ -31,7 +30,6 @@ __declspec(dllexport) REG_T GetTopFromYp(DWORD hMem, DWORD hWin, DWORD yp)
 	if(eax>=((RAEDT *)edx)->topyp)
 	{
 		eax -= ((RAEDT *)edx)->topyp;
-		// xor		edx,edx
 		eax /= edi;
 		edi = temp2;
 		cp = 0;
@@ -62,7 +60,6 @@ Nxt1:
 	{
 		eax -= ((RAEDT *)edx)->topyp;
 		eax = -eax;
-		// xor		edx,edx
 		eax /= edi;
 		edi = temp2;
 		cp = 0;
@@ -379,7 +376,6 @@ __declspec(dllexport) REG_T GetLineFromYp(DWORD hMem, DWORD y)
 	edi = ((EDIT *)ebx)->hChars;
 	eax = y;
 	ecx = ((EDIT *)ebx)->fntinfo.fntht;
-	// xor		edx,edx
 	eax /= ecx;
 	eax *= ecx;
 	y = eax;
@@ -925,7 +921,6 @@ anon_10:
 		} // endw
 		eax = ((RAEDT *)esi)->rc.bottom;
 		ecx = ((EDIT *)ebx)->fntinfo.fntht;
-		// xor		edx,edx
 		eax /= ecx;
 		if(!eax)
 		{

@@ -203,14 +203,13 @@ __declspec(dllexport) REG_T DwToAscii(DWORD dwVal, DWORD lpAscii)
 	eax = -eax;
 	edi++;
 pos:
-	ecx = 429496730;
 	esi = edi;
 anon_1:
 	ebx = eax;
-	eax *= ecx;
+	edx = eax;
+	edx /= 10;
 	eax = edx;
-	edx = edx*4+edx;
-	edx += edx;
+	edx *= 10;
 	ebx -= edx;
 	RBYTE_LOW(ebx) += '0';
 	*(BYTE *)edi = RBYTE_LOW(ebx);
@@ -381,7 +380,6 @@ __declspec(dllexport) REG_T GetTextWidth(DWORD hMem, HDC hDC, DWORD lpText, DWOR
 			if(*(BYTE *)(esi+ecx)==VK_TAB)
 			{
 				eax += ((EDIT *)ebx)->nTab;
-				// xor		edx,edx
 				eax /= ((EDIT *)ebx)->nTab;
 				eax *= ((EDIT *)ebx)->nTab;
 			}

@@ -510,7 +510,6 @@ anon_1:
 			ecx = ((EDIT *)ebx)->fntinfo.tabwt;
 			eax = rect.left;
 			eax -= rcleft;
-			// xor		edx,edx
 			eax /= ecx;
 			eax *= ecx;
 			eax += rcleft;
@@ -1609,14 +1608,12 @@ anon_7:
 	eax = rect.bottom;
 	eax -= rect.top;
 	ecx = ((EDIT *)ebx)->fntinfo.fntht;
-	// xor		edx,edx
 	eax /= ecx;
 	eax++;
 	eax = SetBlockMarkers(ebx, esi, eax);
 	ecx = ((EDIT *)ebx)->fntinfo.fntht;
 	eax = temp4;
 	temp4 = eax;
-	// xor		edx,edx
 	eax /= ecx;
 	eax *= ecx;
 	edx = temp4;
@@ -1856,9 +1853,8 @@ anon_9:
 		if(ecx)
 		{
 			eax = esi;
-			// xor		edx,edx
-			eax /= ecx;
-			if(!edx)
+			eax %= ecx;
+			if(!eax)
 			{
 				eax = 0;
 				eax -= ps.rcPaint.left;
@@ -1993,14 +1989,12 @@ __declspec(dllexport) REG_T RAEditPaintNoBuff(HWND hWin)
 	eax = rect.bottom;
 	eax -= rect.top;
 	ecx = ((EDIT *)ebx)->fntinfo.fntht;
-	// xor		edx,edx
 	eax /= ecx;
 	eax++;
 	eax = SetBlockMarkers(ebx, esi, eax);
 	ecx = ((EDIT *)ebx)->fntinfo.fntht;
 	eax = temp3;
 	temp3 = eax;
-	// xor		edx,edx
 	eax /= ecx;
 	eax *= ecx;
 	edx = temp3;
@@ -2230,9 +2224,8 @@ anon_11:
 		if(ecx)
 		{
 			eax = esi;
-			// xor		edx,edx
-			eax /= ecx;
-			if(!edx)
+			eax %= ecx;
+			if(!eax)
 			{
 				edx = ((EDIT *)ebx)->fntinfo.fntht;
 				edx += rect1.top;

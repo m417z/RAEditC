@@ -1954,6 +1954,7 @@ __declspec(dllexport) REG_T TrimSpace(DWORD hMem, DWORD nLine, DWORD fLeft)
 	cp = eax;
 	edi *= 4;
 	edx = 0;
+	ecx = 0;
 	if(edi<((EDIT *)ebx)->rpLineFree)
 	{
 		edi += ((EDIT *)ebx)->hLine;
@@ -1965,7 +1966,6 @@ __declspec(dllexport) REG_T TrimSpace(DWORD hMem, DWORD nLine, DWORD fLeft)
 			if(fLeft)
 			{
 				// Left trim (Not implemented)
-				ecx = 0;
 			}
 			else
 			{
@@ -2674,7 +2674,6 @@ __declspec(dllexport) REG_T SelChange(DWORD hMem, DWORD nType)
 	if(ecx)
 	{
 		eax = ((EDIT *)ebx)->line;
-		// xor		edx,edx
 		eax /= ecx;
 	} // endif
 	sc.npage = eax;

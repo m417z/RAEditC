@@ -98,7 +98,6 @@ void WINAPI InstallRAEdit(HINSTANCE hInst, BOOL fGlobal)
 	cbWrdMem = MAXWORDMEM;
 	rpWrdFree = 256*4;
 	// Setup upper CharTab
-	temp1 = ebx;
 	ebx = 128;
 	while(ebx<256)
 	{
@@ -126,7 +125,6 @@ void WINAPI InstallRAEdit(HINSTANCE hInst, BOOL fGlobal)
 		} // endif
 		ebx++;
 	} // endw
-	ebx = temp1;
 	return;
 
 } // InstallRAEdit
@@ -763,7 +761,6 @@ __declspec(dllexport) REG_T EditFunc(HWND hWin, UINT uMsg, DWORD fAlt, DWORD fSh
 					eax -= ((EDIT *)ebx)->linenrwt;
 					eax -= ((EDIT *)ebx)->selbarwt;
 					ecx = ((EDIT *)ebx)->fntinfo.fntwt;
-					// xor		edx,edx
 					eax /= ecx;
 					edx = ((EDIT *)ebx)->line;
 					((EDIT *)ebx)->blrg.lnMin = edx;
@@ -883,7 +880,6 @@ __declspec(dllexport) REG_T EditFunc(HWND hWin, UINT uMsg, DWORD fAlt, DWORD fSh
 					eax -= ((EDIT *)ebx)->linenrwt;
 					eax -= ((EDIT *)ebx)->selbarwt;
 					ecx = ((EDIT *)ebx)->fntinfo.fntwt;
-					// xor		edx,edx
 					eax /= ecx;
 					edx = ((EDIT *)ebx)->line;
 					((EDIT *)ebx)->blrg.lnMin = edx;
@@ -1180,7 +1176,6 @@ anon_4:
 					eax = GetCaretPos(&pt);
 					eax = ((RAEDT *)esi)->rc.bottom;
 					ecx = ((EDIT *)ebx)->fntinfo.fntht;
-					// xor		edx,edx
 					eax /= ecx;
 					eax *= ecx;
 					if(eax>((RAEDT *)esi)->cpy)
@@ -1226,7 +1221,6 @@ anon_4:
 					eax = ((RAEDT *)esi)->rc.bottom;
 					eax -= ((RAEDT *)esi)->rc.top;
 					ecx = ((EDIT *)ebx)->fntinfo.fntht;
-					// xor		edx,edx
 					eax /= ecx;
 					edx = ((EDIT *)ebx)->blrg.lnMin;
 					if(edx>eax)
@@ -1297,7 +1291,6 @@ anon_4:
 					eax = GetCaretPos(&pt);
 					eax = ((RAEDT *)esi)->rc.bottom;
 					ecx = ((EDIT *)ebx)->fntinfo.fntht;
-					// xor		edx,edx
 					eax /= ecx;
 					eax *= ecx;
 					temp2 = eax;
@@ -1376,7 +1369,6 @@ anon_4:
 					eax = ((RAEDT *)esi)->rc.bottom;
 					eax -= ((RAEDT *)esi)->rc.top;
 					ecx = ((EDIT *)ebx)->fntinfo.fntht;
-					// xor		edx,edx
 					eax /= ecx;
 					edx = ((EDIT *)ebx)->blrg.lnMin;
 					edx += eax;
@@ -2334,7 +2326,6 @@ anon_5:
 					{
 						eax = ((EDIT *)ebx)->blrg.clMin;
 						ecx = ((EDIT *)ebx)->nTab;
-						// xor		edx,edx
 						eax /= ecx;
 						eax++;
 						eax *= ecx;
@@ -2557,14 +2548,12 @@ anon_5:
 				if(R_SIGNED(eax) < 0)
 				{
 					eax = -eax;
-					// xor		edx,edx
 					eax /= ecx;
 					eax *= ecx;
 					eax = -eax;
 				}
 				else
 				{
-					// xor		edx,edx
 					eax /= ecx;
 					eax *= ecx;
 				} // endif
@@ -3276,7 +3265,6 @@ anon_6: ;
 			{
 				eax = ((RAEDT *)esi)->cpy;
 				ecx = ((EDIT *)ebx)->fntinfo.fntht;
-				// xor		edx,edx
 				eax /= ecx;
 				eax *= ecx;
 				eax += ecx;
@@ -3289,7 +3277,6 @@ anon_6: ;
 			{
 				eax = ((RAEDT *)esi)->cpy;
 				ecx = ((EDIT *)ebx)->fntinfo.fntht;
-				// xor		edx,edx
 				eax /= ecx;
 				eax *= ecx;
 				if(eax>ecx)
@@ -3558,13 +3545,11 @@ ErrBeep:
 		if(eax<((RAEDT *)esi)->rc.bottom)
 		{
 			eax = ((RAEDT *)esi)->rc.bottom;
-			// xor		edx,edx
 			eax /= ecx;
 			eax *= ecx;
 		} // endif
 		sinf.nMax = eax;
 		eax = ((RAEDT *)esi)->rc.bottom;
-		// xor		edx,edx
 		eax /= ecx;
 		eax *= ecx;
 		sinf.nPage = eax;
@@ -3777,11 +3762,9 @@ __declspec(dllexport) REG_T RAWndProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARA
 			if(ecx)
 			{
 				eax = ((EDIT *)ebx)->edta.cpy;
-				// xor		edx,edx
 				eax /= ecx;
 				temp1 = eax;
 				eax = ((EDIT *)ebx)->edtb.cpy;
-				// xor		edx,edx
 				eax /= ecx;
 				temp2 = eax;
 			}
@@ -4283,7 +4266,6 @@ anon_7:
 			eax = ((RAEDT *)esi)->rc.bottom;
 			eax /= 2;
 			ecx = ((EDIT *)ebx)->fntinfo.fntht;
-			// xor		edx,edx
 			eax /= ecx;
 			eax *= ecx;
 			temp1 = eax;
@@ -5489,7 +5471,6 @@ anon_7:
 				} // endif
 				eax *= ecx;
 				ecx = temp1;
-				// xor		edx,edx
 				eax /= ecx;
 				// neg		eax
 				lf.lfHeight = eax;
@@ -5501,7 +5482,6 @@ anon_7:
 				eax = lf.lfWidth;
 				eax *= ecx;
 				ecx = temp1;
-				// xor		edx,edx
 				eax /= ecx;
 				lf.lfWidth = eax;
 				eax = CreateFontIndirect(&lf);
@@ -6142,7 +6122,6 @@ anon_8:
 			{
 				eax <<= 10;
 				ecx = ((EDIT *)ebx)->rc.bottom;
-				// xor		edx,edx
 				eax /= ecx;
 			} // endif
 			((EDIT *)ebx)->fsplitt = eax;
