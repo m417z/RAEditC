@@ -22,6 +22,8 @@
 					<Add library="user32" />
 					<Add library="comctl32" />
 					<Add library="gdi32" />
+					<Add library="libuuid" />
+					<Add library="ole32" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -41,6 +43,8 @@
 					<Add library="user32" />
 					<Add library="comctl32" />
 					<Add library="gdi32" />
+					<Add library="libuuid" />
+					<Add library="ole32" />
 				</Linker>
 			</Target>
 		</Build>
@@ -56,6 +60,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="Data.h" />
+		<Unit filename="DragDrop.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="DragDrop.h" />
 		<Unit filename="Edit.c">
 			<Option compilerVar="CC" />
 		</Unit>
