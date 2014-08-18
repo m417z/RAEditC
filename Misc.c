@@ -469,9 +469,9 @@ __declspec(dllexport) REG_T GetBlockRects(DWORD hMem, DWORD lpRects)
 		eax -= ((RAEDT *)esi)->cpy;
 		((RECT *)edi)->top = eax;
 		eax = blrg.lnMax;
-		eax++;
 		eax = GetYpFromLine(ebx, eax);
 		eax -= ((RAEDT *)esi)->cpy;
+		eax += ((EDIT *)ebx)->fntinfo.fntht;
 		((RECT *)edi)->bottom = eax;
 		ecx = ((EDIT *)ebx)->fntinfo.fntwt;
 		eax = blrg.clMin;

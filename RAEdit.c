@@ -6338,7 +6338,7 @@ anon_8:
 	{
 		eax = wParam;
 		eax &= 0x0FFFF;
-		if(RWORD(eax)==-2)
+		if(RWORD(eax)==(WORD)-2)
 		{
 			eax = IsDlgButtonChecked(hWin, -2);
 			if(eax)
@@ -6355,7 +6355,7 @@ anon_8:
 			eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edta.hwnd);
 			eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edtb.hwnd);
 		}
-		else if(RWORD(eax)==-3)
+		else if(RWORD(eax)==(WORD)-3)
 		{
 			ecx = BN_CLICKED;
 			ecx <<= 16;
@@ -6363,7 +6363,7 @@ anon_8:
 			eax = SendMessage(((EDIT *)ebx)->hpar, WM_COMMAND, eax, ((EDIT *)ebx)->hexp);
 			eax = SetFocus(((EDIT *)ebx)->focus);
 		}
-		else if(RWORD(eax)==-4)
+		else if(RWORD(eax)==(WORD)-4)
 		{
 			ecx = BN_CLICKED;
 			ecx <<= 16;
@@ -6371,7 +6371,7 @@ anon_8:
 			eax = SendMessage(((EDIT *)ebx)->hpar, WM_COMMAND, eax, ((EDIT *)ebx)->hcol);
 			eax = SetFocus(((EDIT *)ebx)->focus);
 		}
-		else if(RWORD(eax)==-5)
+		else if(RWORD(eax)==(WORD)-5)
 		{
 			ecx = ((EDIT *)ebx)->fLock;
 			ecx ^= 1;
@@ -6658,7 +6658,6 @@ ErrBeep:
 			}
 			else
 			{
-
 				eax = MoveWindow(((EDIT *)ebx)->hsta, 0, 0, 0, 0, TRUE);
 			} // endif
 		} // endif
