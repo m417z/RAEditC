@@ -142,7 +142,7 @@ void WINAPI UnInstallRAEdit(void)
 	DeleteObject(hBmpExp);
 	DeleteObject(hBmpLck);
 	DeleteObject(hBrTlt);
-	GetProcessHeap();
+	eax = GetProcessHeap();
 	HeapFree(eax, 0, hWrdMem);
 	return;
 

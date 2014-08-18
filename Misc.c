@@ -306,12 +306,12 @@ __declspec(dllexport) REG_T GetChar(DWORD hMem, DWORD cp)
 
 } // GetChar
 
-__declspec(dllexport) REG_T IsChar(void)
+__declspec(dllexport) REG_T IsChar(BYTE ch)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 
-	eax = RBYTE_LOW(eax);
+	eax = ch;
 	eax = eax+CharTab;
 	RBYTE_LOW(eax) = *(BYTE *)eax;
 	return eax;

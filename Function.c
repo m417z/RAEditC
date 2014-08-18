@@ -2103,7 +2103,7 @@ anon_7:
 		if(edx<((CHARS *)esi)->len)
 		{
 			RBYTE_LOW(eax) = *(BYTE *)(esi+edx+sizeof(CHARS));
-			eax = IsChar();
+			eax = IsChar(RBYTE_LOW(eax));
 			if(RBYTE_LOW(eax)!=1)
 			{
 				edx++;
@@ -2117,7 +2117,7 @@ anon_8:
 		if(edx)
 		{
 			RBYTE_LOW(eax) = *(BYTE *)(esi+edx+sizeof(CHARS));
-			eax = IsChar();
+			eax = IsChar(RBYTE_LOW(eax));
 			if(RBYTE_LOW(eax)!=1)
 			{
 				edx--;
@@ -2184,7 +2184,7 @@ anon_9:
 		}
 		else
 		{
-			eax = IsChar();
+			eax = IsChar(RBYTE_LOW(eax));
 		} // endif
 		if(RBYTE_LOW(eax)==1)
 		{
@@ -2285,7 +2285,7 @@ anon_10:
 		}
 		else
 		{
-			eax = IsChar();
+			eax = IsChar(RBYTE_LOW(eax));
 		} // endif
 		if(RBYTE_LOW(eax)==1)
 		{
@@ -2314,7 +2314,7 @@ anon_11:
 	if(edx<((CHARS *)esi)->len)
 	{
 		RBYTE_LOW(eax) = *(BYTE *)(esi+edx+sizeof(CHARS));
-		eax = IsChar();
+		eax = IsChar(RBYTE_LOW(eax));
 		if(RBYTE_LOW(eax)==1)
 		{
 			edx++;
