@@ -102,8 +102,13 @@
 		<Unit filename="RAEdit.h" />
 		<Unit filename="RAEditDll.c">
 			<Option compilerVar="CC" />
+			<Option target="Debug" />
+			<Option target="Release" />
 		</Unit>
-		<Unit filename="RAEditDll.h" />
+		<Unit filename="RAEditDll.h">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
 		<Unit filename="RegisterTypes.h" />
 		<Unit filename="Undo.c">
 			<Option compilerVar="CC" />

@@ -1,7 +1,7 @@
-#ifndef RAEDITDLL_H_INCLUDED
-#define RAEDITDLL_H_INCLUDED
+#pragma once
 
 #include <windows.h>
+#include "Data.h"
 
 /*  To use this exported function of dll, include this header
  *  in your project.
@@ -12,5 +12,3 @@
 #else
     #define DLL_EXPORT __declspec(dllimport)
 #endif
-
-#endif // RAEDITDLL_H_INCLUDED

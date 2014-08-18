@@ -1,11 +1,4 @@
-#include <windows.h>
-#include "Data.h"
-
-#ifdef BUILD_DLL
-    #define DLL_EXPORT __declspec(dllexport)
-#else
-    #define DLL_EXPORT __declspec(dllimport)
-#endif
+#include "RAEditDll.h"
 
 DLL_EXPORT BOOL WINAPI DllMain(HINSTANCE hInst, DWORD reason, LPVOID reserved1)
 {
