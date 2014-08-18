@@ -3,7 +3,7 @@
 typedef REG_T CALLBACK (* EDITSTREAMCALLBACKPROTO)(DWORD dwCookie, DWORD pbBuff, DWORD cb, DWORD pcb);
 typedef EDITSTREAMCALLBACKPROTO EDITSTREAMCALLBACKPTR;
 
-__declspec(dllexport) REG_T FindTheText(DWORD hMem, DWORD pFind, DWORD fMC, DWORD fWW, DWORD fWhiteSpace, DWORD cpMin, DWORD cpMax, DWORD fDir)
+__declspec(dllexport) REG_T FindTheText(DWORD hMem, DWORD pFind, DWORD fMC, DWORD fWW, DWORD fWhiteSpace, DWORD cpMin, DWORD cpMax, DWORD fDir, DWORD *pnIgnore)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -149,7 +149,7 @@ __declspec(dllexport) REG_T FindTheText(DWORD hMem, DWORD pFind, DWORD fMC, DWOR
 			eax = -1;
 		} // endw
 	} // endif
-	edx = nIgnore;
+	*pnIgnore = nIgnore;
 	return eax;
 
 	void TstFind(void)
@@ -438,7 +438,7 @@ __declspec(dllexport) REG_T FindTextEx(DWORD hMem, DWORD fFlag, DWORD lpFindText
 			{
 				ecx = -2;
 			} // endif
-			eax = FindTheText(ebx, lpText, fMC, fWW, eax, ((FINDTEXTEX *)esi)->chrg.cpMin, ecx, 1);
+			eax = FindTheText(ebx, lpText, fMC, fWW, eax, ((FINDTEXTEX *)esi)->chrg.cpMin, ecx, 1, &edx);
 			len += edx;
 		}
 		else
@@ -449,7 +449,7 @@ __declspec(dllexport) REG_T FindTextEx(DWORD hMem, DWORD fFlag, DWORD lpFindText
 			{
 				eax++;
 			} // endif
-			eax = FindTheText(ebx, lpText, fMC, fWW, eax, ((FINDTEXTEX *)esi)->chrg.cpMin, ((FINDTEXTEX *)esi)->chrg.cpMax, -1);
+			eax = FindTheText(ebx, lpText, fMC, fWW, eax, ((FINDTEXTEX *)esi)->chrg.cpMin, ((FINDTEXTEX *)esi)->chrg.cpMax, -1, &edx);
 			len += edx;
 		} // endif
 		if(eax!=-1)
@@ -533,11 +533,11 @@ __declspec(dllexport) REG_T IsLine(DWORD hMem, DWORD nLine, DWORD lpszTest)
 		if(((CHARS *)edi)->state&STATE_COMMENT)
 		{
 			RWORD(eax) = *(WORD *)esi;
-			if(((EDIT *)ebx)->ccmntblocks==1 && RWORD(eax)!="/*" && RWORD(eax)!="*/")
+			if(((EDIT *)ebx)->ccmntblocks==1 && RWORD(eax)!='/*' && RWORD(eax)!='*/')
 			{
 				goto Nf;
 			}
-			else if(((EDIT *)ebx)->ccmntblocks==2 && RWORD(eax)!="/'" && RWORD(eax)!="'/")
+			else if(((EDIT *)ebx)->ccmntblocks==2 && RWORD(eax)!='/\'' && RWORD(eax)!='\'/')
 			{
 				goto Nf;
 			} // endif
@@ -647,7 +647,7 @@ Nxt:
 				OptSkipWord();
 				goto Nxt;
 			}
-			else if(RWORD(eax)=="'/")
+			else if(RWORD(eax)=='\'/')
 			{
 				// comment init
 				while(ecx<((CHARS *)edi)->len)
@@ -658,17 +658,17 @@ Nxt:
 					{
 						SkipString();
 					}
-					else if(*(WORD *)(edi+ecx+sizeof(CHARS))=="'/")
+					else if(*(WORD *)(edi+ecx+sizeof(CHARS))=='\'/')
 					{
 						ecx++;
 						fCmnt++;
 					}
-					else if(*(WORD *)(edi+ecx+sizeof(CHARS))=="/'")
+					else if(*(WORD *)(edi+ecx+sizeof(CHARS))=='/\'')
 					{
 						ecx++;
 						fCmnt--;
 					}
-					else if(*(BYTE *)(edi+ecx+sizeof(CHARS))=="'" && !fCmnt)
+					else if(*(BYTE *)(edi+ecx+sizeof(CHARS))=='\'' && !fCmnt)
 					{
 						ecx = ((CHARS *)edi)->len;
 					} // endif
@@ -681,7 +681,7 @@ Nxt:
 				} // endif
 				goto Nf;
 			}
-			else if(RWORD(eax)=="/'")
+			else if(RWORD(eax)=='/\'')
 			{
 				// Comment end
 				while(ecx<((CHARS *)edi)->len)
@@ -692,7 +692,7 @@ Nxt:
 					{
 						SkipString();
 					}
-					else if(*(WORD *)(edi+ecx+sizeof(CHARS))=="/'")
+					else if(*(WORD *)(edi+ecx+sizeof(CHARS))=='/\'')
 					{
 						if(((CHARS *)edi)->state&STATE_COMMENT)
 						{
@@ -700,12 +700,12 @@ Nxt:
 						} // endif
 						ecx++;
 					}
-					else if(*(WORD *)(edi+ecx+sizeof(CHARS))=="'/")
+					else if(*(WORD *)(edi+ecx+sizeof(CHARS))=='\'/')
 					{
 						fCmnt++;
 						ecx++;
 					}
-					else if(*(BYTE *)(edi+ecx+sizeof(CHARS))=="'" && !fCmnt)
+					else if(*(BYTE *)(edi+ecx+sizeof(CHARS))=='\'' && !fCmnt)
 					{
 						ecx = ((CHARS *)edi)->len;
 					} // endif
@@ -718,7 +718,7 @@ Nxt:
 				} // endif
 				goto Nf;
 			}
-			else if(RWORD(eax)=="*/")
+			else if(RWORD(eax)=='*/')
 			{
 				// comment init
 				while(ecx<((CHARS *)edi)->len)
@@ -729,12 +729,12 @@ Nxt:
 					{
 						SkipString();
 					}
-					else if(*(WORD *)(edi+ecx+sizeof(CHARS))=="*/")
+					else if(*(WORD *)(edi+ecx+sizeof(CHARS))=='*/')
 					{
 						ecx++;
 						fCmnt++;
 					}
-					else if(*(WORD *)(edi+ecx+sizeof(CHARS))=="/*")
+					else if(*(WORD *)(edi+ecx+sizeof(CHARS))=='/*')
 					{
 						ecx++;
 						fCmnt--;
@@ -748,16 +748,16 @@ Nxt:
 				} // endif
 				goto Nf;
 			}
-			else if(RWORD(eax)=="/*")
+			else if(RWORD(eax)=='/*')
 			{
 				// Comment end
 				while(ecx<((CHARS *)edi)->len)
 				{
-					if(*(WORD *)(edi+ecx+sizeof(CHARS))=="/*")
+					if(*(WORD *)(edi+ecx+sizeof(CHARS))=='/*')
 					{
 						fCmnt--;
 					}
-					else if(*(WORD *)(edi+ecx+sizeof(CHARS))=="*/")
+					else if(*(WORD *)(edi+ecx+sizeof(CHARS))=='*/')
 					{
 						fCmnt++;
 					} // endif
@@ -854,19 +854,19 @@ Nf:
 	void SkipCmnt(void)
 	{
 		REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
-		if(*(WORD *)(edi+ecx+sizeof(CHARS))=="'/")
+		if(*(WORD *)(edi+ecx+sizeof(CHARS))=='\'/')
 		{
 			temp1 = eax;
 			ecx++;
 			while(ecx<((CHARS *)edi)->len)
 			{
 				ecx++;
-				if(*(WORD *)(edi+ecx+sizeof(CHARS))=="/'")
+				if(*(WORD *)(edi+ecx+sizeof(CHARS))=='/\'')
 				{
 					break;
 				} // endif
 			} // endw
-			if(*(WORD *)(edi+ecx+sizeof(CHARS))=="/'")
+			if(*(WORD *)(edi+ecx+sizeof(CHARS))=='/\'')
 			{
 				ecx += 2;
 			} // endif
@@ -899,7 +899,7 @@ SkipSpcStart:
 				} // endif
 				goto SkipSpcStart;
 			}
-			else if(RBYTE_LOW(eax)==(BYTE)bracketcont)
+			else if(RBYTE_LOW(eax)==bracketcont[0])
 			{
 				if(*(BYTE *)(edi+ecx+sizeof(CHARS)+1)==VK_RETURN)
 				{
@@ -2165,7 +2165,7 @@ anon_9:
 			while(edx>1)
 			{
 				RBYTE_LOW(eax) = *(BYTE *)(esi+edx+sizeof(CHARS)-1);
-				if(RBYTE_LOW(eax)==")")
+				if(RBYTE_LOW(eax)==')')
 				{
 					ecx++;
 				}
@@ -2266,7 +2266,7 @@ anon_10:
 			while(edx<((CHARS *)esi)->len)
 			{
 				RBYTE_LOW(eax) = *(BYTE *)(esi+edx+sizeof(CHARS));
-				if(RBYTE_LOW(eax)=="(")
+				if(RBYTE_LOW(eax)=='(')
 				{
 					ecx++;
 				}
@@ -2763,18 +2763,18 @@ __declspec(dllexport) REG_T IsCharPos(DWORD hMem, DWORD cp)
 		ecx = 0;
 		while(ecx<nMax)
 		{
-			if(((EDIT *)ebx)->ccmntblocks==1 && *(WORD *)(esi+ecx+sizeof(CHARS))=="*/")
+			if(((EDIT *)ebx)->ccmntblocks==1 && *(WORD *)(esi+ecx+sizeof(CHARS))=='*/')
 			{
 				ecx += 2;
 				while(ecx<nMax)
 				{
-					if(*(WORD *)(esi+ecx+sizeof(CHARS))=="/*")
+					if(*(WORD *)(esi+ecx+sizeof(CHARS))=='/*')
 					{
 						break;
 					} // endif
 					ecx++;
 				} // endw
-				if(*(WORD *)(esi+ecx+sizeof(CHARS))=="/*")
+				if(*(WORD *)(esi+ecx+sizeof(CHARS))=='/*')
 				{
 					ecx += 2;
 				}
@@ -2785,18 +2785,18 @@ __declspec(dllexport) REG_T IsCharPos(DWORD hMem, DWORD cp)
 					goto Ex;
 				} // endif
 			}
-			else if(((EDIT *)ebx)->ccmntblocks==2 && *(WORD *)(esi+ecx+sizeof(CHARS))=="'/")
+			else if(((EDIT *)ebx)->ccmntblocks==2 && *(WORD *)(esi+ecx+sizeof(CHARS))=='\'/')
 			{
 				ecx += 2;
 				while(ecx<nMax)
 				{
-					if(*(WORD *)(esi+ecx+sizeof(CHARS))=="/'")
+					if(*(WORD *)(esi+ecx+sizeof(CHARS))=='/\'')
 					{
 						break;
 					} // endif
 					ecx++;
 				} // endw
-				if(*(WORD *)(esi+ecx+sizeof(CHARS))=="/'")
+				if(*(WORD *)(esi+ecx+sizeof(CHARS))=='/\'')
 				{
 					ecx += 2;
 				}
@@ -2874,8 +2874,8 @@ __declspec(dllexport) REG_T BracketMatchRight(DWORD hMem, DWORD nChr, DWORD nMat
 	{
 		RBYTE_LOW(eax) = (BYTE)nMatch;
 		RBYTE_HIGH(eax) = (BYTE)nChr;
-		RBYTE_LOW(ecx) = (BYTE)bracketcont;
-		RBYTE_HIGH(ecx) = (BYTE)bracketcont+1;
+		RBYTE_LOW(ecx) = bracketcont[0];
+		RBYTE_HIGH(ecx) = bracketcont[1];
 		if(RBYTE_LOW(eax)==*(BYTE *)(edi+edx+sizeof(CHARS)))
 		{
 			temp1 = edx;
@@ -3012,13 +3012,13 @@ __declspec(dllexport) REG_T BracketMatchLeft(DWORD hMem, DWORD nChr, DWORD nMatc
 			edx = temp2;
 			if(!eax)
 			{
-				if((BYTE)bracketcont!=VK_RETURN)
+				if(bracketcont[0]!=VK_RETURN)
 				{
 					if(edx)
 					{
 						edx--;
 						RBYTE_LOW(eax) = *(BYTE *)(edi+edx+sizeof(CHARS));
-						if(RBYTE_LOW(eax)!=(BYTE)bracketcont && RBYTE_LOW(eax)!=(BYTE)bracketcont+1)
+						if(RBYTE_LOW(eax)!=bracketcont[0] && RBYTE_LOW(eax)!=bracketcont[1])
 						{
 							break;
 						} // endif
@@ -3117,6 +3117,7 @@ __declspec(dllexport) REG_T GetLineBegin(DWORD hMem, DWORD nLine)
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 
+	ebx = hMem;
 	eax = nLine;
 	if(eax)
 	{
@@ -3134,7 +3135,7 @@ __declspec(dllexport) REG_T GetLineBegin(DWORD hMem, DWORD nLine)
 				break;
 			} // endif
 			RBYTE_LOW(eax) = *(BYTE *)(esi+ecx+sizeof(CHARS)-2);
-			if(RBYTE_LOW(eax)!=bracketcont && RBYTE_LOW(eax) !=bracketcont[1])
+			if(RBYTE_LOW(eax)!=bracketcont[0] && RBYTE_LOW(eax)!=bracketcont[1])
 			{
 				break;
 			} // endif

@@ -3228,7 +3228,7 @@ anon_6: ;
 					eax = ScrollEdit(ebx, hWin, 0, eax);
 				} // endif
 			}
-			else if(eax==MK_CONTROL | MK_SHIFT)
+			else if(eax==(MK_CONTROL | MK_SHIFT))
 			{
 				eax = wParam;
 				if(R_SIGNED(eax) > 0)
@@ -3427,7 +3427,7 @@ anon_6: ;
 			eax = GetClientRect(hWin, & ((EDIT *)ebx)->edta.rc);
 			eax = ((EDIT *)ebx)->fstyle;
 			eax &= STYLE_NOSPLITT | STYLE_NOVSCROLL;
-			if(eax!=STYLE_NOSPLITT | STYLE_NOVSCROLL)
+			if(eax!=(STYLE_NOSPLITT | STYLE_NOVSCROLL))
 			{
 				eax = SBWT;
 				((EDIT *)ebx)->edta.rc.right -= eax;
@@ -3443,7 +3443,7 @@ anon_6: ;
 			eax = GetClientRect(hWin, & ((EDIT *)ebx)->edtb.rc);
 			eax = ((EDIT *)ebx)->fstyle;
 			eax &= STYLE_NOSPLITT | STYLE_NOVSCROLL;
-			if(eax!=STYLE_NOSPLITT | STYLE_NOVSCROLL)
+			if(eax!=(STYLE_NOSPLITT | STYLE_NOVSCROLL))
 			{
 				eax = SBWT;
 				((EDIT *)ebx)->edtb.rc.right -= eax;
@@ -4104,8 +4104,6 @@ __declspec(dllexport) REG_T RAWndProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARA
 			eax = CollapseAll(ebx);
 			if(eax)
 			{
-				temp1 = esi;
-				temp2 = edi;
 				eax = GetLineFromCp(ebx, ((EDIT *)ebx)->cpMin);
 				esi = eax;
 				edi = eax;
@@ -4123,8 +4121,6 @@ anon_7:
 					chrg.cpMax = eax;
 					eax = SendMessage(hWin, EM_EXSETSEL, 0, &chrg);
 				} // endif
-				esi = temp2;
-				edi = temp1;
 				if(((EDIT *)ebx)->fsplitt)
 				{
 					eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edta.hwnd);
@@ -6410,7 +6406,6 @@ anon_8:
 	}
 	else if(eax==WM_SIZE)
 	{
-		temp1 = edi;
 		eax = GetWindowLong(hWin, GWL_STYLE);
 		((EDIT *)ebx)->fstyle = eax;
 		eax = GetClientRect(hWin, & ((EDIT *)ebx)->rc);
@@ -6418,7 +6413,7 @@ anon_8:
 		eax &= STYLE_NOLINENUMBER | STYLE_NOCOLLAPSE | STYLE_NOHSCROLL;
 		edx = ((EDIT *)ebx)->fstyleex;
 		edx &= STYLEEX_LOCK;
-		if(eax!=STYLE_NOLINENUMBER | STYLE_NOCOLLAPSE | STYLE_NOHSCROLL || edx==STYLEEX_LOCK)
+		if(eax!=(STYLE_NOLINENUMBER | STYLE_NOCOLLAPSE | STYLE_NOHSCROLL) || edx==STYLEEX_LOCK)
 		{
 			eax = SBWT;
 			((EDIT *)ebx)->rc.bottom -= eax;
@@ -6459,13 +6454,13 @@ anon_8:
 		eax &= STYLE_NOLINENUMBER | STYLE_NOCOLLAPSE | STYLE_NOHSCROLL;
 		edx = ((EDIT *)ebx)->fstyleex;
 		edx &= STYLEEX_LOCK;
-		if(eax!=STYLE_NOLINENUMBER | STYLE_NOCOLLAPSE | STYLE_NOHSCROLL || edx==STYLEEX_LOCK)
+		if(eax!=(STYLE_NOLINENUMBER | STYLE_NOCOLLAPSE | STYLE_NOHSCROLL) || edx==STYLEEX_LOCK)
 		{
 			ecx = ((EDIT *)ebx)->rc.right;
 			ecx -= edi;
 			eax = ((EDIT *)ebx)->fstyle;
 			eax &= STYLE_NOSPLITT | STYLE_NOVSCROLL;
-			if(eax!=STYLE_NOSPLITT | STYLE_NOVSCROLL)
+			if(eax!=(STYLE_NOSPLITT | STYLE_NOVSCROLL))
 			{
 				ecx -= SBWT;
 				eax = MoveWindow(((EDIT *)ebx)->hhscroll, edi, ((EDIT *)ebx)->rc.bottom, ecx, SBWT, TRUE);
@@ -6518,7 +6513,6 @@ anon_9:
 		} // endif
 		eax = GetTopFromYp(ebx, ((EDIT *)ebx)->edta.hwnd, ((EDIT *)ebx)->edta.cpy);
 		eax = GetTopFromYp(ebx, ((EDIT *)ebx)->edtb.hwnd, ((EDIT *)ebx)->edtb.cpy);
-		edi = temp1;
 		eax = 0;
 		goto Ex;
 	}

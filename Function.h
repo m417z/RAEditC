@@ -3,7 +3,7 @@
 #include <windows.h>
 #include "Data.h"
 
-REG_T FindTheText(DWORD hMem, DWORD pFind, DWORD fMC, DWORD fWW, DWORD fWhiteSpace, DWORD cpMin, DWORD cpMax, DWORD fDir);
+REG_T FindTheText(DWORD hMem, DWORD pFind, DWORD fMC, DWORD fWW, DWORD fWhiteSpace, DWORD cpMin, DWORD cpMax, DWORD fDir, DWORD *pnIgnore);
 REG_T FindTextEx(DWORD hMem, DWORD fFlag, DWORD lpFindTextEx)                                                            ;
 REG_T IsLine(DWORD hMem, DWORD nLine, DWORD lpszTest)                                                                    ;
 REG_T SetBookMark(DWORD hMem, DWORD nLine, DWORD nType)                                                                  ;

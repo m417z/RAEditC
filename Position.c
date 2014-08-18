@@ -1040,6 +1040,7 @@ __declspec(dllexport) REG_T GetBlockCp(DWORD hMem, DWORD nLine, DWORD nPos)
 	REG_T eax = 0, ecx, edx, ebx, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 
+	ebx = hMem;
 	eax = GetCpFromLine(ebx, nLine);
 	edi = eax;
 	eax = nPos;

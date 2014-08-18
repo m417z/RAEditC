@@ -1395,12 +1395,12 @@ __declspec(dllexport) REG_T SetCommentBlocks(DWORD hMem, DWORD lpStart, DWORD lp
 			fCmnt = eax;
 			while(ecx<((CHARS *)esi)->len)
 			{
-				if(*(WORD *)(esi+ecx+sizeof(CHARS)-1)=="*/")
+				if(*(WORD *)(esi+ecx+sizeof(CHARS)-1)=='*/')
 				{
 					ecx++;
 					nCmnt++;
 				}
-				else if(*(WORD *)(esi+ecx+sizeof(CHARS)-1)=="/*")
+				else if(*(WORD *)(esi+ecx+sizeof(CHARS)-1)=='/*')
 				{
 					ecx++;
 					if(nCmnt)
@@ -1410,7 +1410,7 @@ __declspec(dllexport) REG_T SetCommentBlocks(DWORD hMem, DWORD lpStart, DWORD lp
 				} // endif
 				ecx++;
 			} // endw
-			((CHARS *)esi)->state &= -1 ^ STATE_COMMENT | STATE_COMMENTNEST;
+			((CHARS *)esi)->state &= -1 ^ (STATE_COMMENT | STATE_COMMENTNEST);
 			if(nCmnt>1 || fCmnt)
 			{
 				((CHARS *)esi)->state |= STATE_COMMENT;
@@ -1433,7 +1433,7 @@ __declspec(dllexport) REG_T SetCommentBlocks(DWORD hMem, DWORD lpStart, DWORD lp
 		} // endif
 		return eax;
 	}
-	else if(*(WORD *)eax=="'/" && *(WORD *)edx=="/'")
+	else if(*(WORD *)eax=='\'/' && *(WORD *)edx=='/\'')
 	{
 		((EDIT *)ebx)->ccmntblocks = 2;
 		ecx = 0;
@@ -1456,7 +1456,7 @@ __declspec(dllexport) REG_T SetCommentBlocks(DWORD hMem, DWORD lpStart, DWORD lp
 			fCmnt = eax;
 			while(ecx<((CHARS *)esi)->len)
 			{
-				if(*(BYTE *)(esi+ecx+sizeof(CHARS)-1)=="'" &&  *(WORD *)(esi+ecx+sizeof(CHARS)-1)!="/'")
+				if(*(BYTE *)(esi+ecx+sizeof(CHARS)-1)=='\'' &&  *(WORD *)(esi+ecx+sizeof(CHARS)-1)!='/\'')
 				{
 					ecx = ((CHARS *)esi)->len;
 				}
@@ -1468,12 +1468,12 @@ __declspec(dllexport) REG_T SetCommentBlocks(DWORD hMem, DWORD lpStart, DWORD lp
 						ecx++;
 					} // endw
 				}
-				else if(*(WORD *)(esi+ecx+sizeof(CHARS)-1)=="'/")
+				else if(*(WORD *)(esi+ecx+sizeof(CHARS)-1)=='\'/')
 				{
 					ecx++;
 					nCmnt++;
 				}
-				else if(*(WORD *)(esi+ecx+sizeof(CHARS)-1)=="/'")
+				else if(*(WORD *)(esi+ecx+sizeof(CHARS)-1)=='/\'')
 				{
 					ecx++;
 					if(nCmnt)
@@ -1483,7 +1483,7 @@ __declspec(dllexport) REG_T SetCommentBlocks(DWORD hMem, DWORD lpStart, DWORD lp
 				} // endif
 				ecx++;
 			} // endw
-			((CHARS *)esi)->state &= -1 ^ STATE_COMMENT | STATE_COMMENTNEST;
+			((CHARS *)esi)->state &= -1 ^ (STATE_COMMENT | STATE_COMMENTNEST);
 			if(nCmnt>1 || fCmnt)
 			{
 				((CHARS *)esi)->state |= STATE_COMMENT;

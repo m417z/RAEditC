@@ -225,7 +225,7 @@ __declspec(dllexport) REG_T DrawLine(DWORD hMem, DWORD lpChars, DWORD nLine, DWO
 				if(edi>=2 && ((EDIT *)ebx)->ccmntblocks && fCmnt && !fCmntNest && !nStr && nCmnt)
 				{
 					eax = *(WORD *)(esi+edi-2);
-					if(((eax=='/*' && ((EDIT *)ebx)->ccmntblocks==1) || (eax=="/'" && ((EDIT *)ebx)->ccmntblocks==2) || (RBYTE_HIGH(eax)=="}" && ((EDIT *)ebx)->ccmntblocks==3)))
+					if(((eax=='/*' && ((EDIT *)ebx)->ccmntblocks==1) || (eax=='/\'' && ((EDIT *)ebx)->ccmntblocks==2) || (RBYTE_HIGH(eax)=='}' && ((EDIT *)ebx)->ccmntblocks==3)))
 					{
 						fCmnt = 0;
 						nCmnt--;
@@ -264,7 +264,7 @@ __declspec(dllexport) REG_T DrawLine(DWORD hMem, DWORD lpChars, DWORD nLine, DWO
 					else if(RBYTE_LOW(eax)==CT_CMNTINITCHAR)
 					{
 						eax = *(WORD *)(esi+edi);
-						if(RBYTE_HIGH(eax)=="'")
+						if(RBYTE_HIGH(eax)=='\'')
 						{
 							fEnd = 0;
 							fStr = 0;
@@ -408,7 +408,7 @@ __declspec(dllexport) REG_T DrawLine(DWORD hMem, DWORD lpChars, DWORD nLine, DWO
 					else if(RBYTE_LOW(eax)==CT_CMNTINITCHAR)
 					{
 						eax = *(WORD *)(esi+edi);
-						if(RBYTE_HIGH(eax)=="'" || RBYTE_LOW(eax)=='{')
+						if(RBYTE_HIGH(eax)=='\'' || RBYTE_LOW(eax)=='{')
 						{
 							nCmnt++;
 							fCmnt = eax;
