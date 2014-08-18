@@ -5,7 +5,7 @@
 #define EM_SETIMESTATUS 0x00d8
 #define EM_GETIMESTATUS 0x00d9
 
-__declspec(dllexport) REG_T TimerProc(DWORD hWin, DWORD uMsg, DWORD idEvent, DWORD dwTime)
+REG_T TimerProc(DWORD hWin, DWORD uMsg, DWORD idEvent, DWORD dwTime)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -157,7 +157,7 @@ void WINAPI UnInstallRAEdit(void)
 //
 // nColor			gggg0sff cccccccc cccccccc cccccccc
 // g=Word group, s=Case sensitive, f=Font style, c=color
-__declspec(dllexport) REG_T SetHiliteWords(DWORD nColor, DWORD lpWords)
+REG_T SetHiliteWords(DWORD nColor, DWORD lpWords)
 {
 	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -392,7 +392,7 @@ Ex:
 
 } // SetHiliteWords
 
-__declspec(dllexport) REG_T GetCharTabPtr(void)
+REG_T GetCharTabPtr(void)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -402,7 +402,7 @@ __declspec(dllexport) REG_T GetCharTabPtr(void)
 
 } // GetCharTabPtr
 
-__declspec(dllexport) REG_T GetCharTabVal(DWORD nChar)
+REG_T GetCharTabVal(DWORD nChar)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -414,7 +414,7 @@ __declspec(dllexport) REG_T GetCharTabVal(DWORD nChar)
 
 } // GetCharTabVal
 
-__declspec(dllexport) REG_T SetCharTabVal(DWORD nChar, DWORD nValue)
+REG_T SetCharTabVal(DWORD nChar, DWORD nValue)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -427,7 +427,7 @@ __declspec(dllexport) REG_T SetCharTabVal(DWORD nChar, DWORD nValue)
 
 } // SetCharTabVal
 
-__declspec(dllexport) REG_T SetBlockDef(DWORD lpRABLOCKDEF)
+REG_T SetBlockDef(DWORD lpRABLOCKDEF)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -546,7 +546,7 @@ Ex:
 
 // --------------------------------------------------------------------------------
 
-__declspec(dllexport) REG_T SplittBtnProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
+REG_T SplittBtnProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -589,7 +589,7 @@ __declspec(dllexport) REG_T SplittBtnProc(HWND hWin, UINT uMsg, WPARAM wParam, L
 
 } // SplittBtnProc
 
-__declspec(dllexport) REG_T StateProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
+REG_T StateProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -630,7 +630,7 @@ __declspec(dllexport) REG_T StateProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARA
 
 } // StateProc
 
-__declspec(dllexport) REG_T EditFunc(HWND hWin, UINT uMsg, DWORD fAlt, DWORD fShift, DWORD fControl)
+REG_T EditFunc(HWND hWin, UINT uMsg, DWORD fAlt, DWORD fShift, DWORD fControl)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1877,7 +1877,7 @@ ErrBeep:
 
 } // EditFunc
 
-__declspec(dllexport) REG_T RAEditProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
+REG_T RAEditProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -3570,7 +3570,7 @@ ErrBeep:
 
 } // RAEditProc
 
-__declspec(dllexport) REG_T GetText(DWORD hMem, DWORD cpMin, DWORD cpMax, DWORD lpText, DWORD fLf)
+REG_T GetText(DWORD hMem, DWORD cpMin, DWORD cpMax, DWORD lpText, DWORD fLf)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -3637,7 +3637,7 @@ __declspec(dllexport) REG_T GetText(DWORD hMem, DWORD cpMin, DWORD cpMax, DWORD 
 
 } // GetText
 
-__declspec(dllexport) REG_T FakeToolTipProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
+REG_T FakeToolTipProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -3671,7 +3671,7 @@ __declspec(dllexport) REG_T FakeToolTipProc(HWND hWin, UINT uMsg, WPARAM wParam,
 
 } // FakeToolTipProc
 
-__declspec(dllexport) REG_T ConvTwipsToPixels(HDC hDC, DWORD fHorz, DWORD lSize)
+REG_T ConvTwipsToPixels(HDC hDC, DWORD fHorz, DWORD lSize)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -3694,7 +3694,7 @@ __declspec(dllexport) REG_T ConvTwipsToPixels(HDC hDC, DWORD fHorz, DWORD lSize)
 } // ConvTwipsToPixels
 
 // The edit controls callback (WndProc).
-__declspec(dllexport) REG_T RAWndProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
+REG_T RAWndProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;

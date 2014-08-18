@@ -3,7 +3,7 @@
 typedef REG_T CALLBACK (* EDITSTREAMCALLBACKPROTO)(DWORD dwCookie, DWORD pbBuff, DWORD cb, DWORD pcb);
 typedef EDITSTREAMCALLBACKPROTO EDITSTREAMCALLBACKPTR;
 
-__declspec(dllexport) REG_T FindTheText(DWORD hMem, DWORD pFind, DWORD fMC, DWORD fWW, DWORD fWhiteSpace, DWORD cpMin, DWORD cpMax, DWORD fDir, DWORD *pnIgnore)
+REG_T FindTheText(DWORD hMem, DWORD pFind, DWORD fMC, DWORD fWW, DWORD fWhiteSpace, DWORD cpMin, DWORD cpMax, DWORD fDir, DWORD *pnIgnore)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -396,7 +396,7 @@ FoundUp:
 
 } // FindTheText
 
-__declspec(dllexport) REG_T FindTextEx(DWORD hMem, DWORD fFlag, DWORD lpFindTextEx)
+REG_T FindTextEx(DWORD hMem, DWORD fFlag, DWORD lpFindTextEx)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -468,7 +468,7 @@ __declspec(dllexport) REG_T FindTextEx(DWORD hMem, DWORD fFlag, DWORD lpFindText
 
 } // FindTextEx
 
-__declspec(dllexport) REG_T IsLine(DWORD hMem, DWORD nLine, DWORD lpszTest)
+REG_T IsLine(DWORD hMem, DWORD nLine, DWORD lpszTest)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1328,7 +1328,7 @@ TestWordNf:
 
 } // IsLine
 
-__declspec(dllexport) REG_T SetBookMark(DWORD hMem, DWORD nLine, DWORD nType)
+REG_T SetBookMark(DWORD hMem, DWORD nLine, DWORD nType)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1358,7 +1358,7 @@ __declspec(dllexport) REG_T SetBookMark(DWORD hMem, DWORD nLine, DWORD nType)
 
 } // SetBookMark
 
-__declspec(dllexport) REG_T GetBookMark(DWORD hMem, DWORD nLine)
+REG_T GetBookMark(DWORD hMem, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1381,7 +1381,7 @@ __declspec(dllexport) REG_T GetBookMark(DWORD hMem, DWORD nLine)
 
 } // GetBookMark
 
-__declspec(dllexport) REG_T ClearBookMarks(DWORD hMem, DWORD nType)
+REG_T ClearBookMarks(DWORD hMem, DWORD nType)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1413,7 +1413,7 @@ __declspec(dllexport) REG_T ClearBookMarks(DWORD hMem, DWORD nType)
 
 } // ClearBookMarks
 
-__declspec(dllexport) REG_T NextBookMark(DWORD hMem, DWORD nLine, DWORD nType)
+REG_T NextBookMark(DWORD hMem, DWORD nLine, DWORD nType)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1450,7 +1450,7 @@ __declspec(dllexport) REG_T NextBookMark(DWORD hMem, DWORD nLine, DWORD nType)
 
 } // NextBookMark
 
-__declspec(dllexport) REG_T NextBreakpoint(DWORD hMem, DWORD nLine)
+REG_T NextBreakpoint(DWORD hMem, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1479,7 +1479,7 @@ __declspec(dllexport) REG_T NextBreakpoint(DWORD hMem, DWORD nLine)
 
 } // NextBreakpoint
 
-__declspec(dllexport) REG_T NextError(DWORD hMem, DWORD nLine)
+REG_T NextError(DWORD hMem, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1508,7 +1508,7 @@ __declspec(dllexport) REG_T NextError(DWORD hMem, DWORD nLine)
 
 } // NextError
 
-__declspec(dllexport) REG_T PreviousBookMark(DWORD hMem, DWORD nLine, DWORD nType)
+REG_T PreviousBookMark(DWORD hMem, DWORD nLine, DWORD nType)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1546,7 +1546,7 @@ anon_3:
 
 } // PreviousBookMark
 
-__declspec(dllexport) REG_T LockLine(DWORD hMem, DWORD nLine, DWORD fLock)
+REG_T LockLine(DWORD hMem, DWORD nLine, DWORD fLock)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1572,7 +1572,7 @@ __declspec(dllexport) REG_T LockLine(DWORD hMem, DWORD nLine, DWORD fLock)
 
 } // LockLine
 
-__declspec(dllexport) REG_T IsLineLocked(DWORD hMem, DWORD nLine)
+REG_T IsLineLocked(DWORD hMem, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1600,7 +1600,7 @@ __declspec(dllexport) REG_T IsLineLocked(DWORD hMem, DWORD nLine)
 
 } // IsLineLocked
 
-__declspec(dllexport) REG_T HideLine(DWORD hMem, DWORD nLine, DWORD fHide)
+REG_T HideLine(DWORD hMem, DWORD nLine, DWORD fHide)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1671,7 +1671,7 @@ Ex:
 
 } // HideLine
 
-__declspec(dllexport) REG_T IsLineHidden(DWORD hMem, DWORD nLine)
+REG_T IsLineHidden(DWORD hMem, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1695,7 +1695,7 @@ __declspec(dllexport) REG_T IsLineHidden(DWORD hMem, DWORD nLine)
 
 } // IsLineHidden
 
-__declspec(dllexport) REG_T NoBlockLine(DWORD hMem, DWORD nLine, DWORD fNoBlock)
+REG_T NoBlockLine(DWORD hMem, DWORD nLine, DWORD fNoBlock)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1721,7 +1721,7 @@ __declspec(dllexport) REG_T NoBlockLine(DWORD hMem, DWORD nLine, DWORD fNoBlock)
 
 } // NoBlockLine
 
-__declspec(dllexport) REG_T IsLineNoBlock(DWORD hMem, DWORD nLine)
+REG_T IsLineNoBlock(DWORD hMem, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1745,7 +1745,7 @@ __declspec(dllexport) REG_T IsLineNoBlock(DWORD hMem, DWORD nLine)
 
 } // IsLineNoBlock
 
-__declspec(dllexport) REG_T AltHiliteLine(DWORD hMem, DWORD nLine, DWORD fAltHilite)
+REG_T AltHiliteLine(DWORD hMem, DWORD nLine, DWORD fAltHilite)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1771,7 +1771,7 @@ __declspec(dllexport) REG_T AltHiliteLine(DWORD hMem, DWORD nLine, DWORD fAltHil
 
 } // AltHiliteLine
 
-__declspec(dllexport) REG_T IsLineAltHilite(DWORD hMem, DWORD nLine)
+REG_T IsLineAltHilite(DWORD hMem, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1795,7 +1795,7 @@ __declspec(dllexport) REG_T IsLineAltHilite(DWORD hMem, DWORD nLine)
 
 } // IsLineAltHilite
 
-__declspec(dllexport) REG_T SetBreakpoint(DWORD hMem, DWORD nLine, DWORD fBreakpoint)
+REG_T SetBreakpoint(DWORD hMem, DWORD nLine, DWORD fBreakpoint)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1821,7 +1821,7 @@ __declspec(dllexport) REG_T SetBreakpoint(DWORD hMem, DWORD nLine, DWORD fBreakp
 
 } // SetBreakpoint
 
-__declspec(dllexport) REG_T SetError(DWORD hMem, DWORD nLine, DWORD nErrID)
+REG_T SetError(DWORD hMem, DWORD nLine, DWORD nErrID)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1841,7 +1841,7 @@ __declspec(dllexport) REG_T SetError(DWORD hMem, DWORD nLine, DWORD nErrID)
 
 } // SetError
 
-__declspec(dllexport) REG_T GetError(DWORD hMem, DWORD nLine)
+REG_T GetError(DWORD hMem, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1861,7 +1861,7 @@ __declspec(dllexport) REG_T GetError(DWORD hMem, DWORD nLine)
 
 } // GetError
 
-__declspec(dllexport) REG_T SetRedText(DWORD hMem, DWORD nLine, DWORD fRed)
+REG_T SetRedText(DWORD hMem, DWORD nLine, DWORD fRed)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1887,7 +1887,7 @@ __declspec(dllexport) REG_T SetRedText(DWORD hMem, DWORD nLine, DWORD fRed)
 
 } // SetRedText
 
-__declspec(dllexport) REG_T GetLineState(DWORD hMem, DWORD nLine)
+REG_T GetLineState(DWORD hMem, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1907,7 +1907,7 @@ __declspec(dllexport) REG_T GetLineState(DWORD hMem, DWORD nLine)
 
 } // GetLineState
 
-__declspec(dllexport) REG_T IsSelectionLocked(DWORD hMem, DWORD cpMin, DWORD cpMax)
+REG_T IsSelectionLocked(DWORD hMem, DWORD cpMin, DWORD cpMax)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1942,7 +1942,7 @@ Ex:
 } // IsSelectionLocked
 
 
-__declspec(dllexport) REG_T TrimSpace(DWORD hMem, DWORD nLine, DWORD fLeft)
+REG_T TrimSpace(DWORD hMem, DWORD nLine, DWORD fLeft)
 {
 	REG_T eax = 0, ecx, edx, ebx, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -2045,7 +2045,7 @@ Ex:
 
 } // TrimSpace
 
-__declspec(dllexport) REG_T SkipSpace(DWORD hMem, DWORD cp, DWORD fLeft)
+REG_T SkipSpace(DWORD hMem, DWORD cp, DWORD fLeft)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -2087,7 +2087,7 @@ anon_6:
 
 } // SkipSpace
 
-__declspec(dllexport) REG_T SkipWhiteSpace(DWORD hMem, DWORD cp, DWORD fLeft)
+REG_T SkipWhiteSpace(DWORD hMem, DWORD cp, DWORD fLeft)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -2131,7 +2131,7 @@ anon_8:
 
 } // SkipWhiteSpace
 
-__declspec(dllexport) REG_T GetWordStart(DWORD hMem, DWORD cp, DWORD nType)
+REG_T GetWordStart(DWORD hMem, DWORD cp, DWORD nType)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -2198,7 +2198,7 @@ anon_9:
 
 } // GetWordStart
 
-__declspec(dllexport) REG_T GetLineStart(DWORD hMem, DWORD cp)
+REG_T GetLineStart(DWORD hMem, DWORD cp)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -2210,7 +2210,7 @@ __declspec(dllexport) REG_T GetLineStart(DWORD hMem, DWORD cp)
 
 } // GetLineStart
 
-__declspec(dllexport) REG_T GetTabPos(DWORD hMem, DWORD cp)
+REG_T GetTabPos(DWORD hMem, DWORD cp)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -2235,7 +2235,7 @@ __declspec(dllexport) REG_T GetTabPos(DWORD hMem, DWORD cp)
 
 } // GetTabPos
 
-__declspec(dllexport) REG_T GetWordEnd(DWORD hMem, DWORD cp, DWORD nType)
+REG_T GetWordEnd(DWORD hMem, DWORD cp, DWORD nType)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -2300,7 +2300,7 @@ anon_10:
 
 } // GetWordEnd
 
-__declspec(dllexport) REG_T GetLineEnd(DWORD hMem, DWORD cp)
+REG_T GetLineEnd(DWORD hMem, DWORD cp)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -2332,7 +2332,7 @@ anon_11:
 
 } // GetLineEnd
 
-__declspec(dllexport) REG_T StreamIn(DWORD hMem, DWORD lParam)
+REG_T StreamIn(DWORD hMem, DWORD lParam)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -2427,7 +2427,7 @@ anon_13:
 
 } // StreamIn
 
-__declspec(dllexport) REG_T StreamOut(DWORD hMem, DWORD lParam)
+REG_T StreamOut(DWORD hMem, DWORD lParam)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -2587,7 +2587,7 @@ Ex:
 
 } // StreamOut
 
-__declspec(dllexport) REG_T HiliteLine(DWORD hMem, DWORD nLine, DWORD nColor)
+REG_T HiliteLine(DWORD hMem, DWORD nLine, DWORD nColor)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -2612,7 +2612,7 @@ __declspec(dllexport) REG_T HiliteLine(DWORD hMem, DWORD nLine, DWORD nColor)
 
 } // HiliteLine
 
-__declspec(dllexport) REG_T SelChange(DWORD hMem, DWORD nType)
+REG_T SelChange(DWORD hMem, DWORD nType)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -2701,7 +2701,7 @@ __declspec(dllexport) REG_T SelChange(DWORD hMem, DWORD nType)
 
 } // SelChange
 
-__declspec(dllexport) REG_T AutoIndent(DWORD hMem)
+REG_T AutoIndent(DWORD hMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -2746,7 +2746,7 @@ anon_16:
 
 } // AutoIndent
 
-__declspec(dllexport) REG_T IsCharPos(DWORD hMem, DWORD cp)
+REG_T IsCharPos(DWORD hMem, DWORD cp)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -2857,7 +2857,7 @@ Ex:
 
 } // IsCharPos
 
-__declspec(dllexport) REG_T BracketMatchRight(DWORD hMem, DWORD nChr, DWORD nMatch, DWORD cp)
+REG_T BracketMatchRight(DWORD hMem, DWORD nChr, DWORD nMatch, DWORD cp)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -2951,7 +2951,7 @@ __declspec(dllexport) REG_T BracketMatchRight(DWORD hMem, DWORD nChr, DWORD nMat
 
 } // BracketMatchRight
 
-__declspec(dllexport) REG_T BracketMatchLeft(DWORD hMem, DWORD nChr, DWORD nMatch, DWORD cp)
+REG_T BracketMatchLeft(DWORD hMem, DWORD nChr, DWORD nMatch, DWORD cp)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -3041,7 +3041,7 @@ Ex:
 
 } // BracketMatchLeft
 
-__declspec(dllexport) REG_T BracketMatch(DWORD hMem, DWORD nChr, DWORD cp)
+REG_T BracketMatch(DWORD hMem, DWORD nChr, DWORD cp)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -3111,7 +3111,7 @@ Ex:
 
 } // BracketMatch
 
-__declspec(dllexport) REG_T GetLineBegin(DWORD hMem, DWORD nLine)
+REG_T GetLineBegin(DWORD hMem, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;

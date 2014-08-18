@@ -1,6 +1,6 @@
 #include "Edit.h"
 
-__declspec(dllexport) REG_T InsertNewLine(DWORD hMem, DWORD nLine, DWORD nSize)
+REG_T InsertNewLine(DWORD hMem, DWORD nLine, DWORD nSize)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -55,7 +55,7 @@ __declspec(dllexport) REG_T InsertNewLine(DWORD hMem, DWORD nLine, DWORD nSize)
 
 } // InsertNewLine
 
-__declspec(dllexport) REG_T AddNewLine(DWORD hMem, DWORD lpLine, DWORD nSize)
+REG_T AddNewLine(DWORD hMem, DWORD lpLine, DWORD nSize)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -95,7 +95,7 @@ __declspec(dllexport) REG_T AddNewLine(DWORD hMem, DWORD lpLine, DWORD nSize)
 
 } // AddNewLine
 
-__declspec(dllexport) REG_T ExpandCharLine(DWORD hMem)
+REG_T ExpandCharLine(DWORD hMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -151,7 +151,7 @@ __declspec(dllexport) REG_T ExpandCharLine(DWORD hMem)
 
 } // ExpandCharLine
 
-__declspec(dllexport) REG_T DeleteLine(DWORD hMem, DWORD nLine)
+REG_T DeleteLine(DWORD hMem, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -185,7 +185,7 @@ __declspec(dllexport) REG_T DeleteLine(DWORD hMem, DWORD nLine)
 
 } // DeleteLine
 
-__declspec(dllexport) REG_T InsertChar(DWORD hMem, DWORD cp, DWORD nChr)
+REG_T InsertChar(DWORD hMem, DWORD cp, DWORD nChr)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -344,7 +344,7 @@ Ex:
 
 } // InsertChar
 
-__declspec(dllexport) REG_T DeleteChar(DWORD hMem, DWORD cp)
+REG_T DeleteChar(DWORD hMem, DWORD cp)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -483,7 +483,7 @@ __declspec(dllexport) REG_T DeleteChar(DWORD hMem, DWORD cp)
 
 } // DeleteChar
 
-__declspec(dllexport) REG_T DeleteSelection(DWORD hMem, DWORD cpMin, DWORD cpMax)
+REG_T DeleteSelection(DWORD hMem, DWORD cpMin, DWORD cpMax)
 {
 	REG_T eax = 0, ecx, edx, ebx, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -538,7 +538,7 @@ __declspec(dllexport) REG_T DeleteSelection(DWORD hMem, DWORD cpMin, DWORD cpMax
 
 } // DeleteSelection
 
-__declspec(dllexport) REG_T DeleteSelectionBlock(DWORD hMem, DWORD lnMin, DWORD clMin, DWORD lnMax, DWORD clMax)
+REG_T DeleteSelectionBlock(DWORD hMem, DWORD lnMin, DWORD clMin, DWORD lnMax, DWORD clMax)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -591,7 +591,7 @@ anon_1:
 
 } // DeleteSelectionBlock
 
-__declspec(dllexport) REG_T EditInsert(DWORD hMem, DWORD cp, DWORD lpBuff)
+REG_T EditInsert(DWORD hMem, DWORD cp, DWORD lpBuff)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;

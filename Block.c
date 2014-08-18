@@ -3,7 +3,7 @@
 #include "Function.h"
 #include "Position.h"
 
-__declspec(dllexport) REG_T GetBlock(DWORD hMem, DWORD nLine, DWORD lpBlockDef)
+REG_T GetBlock(DWORD hMem, DWORD nLine, DWORD lpBlockDef)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -376,7 +376,7 @@ anon_11:
 
 } // GetBlock
 
-__declspec(dllexport) REG_T SetBlocks(DWORD hMem, DWORD lpLnrg, DWORD lpBlockDef)
+REG_T SetBlocks(DWORD hMem, DWORD lpLnrg, DWORD lpBlockDef)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -536,7 +536,7 @@ anon_12:
 
 } // SetBlocks
 
-__declspec(dllexport) REG_T IsBlockDefEqual(DWORD lpRABLOCKDEF1, DWORD lpRABLOCKDEF2)
+REG_T IsBlockDefEqual(DWORD lpRABLOCKDEF1, DWORD lpRABLOCKDEF2)
 {
 	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -616,7 +616,7 @@ NotEq:
 
 } // IsBlockDefEqual
 
-__declspec(dllexport) REG_T IsInBlock(DWORD hMem, DWORD nLine, DWORD lpBlockDef)
+REG_T IsInBlock(DWORD hMem, DWORD nLine, DWORD lpBlockDef)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -654,7 +654,7 @@ anon_13:
 
 } // IsInBlock
 
-__declspec(dllexport) REG_T TestBlockStart(DWORD hMem, DWORD nLine)
+REG_T TestBlockStart(DWORD hMem, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -696,7 +696,7 @@ Ex:
 
 } // TestBlockStart
 
-__declspec(dllexport) REG_T TestBlockEnd(DWORD hMem, DWORD nLine)
+REG_T TestBlockEnd(DWORD hMem, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -771,7 +771,7 @@ Ex:
 
 } // TestBlockEnd
 
-__declspec(dllexport) REG_T CollapseGetEnd(DWORD hMem, DWORD nLine)
+REG_T CollapseGetEnd(DWORD hMem, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -889,7 +889,7 @@ Ex:
 
 } // CollapseGetEnd
 
-__declspec(dllexport) REG_T Collapse(DWORD hMem, DWORD nLine)
+REG_T Collapse(DWORD hMem, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1165,7 +1165,7 @@ Ex:
 
 } // Collapse
 
-__declspec(dllexport) REG_T CollapseAll(DWORD hMem)
+REG_T CollapseAll(DWORD hMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1192,7 +1192,7 @@ anon_14:
 
 } // CollapseAll
 
-__declspec(dllexport) REG_T Expand(DWORD hMem, DWORD nLine)
+REG_T Expand(DWORD hMem, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1295,7 +1295,7 @@ Ex:
 
 } // Expand
 
-__declspec(dllexport) REG_T ExpandAll(DWORD hMem)
+REG_T ExpandAll(DWORD hMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1322,7 +1322,7 @@ anon_15:
 
 } // ExpandAll
 
-__declspec(dllexport) REG_T TestExpand(DWORD hMem, DWORD nLine)
+REG_T TestExpand(DWORD hMem, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1353,7 +1353,7 @@ anon_16:
 
 } // TestExpand
 
-__declspec(dllexport) REG_T SetCommentBlocks(DWORD hMem, DWORD lpStart, DWORD lpEnd)
+REG_T SetCommentBlocks(DWORD hMem, DWORD lpStart, DWORD lpEnd)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1708,7 +1708,7 @@ anon_20:
 
 } // SetCommentBlocks
 
-__declspec(dllexport) REG_T SetChangedState(DWORD hMem, DWORD fUpdate)
+REG_T SetChangedState(DWORD hMem, DWORD fUpdate)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;

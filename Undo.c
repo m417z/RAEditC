@@ -1,6 +1,6 @@
 #include "Undo.h"
 
-__declspec(dllexport) REG_T DoUndo(DWORD hMem)
+REG_T DoUndo(DWORD hMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -130,7 +130,7 @@ Nxt:
 
 } // DoUndo
 
-__declspec(dllexport) REG_T DoRedo(DWORD hMem)
+REG_T DoRedo(DWORD hMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -273,7 +273,7 @@ Nxt:
 
 } // DoRedo
 
-__declspec(dllexport) REG_T SaveUndo(DWORD hMem, DWORD nFun, DWORD cp, DWORD lp, DWORD cb)
+REG_T SaveUndo(DWORD hMem, DWORD nFun, DWORD cp, DWORD lp, DWORD cb)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -348,7 +348,7 @@ __declspec(dllexport) REG_T SaveUndo(DWORD hMem, DWORD nFun, DWORD cp, DWORD lp,
 
 } // SaveUndo
 
-__declspec(dllexport) REG_T Undo(RAEDT *raedt, DWORD hMem, DWORD hWin)
+REG_T Undo(RAEDT *raedt, DWORD hMem, DWORD hWin)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -376,7 +376,7 @@ __declspec(dllexport) REG_T Undo(RAEDT *raedt, DWORD hMem, DWORD hWin)
 
 } // Undo
 
-__declspec(dllexport) REG_T Redo(RAEDT *raedt, DWORD hMem, DWORD hWin)
+REG_T Redo(RAEDT *raedt, DWORD hMem, DWORD hWin)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -405,7 +405,7 @@ __declspec(dllexport) REG_T Redo(RAEDT *raedt, DWORD hMem, DWORD hWin)
 
 } // Redo
 
-__declspec(dllexport) REG_T GetUndo(DWORD hMem, DWORD nCount, DWORD lpMem)
+REG_T GetUndo(DWORD hMem, DWORD nCount, DWORD lpMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -499,7 +499,7 @@ __declspec(dllexport) REG_T GetUndo(DWORD hMem, DWORD nCount, DWORD lpMem)
 
 } // GetUndo
 
-__declspec(dllexport) REG_T SetUndo(DWORD hMem, DWORD nSize, DWORD lpMem)
+REG_T SetUndo(DWORD hMem, DWORD nSize, DWORD lpMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;

@@ -1,6 +1,6 @@
 #include "Position.h"
 
-__declspec(dllexport) REG_T GetTopFromYp(DWORD hMem, DWORD hWin, DWORD yp)
+REG_T GetTopFromYp(DWORD hMem, DWORD hWin, DWORD yp)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -118,7 +118,7 @@ anon_1:
 // eax=Char index in line
 // ecx=Char index
 // edx=Line number
-__declspec(dllexport) REG_T GetCharPtr(DWORD hMem, DWORD cp, DWORD *pdwCharIndex, DWORD *pdwLineNumber)
+REG_T GetCharPtr(DWORD hMem, DWORD cp, DWORD *pdwCharIndex, DWORD *pdwLineNumber)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -208,7 +208,7 @@ anon_3:
 } // GetCharPtr
 
 // eax=Char index
-__declspec(dllexport) REG_T GetCpFromLine(DWORD hMem, DWORD nLine)
+REG_T GetCpFromLine(DWORD hMem, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -251,7 +251,7 @@ __declspec(dllexport) REG_T GetCpFromLine(DWORD hMem, DWORD nLine)
 
 } // GetCpFromLine
 
-__declspec(dllexport) REG_T GetLineFromCp(DWORD hMem, DWORD cp)
+REG_T GetLineFromCp(DWORD hMem, DWORD cp)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -304,7 +304,7 @@ __declspec(dllexport) REG_T GetLineFromCp(DWORD hMem, DWORD cp)
 
 } // GetLineFromCp
 
-__declspec(dllexport) REG_T GetYpFromLine(DWORD hMem, DWORD nLine)
+REG_T GetYpFromLine(DWORD hMem, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -361,7 +361,7 @@ anon_5: ;
 
 } // GetYpFromLine
 
-__declspec(dllexport) REG_T GetLineFromYp(DWORD hMem, DWORD y)
+REG_T GetLineFromYp(DWORD hMem, DWORD y)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -424,7 +424,7 @@ anon_7: ;
 
 } // GetLineFromYp
 
-__declspec(dllexport) REG_T GetCpFromXp(DWORD hMem, DWORD lpChars, DWORD x, DWORD fNoAdjust)
+REG_T GetCpFromXp(DWORD hMem, DWORD lpChars, DWORD x, DWORD fNoAdjust)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -532,7 +532,7 @@ anon_8:
 
 } // GetCpFromXp
 
-__declspec(dllexport) REG_T GetPosFromChar(DWORD hMem, DWORD cp, DWORD lpPoint)
+REG_T GetPosFromChar(DWORD hMem, DWORD cp, DWORD lpPoint)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -577,7 +577,7 @@ __declspec(dllexport) REG_T GetPosFromChar(DWORD hMem, DWORD cp, DWORD lpPoint)
 
 } // GetPosFromChar
 
-__declspec(dllexport) REG_T GetCharFromPos(DWORD hMem, DWORD cpy, DWORD x, DWORD y)
+REG_T GetCharFromPos(DWORD hMem, DWORD cpy, DWORD x, DWORD y)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -629,7 +629,7 @@ Ex:
 
 } // GetCharFromPos
 
-__declspec(dllexport) REG_T GetCaretPoint(DWORD hMem, DWORD cp, DWORD cpy, DWORD lpPoint)
+REG_T GetCaretPoint(DWORD hMem, DWORD cp, DWORD cpy, DWORD lpPoint)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -659,7 +659,7 @@ __declspec(dllexport) REG_T GetCaretPoint(DWORD hMem, DWORD cp, DWORD cpy, DWORD
 
 } // GetCaretPoint
 
-__declspec(dllexport) REG_T SetCaret(DWORD hMem, DWORD cpy)
+REG_T SetCaret(DWORD hMem, DWORD cpy)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -693,7 +693,7 @@ __declspec(dllexport) REG_T SetCaret(DWORD hMem, DWORD cpy)
 
 } // SetCaret
 
-__declspec(dllexport) REG_T ScrollEdit(DWORD hMem, DWORD hWin, DWORD x, DWORD y)
+REG_T ScrollEdit(DWORD hMem, DWORD hWin, DWORD x, DWORD y)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -751,7 +751,7 @@ __declspec(dllexport) REG_T ScrollEdit(DWORD hMem, DWORD hWin, DWORD x, DWORD y)
 
 } // ScrollEdit
 
-__declspec(dllexport) REG_T InvalidateEdit(DWORD hMem, DWORD hWin)
+REG_T InvalidateEdit(DWORD hMem, DWORD hWin)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -776,7 +776,7 @@ __declspec(dllexport) REG_T InvalidateEdit(DWORD hMem, DWORD hWin)
 
 } // InvalidateEdit
 
-__declspec(dllexport) REG_T InvalidateLine(DWORD hMem, DWORD hWin, DWORD nLine)
+REG_T InvalidateLine(DWORD hMem, DWORD hWin, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -813,7 +813,7 @@ __declspec(dllexport) REG_T InvalidateLine(DWORD hMem, DWORD hWin, DWORD nLine)
 
 } // InvalidateLine
 
-__declspec(dllexport) REG_T InvalidateSelection(DWORD hMem, DWORD hWin, DWORD cpMin, DWORD cpMax)
+REG_T InvalidateSelection(DWORD hMem, DWORD hWin, DWORD cpMin, DWORD cpMax)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -865,7 +865,7 @@ anon_9:
 
 } // InvalidateSelection
 
-__declspec(dllexport) REG_T SetCaretVisible(DWORD hWin, DWORD cpy)
+REG_T SetCaretVisible(DWORD hWin, DWORD cpy)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1030,7 +1030,7 @@ anon_10:
 
 } // SetCaretVisible
 
-__declspec(dllexport) REG_T GetBlockCp(DWORD hMem, DWORD nLine, DWORD nPos)
+REG_T GetBlockCp(DWORD hMem, DWORD nLine, DWORD nPos)
 {
 	REG_T eax = 0, ecx, edx, ebx, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1060,7 +1060,7 @@ __declspec(dllexport) REG_T GetBlockCp(DWORD hMem, DWORD nLine, DWORD nPos)
 
 } // GetBlockCp
 
-__declspec(dllexport) REG_T SetCpxMax(DWORD hMem, DWORD hWin)
+REG_T SetCpxMax(DWORD hMem, DWORD hWin)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1086,7 +1086,7 @@ __declspec(dllexport) REG_T SetCpxMax(DWORD hMem, DWORD hWin)
 
 } // SetCpxMax
 
-__declspec(dllexport) REG_T SetBlockFromCp(DWORD hMem, DWORD cp, DWORD fShift)
+REG_T SetBlockFromCp(DWORD hMem, DWORD cp, DWORD fShift)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;

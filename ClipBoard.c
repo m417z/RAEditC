@@ -2,7 +2,7 @@
 
 #include "Memory.h"
 
-__declspec(dllexport) REG_T SetClipData(LPSTR lpData, DWORD dwSize)
+REG_T SetClipData(LPSTR lpData, DWORD dwSize)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -49,7 +49,7 @@ exit3:
 
 } // SetClipData
 
-__declspec(dllexport) REG_T EditCopy(DWORD hMem, DWORD lpCMem)
+REG_T EditCopy(DWORD hMem, DWORD lpCMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -101,7 +101,7 @@ __declspec(dllexport) REG_T EditCopy(DWORD hMem, DWORD lpCMem)
 
 } // EditCopy
 
-__declspec(dllexport) REG_T EditCopyBlock(DWORD hMem, DWORD lpCMem)
+REG_T EditCopyBlock(DWORD hMem, DWORD lpCMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -160,7 +160,7 @@ __declspec(dllexport) REG_T EditCopyBlock(DWORD hMem, DWORD lpCMem)
 
 } // EditCopyBlock
 
-__declspec(dllexport) REG_T EditCopyNoLF(DWORD hMem, DWORD lpCMem)
+REG_T EditCopyNoLF(DWORD hMem, DWORD lpCMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -207,7 +207,7 @@ __declspec(dllexport) REG_T EditCopyNoLF(DWORD hMem, DWORD lpCMem)
 
 } // EditCopyNoLF
 
-__declspec(dllexport) REG_T Copy(DWORD hMem)
+REG_T Copy(DWORD hMem)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -258,7 +258,7 @@ __declspec(dllexport) REG_T Copy(DWORD hMem)
 
 } // Copy
 
-__declspec(dllexport) REG_T EditPaste(DWORD hMem, DWORD hData)
+REG_T EditPaste(DWORD hMem, DWORD hData)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -310,7 +310,7 @@ __declspec(dllexport) REG_T EditPaste(DWORD hMem, DWORD hData)
 
 } // EditPaste
 
-__declspec(dllexport) REG_T EditPasteBlock(DWORD hMem, DWORD hData)
+REG_T EditPasteBlock(DWORD hMem, DWORD hData)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -436,7 +436,7 @@ anon_1:
 
 } // EditPasteBlock
 
-__declspec(dllexport) REG_T Paste(DWORD hMem, DWORD hWin, DWORD hData)
+REG_T Paste(DWORD hMem, DWORD hWin, DWORD hData)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -480,7 +480,7 @@ __declspec(dllexport) REG_T Paste(DWORD hMem, DWORD hWin, DWORD hData)
 
 } // Paste
 
-__declspec(dllexport) REG_T Cut(DWORD hMem, DWORD hWin)
+REG_T Cut(DWORD hMem, DWORD hWin)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -527,7 +527,7 @@ __declspec(dllexport) REG_T Cut(DWORD hMem, DWORD hWin)
 
 } // Cut
 
-__declspec(dllexport) REG_T ConvertCase(DWORD hMem, DWORD nFunction)
+REG_T ConvertCase(DWORD hMem, DWORD nFunction)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -562,7 +562,7 @@ __declspec(dllexport) REG_T ConvertCase(DWORD hMem, DWORD nFunction)
 
 } // ConvertCase
 
-__declspec(dllexport) REG_T ConvertIndent(DWORD hMem, DWORD nFunction)
+REG_T ConvertIndent(DWORD hMem, DWORD nFunction)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;

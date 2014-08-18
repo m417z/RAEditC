@@ -3,7 +3,7 @@
 typedef REG_T WINAPI (* BOOKMARKPAINTCALLBACKPROTO)(HWND hWnd, DWORD line);
 typedef BOOKMARKPAINTCALLBACKPROTO BOOKMARKPAINTCALLBACKPTR;
 
-__declspec(dllexport) REG_T DrawLine(DWORD hMem, DWORD lpChars, DWORD nLine, DWORD cp, DWORD hDC, DWORD lpRect)
+REG_T DrawLine(DWORD hMem, DWORD lpChars, DWORD nLine, DWORD cp, DWORD hDC, DWORD lpRect)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1249,7 +1249,7 @@ anon_6:
 
 } // DrawLine
 
-__declspec(dllexport) REG_T SetBlockMarkers(DWORD hMem, DWORD nLine, DWORD nMax)
+REG_T SetBlockMarkers(DWORD hMem, DWORD nLine, DWORD nMax)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1412,7 +1412,7 @@ BlockRootStart:
 
 } // SetBlockMarkers
 
-__declspec(dllexport) REG_T DrawChangedState(DWORD hMem, HDC hDC, DWORD lpLine, DWORD x, DWORD y)
+REG_T DrawChangedState(DWORD hMem, HDC hDC, DWORD lpLine, DWORD x, DWORD y)
 {
 	REG_T eax = 0, ecx, edx, ebx, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1468,7 +1468,7 @@ __declspec(dllexport) REG_T DrawChangedState(DWORD hMem, HDC hDC, DWORD lpLine, 
 } // DrawChangedState
 
 // This proc does all the painting and drawing
-__declspec(dllexport) REG_T RAEditPaint(HWND hWin)
+REG_T RAEditPaint(HWND hWin)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1878,7 +1878,7 @@ anon_9:
 } // RAEditPaint
 
 // This proc does all the painting and drawing
-__declspec(dllexport) REG_T RAEditPaintNoBuff(HWND hWin)
+REG_T RAEditPaintNoBuff(HWND hWin)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;

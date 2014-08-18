@@ -2,7 +2,7 @@
 
 #include "Function.h"
 
-__declspec(dllexport) REG_T SetFont(DWORD hMem, DWORD lpRafont)
+REG_T SetFont(DWORD hMem, DWORD lpRafont)
 {
 	REG_T eax = 0, ecx, edx, ebx, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -89,7 +89,7 @@ __declspec(dllexport) REG_T SetFont(DWORD hMem, DWORD lpRafont)
 
 } // SetFont
 
-__declspec(dllexport) REG_T SetColor(DWORD hMem, DWORD lpRAColor)
+REG_T SetColor(DWORD hMem, DWORD lpRAColor)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -118,7 +118,7 @@ __declspec(dllexport) REG_T SetColor(DWORD hMem, DWORD lpRAColor)
 
 } // SetColor
 
-__declspec(dllexport) REG_T DestroyBrushes(DWORD hMem)
+REG_T DestroyBrushes(DWORD hMem)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -163,7 +163,7 @@ __declspec(dllexport) REG_T DestroyBrushes(DWORD hMem)
 
 } // DestroyBrushes
 
-__declspec(dllexport) REG_T CreateBrushes(DWORD hMem)
+REG_T CreateBrushes(DWORD hMem)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -188,7 +188,7 @@ __declspec(dllexport) REG_T CreateBrushes(DWORD hMem)
 
 } // CreateBrushes
 
-__declspec(dllexport) REG_T DwToAscii(DWORD dwVal, DWORD lpAscii)
+REG_T DwToAscii(DWORD dwVal, DWORD lpAscii)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -232,7 +232,7 @@ anon_1:
 
 } // DwToAscii
 /*
-__declspec(dllexport) REG_T strlen(DWORD lpSource)
+REG_T strlen(DWORD lpSource)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -284,7 +284,7 @@ lb1:
 
 } // strlen
 */
-__declspec(dllexport) REG_T GetChar(DWORD hMem, DWORD cp)
+REG_T GetChar(DWORD hMem, DWORD cp)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -306,7 +306,7 @@ __declspec(dllexport) REG_T GetChar(DWORD hMem, DWORD cp)
 
 } // GetChar
 
-__declspec(dllexport) REG_T IsChar(BYTE ch)
+REG_T IsChar(BYTE ch)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -318,7 +318,7 @@ __declspec(dllexport) REG_T IsChar(BYTE ch)
 
 } // IsChar
 
-__declspec(dllexport) REG_T IsCharLeadByte(DWORD hMem, DWORD cp)
+REG_T IsCharLeadByte(DWORD hMem, DWORD cp)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -359,7 +359,7 @@ __declspec(dllexport) REG_T IsCharLeadByte(DWORD hMem, DWORD cp)
 
 } // IsCharLeadByte
 
-__declspec(dllexport) REG_T GetTextWidth(DWORD hMem, HDC hDC, DWORD lpText, DWORD nChars, DWORD lpRect)
+REG_T GetTextWidth(DWORD hMem, HDC hDC, DWORD lpText, DWORD nChars, DWORD lpRect)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -413,7 +413,7 @@ __declspec(dllexport) REG_T GetTextWidth(DWORD hMem, HDC hDC, DWORD lpText, DWOR
 
 } // GetTextWidth
 
-__declspec(dllexport) REG_T GetBlockRange(DWORD lpSrc, DWORD lpDst)
+REG_T GetBlockRange(DWORD lpSrc, DWORD lpDst)
 {
 	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -444,7 +444,7 @@ __declspec(dllexport) REG_T GetBlockRange(DWORD lpSrc, DWORD lpDst)
 
 } // GetBlockRange
 
-__declspec(dllexport) REG_T GetBlockRects(DWORD hMem, DWORD lpRects)
+REG_T GetBlockRects(DWORD hMem, DWORD lpRects)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -493,7 +493,7 @@ __declspec(dllexport) REG_T GetBlockRects(DWORD hMem, DWORD lpRects)
 
 } // GetBlockRects
 
-__declspec(dllexport) REG_T InvalidateBlock(DWORD hMem, DWORD lpOldRects)
+REG_T InvalidateBlock(DWORD hMem, DWORD lpOldRects)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;

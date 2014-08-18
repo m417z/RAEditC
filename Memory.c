@@ -1,6 +1,6 @@
 #include "Memory.h"
 
-__declspec(dllexport) REG_T xGlobalAlloc(DWORD t, DWORD s)
+REG_T xGlobalAlloc(DWORD t, DWORD s)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -18,7 +18,7 @@ __declspec(dllexport) REG_T xGlobalAlloc(DWORD t, DWORD s)
 
 } // xGlobalAlloc
 
-__declspec(dllexport) REG_T xHeapAlloc(DWORD h, DWORD t, DWORD s)
+REG_T xHeapAlloc(DWORD h, DWORD t, DWORD s)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -36,7 +36,7 @@ __declspec(dllexport) REG_T xHeapAlloc(DWORD h, DWORD t, DWORD s)
 
 } // xHeapAlloc
 
-__declspec(dllexport) REG_T ExpandLineMem(DWORD hMem)
+REG_T ExpandLineMem(DWORD hMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -81,7 +81,7 @@ __declspec(dllexport) REG_T ExpandLineMem(DWORD hMem)
 
 } // ExpandLineMem
 
-__declspec(dllexport) REG_T GarbageCollection(DWORD lpEdit, DWORD lpLine, DWORD lpSrc, DWORD lpDst)
+REG_T GarbageCollection(DWORD lpEdit, DWORD lpLine, DWORD lpSrc, DWORD lpDst)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -132,7 +132,7 @@ anon_1:
 
 } // GarbageCollection
 
-__declspec(dllexport) REG_T ExpandCharMem(DWORD hMem, DWORD nLen)
+REG_T ExpandCharMem(DWORD hMem, DWORD nLen)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -172,7 +172,7 @@ __declspec(dllexport) REG_T ExpandCharMem(DWORD hMem, DWORD nLen)
 
 } // ExpandCharMem
 
-__declspec(dllexport) REG_T ExpandUndoMem(DWORD hMem, DWORD cb)
+REG_T ExpandUndoMem(DWORD hMem, DWORD cb)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -220,7 +220,7 @@ __declspec(dllexport) REG_T ExpandUndoMem(DWORD hMem, DWORD cb)
 
 } // ExpandUndoMem
 
-__declspec(dllexport) REG_T ExpandWordMem(void)
+REG_T ExpandWordMem(void)
 {
 	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
