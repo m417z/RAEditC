@@ -105,9 +105,6 @@
 		<Unit filename="res/RAEditRes.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Unit filename="res/RAEditVer.rc">
-			<Option compilerVar="WINDRES" />
-		</Unit>
 		<Extensions>
 			<code_completion />
 			<envvars />

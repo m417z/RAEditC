@@ -14,3 +14,5 @@ IDB_LINENUMBER			BITMAP   DISCARDABLE "Res/Linenumber.bmp"
 IDB_EXPAND				BITMAP   DISCARDABLE "Res/Expand.bmp"
 IDB_COLLAPSE			BITMAP   DISCARDABLE "Res/Collapse.bmp"
 IDB_LOCK				BITMAP   DISCARDABLE "Res/Lock.bmp"
+
+#include "RAEditVer.rc2"
