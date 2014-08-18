@@ -1,7 +1,9 @@
-#include <windows.h>
-#include "Data.h"
+#include "Block.h"
 
-REG_T GetBlock(DWORD hMem, DWORD nLine, DWORD lpBlockDef)
+#include "Function.h"
+#include "Position.h"
+
+__declspec(dllexport) REG_T GetBlock(DWORD hMem, DWORD nLine, DWORD lpBlockDef)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -374,7 +376,7 @@ anon_11:
 
 } // GetBlock
 
-REG_T SetBlocks(DWORD hMem, DWORD lpLnrg, DWORD lpBlockDef)
+__declspec(dllexport) REG_T SetBlocks(DWORD hMem, DWORD lpLnrg, DWORD lpBlockDef)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -534,7 +536,7 @@ anon_12:
 
 } // SetBlocks
 
-REG_T IsBlockDefEqual(DWORD lpRABLOCKDEF1, DWORD lpRABLOCKDEF2)
+__declspec(dllexport) REG_T IsBlockDefEqual(DWORD lpRABLOCKDEF1, DWORD lpRABLOCKDEF2)
 {
 	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -614,7 +616,7 @@ NotEq:
 
 } // IsBlockDefEqual
 
-REG_T IsInBlock(DWORD hMem, DWORD nLine, DWORD lpBlockDef)
+__declspec(dllexport) REG_T IsInBlock(DWORD hMem, DWORD nLine, DWORD lpBlockDef)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -652,7 +654,7 @@ anon_13:
 
 } // IsInBlock
 
-REG_T TestBlockStart(DWORD hMem, DWORD nLine)
+__declspec(dllexport) REG_T TestBlockStart(DWORD hMem, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -694,7 +696,7 @@ Ex:
 
 } // TestBlockStart
 
-REG_T TestBlockEnd(DWORD hMem, DWORD nLine)
+__declspec(dllexport) REG_T TestBlockEnd(DWORD hMem, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -769,7 +771,7 @@ Ex:
 
 } // TestBlockEnd
 
-REG_T CollapseGetEnd(DWORD hMem, DWORD nLine)
+__declspec(dllexport) REG_T CollapseGetEnd(DWORD hMem, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -887,7 +889,7 @@ Ex:
 
 } // CollapseGetEnd
 
-REG_T Collapse(DWORD hMem, DWORD nLine)
+__declspec(dllexport) REG_T Collapse(DWORD hMem, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1163,13 +1165,13 @@ Ex:
 
 } // Collapse
 
-REG_T CollapseAll(DWORD hMem)
+__declspec(dllexport) REG_T CollapseAll(DWORD hMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 
 	ebx = hMem;
-	eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin);
+	eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin, &ecx, &edx);
 	esi = 0;
 	edi = ((EDIT *)ebx)->rpLineFree;
 	edi /= 4;
@@ -1190,7 +1192,7 @@ anon_14:
 
 } // CollapseAll
 
-REG_T Expand(DWORD hMem, DWORD nLine)
+__declspec(dllexport) REG_T Expand(DWORD hMem, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1293,7 +1295,7 @@ Ex:
 
 } // Expand
 
-REG_T ExpandAll(DWORD hMem)
+__declspec(dllexport) REG_T ExpandAll(DWORD hMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1320,7 +1322,7 @@ anon_15:
 
 } // ExpandAll
 
-REG_T TestExpand(DWORD hMem, DWORD nLine)
+__declspec(dllexport) REG_T TestExpand(DWORD hMem, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1351,7 +1353,7 @@ anon_16:
 
 } // TestExpand
 
-REG_T SetCommentBlocks(DWORD hMem, DWORD lpStart, DWORD lpEnd)
+__declspec(dllexport) REG_T SetCommentBlocks(DWORD hMem, DWORD lpStart, DWORD lpEnd)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1706,7 +1708,7 @@ anon_20:
 
 } // SetCommentBlocks
 
-REG_T SetChangedState(DWORD hMem, DWORD fUpdate)
+__declspec(dllexport) REG_T SetChangedState(DWORD hMem, DWORD fUpdate)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;

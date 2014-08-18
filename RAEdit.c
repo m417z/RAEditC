@@ -1,14 +1,9 @@
-#include <windows.h>
-#include <commctrl.h>
-#include "Data.h"
+#include "RAEdit.h"
 
 #define EM_SETIMESTATUS 0x00d8
 #define EM_GETIMESTATUS 0x00d9
 
-REG_T RAEditProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam);
-REG_T RAWndProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-REG_T TimerProc(DWORD hWin, DWORD uMsg, DWORD idEvent, DWORD dwTime)
+__declspec(dllexport) REG_T TimerProc(DWORD hWin, DWORD uMsg, DWORD idEvent, DWORD dwTime)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -162,7 +157,7 @@ void WINAPI UnInstallRAEdit(void)
 //
 // nColor			gggg0sff cccccccc cccccccc cccccccc
 // g=Word group, s=Case sensitive, f=Font style, c=color
-REG_T SetHiliteWords(DWORD nColor, DWORD lpWords)
+__declspec(dllexport) REG_T SetHiliteWords(DWORD nColor, DWORD lpWords)
 {
 	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -397,7 +392,7 @@ Ex:
 
 } // SetHiliteWords
 
-REG_T GetCharTabPtr(void)
+__declspec(dllexport) REG_T GetCharTabPtr(void)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -407,7 +402,7 @@ REG_T GetCharTabPtr(void)
 
 } // GetCharTabPtr
 
-REG_T GetCharTabVal(DWORD nChar)
+__declspec(dllexport) REG_T GetCharTabVal(DWORD nChar)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -419,7 +414,7 @@ REG_T GetCharTabVal(DWORD nChar)
 
 } // GetCharTabVal
 
-REG_T SetCharTabVal(DWORD nChar, DWORD nValue)
+__declspec(dllexport) REG_T SetCharTabVal(DWORD nChar, DWORD nValue)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -432,7 +427,7 @@ REG_T SetCharTabVal(DWORD nChar, DWORD nValue)
 
 } // SetCharTabVal
 
-REG_T SetBlockDef(DWORD lpRABLOCKDEF)
+__declspec(dllexport) REG_T SetBlockDef(DWORD lpRABLOCKDEF)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -551,7 +546,7 @@ Ex:
 
 // --------------------------------------------------------------------------------
 
-REG_T SplittBtnProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
+__declspec(dllexport) REG_T SplittBtnProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -594,7 +589,7 @@ REG_T SplittBtnProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 } // SplittBtnProc
 
-REG_T StateProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
+__declspec(dllexport) REG_T StateProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -635,7 +630,7 @@ REG_T StateProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 } // StateProc
 
-REG_T EditFunc(HWND hWin, UINT uMsg, DWORD fAlt, DWORD fShift, DWORD fControl)
+__declspec(dllexport) REG_T EditFunc(HWND hWin, UINT uMsg, DWORD fAlt, DWORD fShift, DWORD fControl)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -743,7 +738,7 @@ REG_T EditFunc(HWND hWin, UINT uMsg, DWORD fAlt, DWORD fShift, DWORD fControl)
 						eax = InvalidateLine(ebx, ((EDIT *)ebx)->edta.hwnd, ((EDIT *)ebx)->line);
 						eax = InvalidateLine(ebx, ((EDIT *)ebx)->edtb.hwnd, ((EDIT *)ebx)->line);
 						temp1 = ((EDIT *)ebx)->line;
-						eax = GetCharPtr(ebx, cpOldMin);
+						eax = GetCharPtr(ebx, cpOldMin, &ecx, &edx);
 						eax = temp1;
 						if(eax!=((EDIT *)ebx)->line)
 						{
@@ -818,7 +813,7 @@ REG_T EditFunc(HWND hWin, UINT uMsg, DWORD fAlt, DWORD fShift, DWORD fControl)
 			{
 				if(!(((EDIT *)ebx)->nMode&MODE_BLOCK))
 				{
-					eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin);
+					eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin, &ecx, &edx);
 					nOldLine = edx;
 					eax = ((EDIT *)ebx)->cpMin;
 					if(eax<((EDIT *)ebx)->cpMax && !fShift)
@@ -958,7 +953,7 @@ anon_3:
 					eax = SkipWhiteSpace(ebx, eax, TRUE);
 					eax = GetWordStart(ebx, eax, 0);
 				} // endif
-				eax = GetCharPtr(ebx, eax);
+				eax = GetCharPtr(ebx, eax, &ecx, &edx);
 				((EDIT *)ebx)->cpMin = ecx;
 				if(!fShift)
 				{
@@ -981,7 +976,7 @@ anon_3:
 					eax = InvalidateLine(ebx, ((EDIT *)ebx)->edta.hwnd, ((EDIT *)ebx)->line);
 					eax = InvalidateLine(ebx, ((EDIT *)ebx)->edtb.hwnd, ((EDIT *)ebx)->line);
 					temp1 = ((EDIT *)ebx)->line;
-					eax = GetCharPtr(ebx, cpOldMin);
+					eax = GetCharPtr(ebx, cpOldMin, &ecx, &edx);
 					eax = temp1;
 					if(eax!=((EDIT *)ebx)->line)
 					{
@@ -1067,7 +1062,7 @@ anon_4:
 					eax = SkipWhiteSpace(ebx, eax, FALSE);
 					eax = GetWordEnd(ebx, eax, 0);
 				} // endif
-				eax = GetCharPtr(ebx, eax);
+				eax = GetCharPtr(ebx, eax, &ecx, &edx);
 				eax = ((EDIT *)ebx)->cpMin;
 				((EDIT *)ebx)->cpMin = ecx;
 				if(!fShift)
@@ -1097,7 +1092,7 @@ anon_4:
 					eax = InvalidateLine(ebx, ((EDIT *)ebx)->edta.hwnd, ((EDIT *)ebx)->line);
 					eax = InvalidateLine(ebx, ((EDIT *)ebx)->edtb.hwnd, ((EDIT *)ebx)->line);
 					temp1 = ((EDIT *)ebx)->line;
-					eax = GetCharPtr(ebx, cpOldMin);
+					eax = GetCharPtr(ebx, cpOldMin, &ecx, &edx);
 					eax = temp1;
 					if(eax!=((EDIT *)ebx)->line)
 					{
@@ -1252,7 +1247,7 @@ anon_4:
 					eax = GetBlockCp(ebx, edx, eax);
 					((EDIT *)ebx)->cpMin = eax;
 					((EDIT *)ebx)->cpMax = eax;
-					eax = GetCharPtr(ebx, eax);
+					eax = GetCharPtr(ebx, eax, &ecx, &edx);
 					eax = InvalidateBlock(ebx, &oldrects);
 					eax = SetCaretVisible(hWin, ((RAEDT *)esi)->cpy);
 					eax = SetCaret(ebx, ((RAEDT *)esi)->cpy);
@@ -1401,7 +1396,7 @@ anon_4:
 					eax = GetBlockCp(ebx, edx, eax);
 					((EDIT *)ebx)->cpMin = eax;
 					((EDIT *)ebx)->cpMax = eax;
-					eax = GetCharPtr(ebx, eax);
+					eax = GetCharPtr(ebx, eax, &ecx, &edx);
 					eax = InvalidateBlock(ebx, &oldrects);
 					eax = SetCaretVisible(hWin, ((RAEDT *)esi)->cpy);
 					eax = SetCaret(ebx, ((RAEDT *)esi)->cpy);
@@ -1706,7 +1701,7 @@ anon_4:
 						{
 							((EDIT *)ebx)->edtb.cp = eax;
 						} // endif
-						eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin);
+						eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin, &ecx, &edx);
 						eax = GetYpFromLine(ebx, edx);
 						if(eax<((EDIT *)ebx)->edta.cpy)
 						{
@@ -1796,7 +1791,7 @@ anon_4:
 					eax = GetBlockCp(ebx, edx, eax);
 					((EDIT *)ebx)->cpMin = eax;
 					((EDIT *)ebx)->cpMax = eax;
-					eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin);
+					eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin, &ecx, &edx);
 					eax = SetCaretVisible(hWin, ((RAEDT *)esi)->cpy);
 					eax = SetCaret(ebx, ((RAEDT *)esi)->cpy);
 					eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edta.hwnd);
@@ -1866,7 +1861,7 @@ anon_4:
 					eax = DeleteSelection(ebx, ((EDIT *)ebx)->cpMin, ((EDIT *)ebx)->cpMax);
 					((EDIT *)ebx)->cpMin = eax;
 					((EDIT *)ebx)->cpMax = eax;
-					eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin);
+					eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin, &ecx, &edx);
 					eax = SetCaretVisible(hWin, ((RAEDT *)esi)->cpy);
 					eax = SetCaret(ebx, ((RAEDT *)esi)->cpy);
 					eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edta.hwnd);
@@ -1888,7 +1883,7 @@ ErrBeep:
 
 } // EditFunc
 
-REG_T RAEditProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
+__declspec(dllexport) REG_T RAEditProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -2074,9 +2069,9 @@ REG_T RAEditProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			// Ctrl+A, Select all
 			if(!(((EDIT *)ebx)->nMode&MODE_BLOCK))
 			{
-				eax = GetCharPtr(ebx, -1);
+				eax = GetCharPtr(ebx, -1, &ecx, &edx);
 				((EDIT *)ebx)->cpMax = ecx;
-				eax = GetCharPtr(ebx, 0);
+				eax = GetCharPtr(ebx, 0, &ecx, &edx);
 				((EDIT *)ebx)->cpMin = ecx;
 				eax = SetCaret(ebx, ((RAEDT *)esi)->cpy);
 				eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edta.hwnd);
@@ -2148,7 +2143,7 @@ REG_T RAEditProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 anon_5:
 				temp2 = ecx;
 				temp3 = ((EDIT *)ebx)->cpMin;
-				eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin);
+				eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin, &ecx, &edx);
 				eax = InsertChar(ebx, ((EDIT *)ebx)->cpMin, wParam);
 				ecx = temp3;
 				if(!eax)
@@ -2173,7 +2168,7 @@ anon_5:
 				{
 					eax = AutoIndent(ebx);
 				} // endif
-				eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin);
+				eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin, &ecx, &edx);
 				eax = SetCaretVisible(hWin, ((RAEDT *)esi)->cpy);
 				temp2 = eax;
 				if(!eax)
@@ -2224,7 +2219,7 @@ anon_5:
 						eax = DeleteSelection(ebx, ((EDIT *)ebx)->cpMin, ((EDIT *)ebx)->cpMax);
 						((EDIT *)ebx)->cpMin = eax;
 						((EDIT *)ebx)->cpMax = eax;
-						eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin);
+						eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin, &ecx, &edx);
 						eax = SetCaretVisible(hWin, ((RAEDT *)esi)->cpy);
 						eax = SetCaret(ebx, ((RAEDT *)esi)->cpy);
 						eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edta.hwnd);
@@ -2276,7 +2271,7 @@ anon_5:
 							wParam = eax;
 							eax = SaveUndo(ebx, UNDO_BACKDELETE, ((EDIT *)ebx)->cpMin, eax, 1);
 						} // endif
-						eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin);
+						eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin, &ecx, &edx);
 						eax = SetCaret(ebx, ((RAEDT *)esi)->cpy);
 						if(wParam==VK_RETURN)
 						{
@@ -2408,7 +2403,7 @@ anon_5:
 				eax = temp2;
 				eax = GlobalFree(eax);
 				esi = temp1;
-				eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin);
+				eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin, &ecx, &edx);
 				eax = SetCaretVisible(hWin, ((RAEDT *)esi)->cpy);
 				eax = SetCaret(ebx, ((RAEDT *)esi)->cpy);
 				eax = SelChange(ebx, SEL_TEXT);
@@ -2436,7 +2431,7 @@ anon_5:
 				eax = GetBlockCp(ebx, ((EDIT *)ebx)->blrg.lnMin, eax);
 				((EDIT *)ebx)->cpMin = eax;
 				((EDIT *)ebx)->cpMax = eax;
-				eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin);
+				eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin, &ecx, &edx);
 				eax = SetCaretVisible(hWin, ((RAEDT *)esi)->cpy);
 				eax = SetCaret(ebx, ((RAEDT *)esi)->cpy);
 				eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edta.hwnd);
@@ -2677,7 +2672,7 @@ anon_5:
 						} // endif
 						((EDIT *)ebx)->cpMin = eax;
 						((EDIT *)ebx)->cpMax = eax;
-						eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin);
+						eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin, &ecx, &edx);
 						eax = SetCaretVisible(hWin, ((RAEDT *)esi)->cpy);
 						eax = SetCaret(ebx, ((RAEDT *)esi)->cpy);
 						eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edta.hwnd);
@@ -2834,7 +2829,7 @@ anon_5:
 					edx = -edx;
 					eax = GetCharFromPos(ebx, ((RAEDT *)esi)->cpy, edx, eax);
 					cp = eax;
-					eax = GetCharPtr(ebx, eax);
+					eax = GetCharPtr(ebx, eax, &ecx, &edx);
 					edi = ((EDIT *)ebx)->rpChars;
 					edi += ((EDIT *)ebx)->hChars;
 					ecx = ((CHARS *)edi)->len;
@@ -2849,7 +2844,7 @@ anon_5:
 						eax -= edx;
 						edx = ((EDIT *)ebx)->fntinfo.fntht;
 						edx -= 7;
-						edx /= 1;
+						edx /= 2;
 						eax -= edx;
 						if(eax<12)
 						{
@@ -3005,7 +3000,7 @@ anon_5:
 					} // endif
 					((EDIT *)ebx)->cpMin = eax;
 					((EDIT *)ebx)->cpMax = eax;
-					eax = GetCharPtr(ebx, eax);
+					eax = GetCharPtr(ebx, eax, &ecx, &edx);
 					eax = LoadCursor(0, IDC_ARROW);
 					eax = SetCursor(eax);
 					eax = SetCaretVisible(((RAEDT *)esi)->hwnd, ((RAEDT *)esi)->cpy);
@@ -3590,7 +3585,7 @@ ErrBeep:
 
 } // RAEditProc
 
-REG_T GetText(DWORD hMem, DWORD cpMin, DWORD cpMax, DWORD lpText, DWORD fLf)
+__declspec(dllexport) REG_T GetText(DWORD hMem, DWORD cpMin, DWORD cpMax, DWORD lpText, DWORD fLf)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -3609,9 +3604,9 @@ REG_T GetText(DWORD hMem, DWORD cpMin, DWORD cpMax, DWORD lpText, DWORD fLf)
 	} // endif
 	cpMin = eax;
 	cpMax = edx;
-	eax = GetCharPtr(ebx, cpMax);
+	eax = GetCharPtr(ebx, cpMax, &ecx, &edx);
 	cpMax = ecx;
-	eax = GetCharPtr(ebx, cpMin);
+	eax = GetCharPtr(ebx, cpMin, &ecx, &edx);
 	cpMin = ecx;
 	ecx = eax;
 	edx = cpMin;
@@ -3657,7 +3652,7 @@ REG_T GetText(DWORD hMem, DWORD cpMin, DWORD cpMax, DWORD lpText, DWORD fLf)
 
 } // GetText
 
-REG_T FakeToolTipProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
+__declspec(dllexport) REG_T FakeToolTipProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -3691,7 +3686,7 @@ REG_T FakeToolTipProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 } // FakeToolTipProc
 
-REG_T ConvTwipsToPixels(HDC hDC, DWORD fHorz, DWORD lSize)
+__declspec(dllexport) REG_T ConvTwipsToPixels(HDC hDC, DWORD fHorz, DWORD lSize)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -3714,7 +3709,7 @@ REG_T ConvTwipsToPixels(HDC hDC, DWORD fHorz, DWORD lSize)
 } // ConvTwipsToPixels
 
 // The edit controls callback (WndProc).
-REG_T RAWndProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
+__declspec(dllexport) REG_T RAWndProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -4290,7 +4285,7 @@ anon_7:
 			// wParam=0
 			// lParam=0
 			eax = ((RAEDT *)esi)->rc.bottom;
-			eax /= 1;
+			eax /= 2;
 			ecx = ((EDIT *)ebx)->fntinfo.fntht;
 			// xor		edx,edx
 			eax /= ecx;
@@ -4607,9 +4602,9 @@ anon_7:
 					eax = InvalidateSelection(ebx, ((EDIT *)ebx)->edtb.hwnd, ((EDIT *)ebx)->cpMin, ((EDIT *)ebx)->cpMax);
 				} // endif
 			} // endif
-			eax = GetCharPtr(ebx, ((EDIT *)ebx)->savesel.cpMax);
+			eax = GetCharPtr(ebx, ((EDIT *)ebx)->savesel.cpMax, &ecx, &edx);
 			((EDIT *)ebx)->cpMax = ecx;
-			eax = GetCharPtr(ebx, ((EDIT *)ebx)->savesel.cpMin);
+			eax = GetCharPtr(ebx, ((EDIT *)ebx)->savesel.cpMin, &ecx, &edx);
 			((EDIT *)ebx)->cpMin = ecx;
 			if(!((EDIT *)ebx)->fHideSel)
 			{
@@ -5289,7 +5284,7 @@ anon_7:
 		case EM_EXLINEFROMCHAR:
 			// wParam=0
 			// lParam=cp
-			eax = GetCharPtr(ebx, lParam);
+			eax = GetCharPtr(ebx, lParam, &ecx, &edx);
 			eax = edx;
 			return eax;
 
@@ -5308,9 +5303,9 @@ anon_7:
 					} // endif
 				} // endif
 				edi = lParam;
-				eax = GetCharPtr(ebx, ((CHARRANGE *)edi)->cpMax);
+				eax = GetCharPtr(ebx, ((CHARRANGE *)edi)->cpMax, &ecx, &edx);
 				((EDIT *)ebx)->cpMax = ecx;
-				eax = GetCharPtr(ebx, ((CHARRANGE *)edi)->cpMin);
+				eax = GetCharPtr(ebx, ((CHARRANGE *)edi)->cpMin, &ecx, &edx);
 				((EDIT *)ebx)->cpMin = ecx;
 				temp1 = edx;
 				if(!((EDIT *)ebx)->fHideSel)
@@ -5460,7 +5455,7 @@ anon_7:
 			((EDIT *)ebx)->cpLine = eax;
 			((EDIT *)ebx)->rpLine = eax;
 			((EDIT *)ebx)->rpChars = eax;
-			eax = GetCharPtr(ebx, 0);
+			eax = GetCharPtr(ebx, 0, &ecx, &edx);
 			eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edta.hwnd);
 			eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edtb.hwnd);
 			eax = SetCaret(ebx, 0);
@@ -5615,7 +5610,7 @@ anon_8:
 			{
 				eax = ((EDIT *)ebx)->cpMin;
 			} // endif
-			eax = GetCharPtr(ebx, eax);
+			eax = GetCharPtr(ebx, eax, &ecx, &edx);
 			eax = edx;
 			return eax;
 
@@ -5753,9 +5748,9 @@ anon_8:
 						eax = InvalidateSelection(ebx, ((EDIT *)ebx)->edtb.hwnd, ((EDIT *)ebx)->cpMin, ((EDIT *)ebx)->cpMax);
 					} // endif
 				} // endif
-				eax = GetCharPtr(ebx, lParam);
+				eax = GetCharPtr(ebx, lParam, &ecx, &edx);
 				((EDIT *)ebx)->cpMax = ecx;
-				eax = GetCharPtr(ebx, wParam);
+				eax = GetCharPtr(ebx, wParam, &ecx, &edx);
 				((EDIT *)ebx)->cpMin = ecx;
 				if(!((EDIT *)ebx)->fHideSel)
 				{
@@ -5842,7 +5837,7 @@ anon_8:
 			{
 				eax = SaveUndo(ebx, UNDO_INSERTBLOCK, ecx, lParam, eax);
 			} // endif
-			eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin);
+			eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin, &ecx, &edx);
 			eax = SetCaretVisible(((RAEDT *)esi)->hwnd, ((RAEDT *)esi)->cpy);
 			eax = SetCaret(ebx, ((RAEDT *)esi)->cpy);
 			eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edta.hwnd);
@@ -5977,7 +5972,7 @@ anon_8:
 			eax = DeleteSelection(ebx, ((EDIT *)ebx)->cpMin, ((EDIT *)ebx)->cpMax);
 			((EDIT *)ebx)->cpMin = eax;
 			((EDIT *)ebx)->cpMax = eax;
-			eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin);
+			eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin, &ecx, &edx);
 			eax = SetCaretVisible(hWin, ((RAEDT *)esi)->cpy);
 			eax = SetCaret(ebx, ((RAEDT *)esi)->cpy);
 			eax = InvalidateRect(((EDIT *)ebx)->edta.hwnd, NULL, FALSE);
@@ -6003,7 +5998,7 @@ anon_8:
 			eax = GetBlockCp(ebx, edx, eax);
 			((EDIT *)ebx)->cpMin = eax;
 			((EDIT *)ebx)->cpMax = eax;
-			eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin);
+			eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin, &ecx, &edx);
 			eax = SetCaretVisible(hWin, ((RAEDT *)esi)->cpy);
 			eax = SetCaret(ebx, ((RAEDT *)esi)->cpy);
 			eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edta.hwnd);
@@ -6044,7 +6039,7 @@ anon_8:
 		((EDIT *)ebx)->cpLine = eax;
 		((EDIT *)ebx)->rpLine = eax;
 		((EDIT *)ebx)->rpChars = eax;
-		eax = GetCharPtr(ebx, 0);
+		eax = GetCharPtr(ebx, 0, &ecx, &edx);
 		eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edta.hwnd);
 		eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edtb.hwnd);
 		eax = SetCaret(ebx, 0);

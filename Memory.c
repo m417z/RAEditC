@@ -1,7 +1,6 @@
-#include <windows.h>
-#include "Data.h"
+#include "Memory.h"
 
-REG_T xGlobalAlloc(DWORD t, DWORD s)
+__declspec(dllexport) REG_T xGlobalAlloc(DWORD t, DWORD s)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -19,7 +18,7 @@ REG_T xGlobalAlloc(DWORD t, DWORD s)
 
 } // xGlobalAlloc
 
-REG_T xHeapAlloc(DWORD h, DWORD t, DWORD s)
+__declspec(dllexport) REG_T xHeapAlloc(DWORD h, DWORD t, DWORD s)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -37,7 +36,7 @@ REG_T xHeapAlloc(DWORD h, DWORD t, DWORD s)
 
 } // xHeapAlloc
 
-REG_T ExpandLineMem(DWORD hMem)
+__declspec(dllexport) REG_T ExpandLineMem(DWORD hMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -82,7 +81,7 @@ REG_T ExpandLineMem(DWORD hMem)
 
 } // ExpandLineMem
 
-REG_T GarbageCollection(DWORD lpEdit, DWORD lpLine, DWORD lpSrc, DWORD lpDst)
+__declspec(dllexport) REG_T GarbageCollection(DWORD lpEdit, DWORD lpLine, DWORD lpSrc, DWORD lpDst)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -133,7 +132,7 @@ anon_1:
 
 } // GarbageCollection
 
-REG_T ExpandCharMem(DWORD hMem, DWORD nLen)
+__declspec(dllexport) REG_T ExpandCharMem(DWORD hMem, DWORD nLen)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -173,7 +172,7 @@ REG_T ExpandCharMem(DWORD hMem, DWORD nLen)
 
 } // ExpandCharMem
 
-REG_T ExpandUndoMem(DWORD hMem, DWORD cb)
+__declspec(dllexport) REG_T ExpandUndoMem(DWORD hMem, DWORD cb)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -221,7 +220,7 @@ REG_T ExpandUndoMem(DWORD hMem, DWORD cb)
 
 } // ExpandUndoMem
 
-REG_T ExpandWordMem(void)
+__declspec(dllexport) REG_T ExpandWordMem(void)
 {
 	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;

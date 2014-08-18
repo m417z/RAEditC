@@ -1,7 +1,6 @@
-#include <windows.h>
-#include "Data.h"
+#include "Undo.h"
 
-REG_T DoUndo(DWORD hMem)
+__declspec(dllexport) REG_T DoUndo(DWORD hMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -131,7 +130,7 @@ Nxt:
 
 } // DoUndo
 
-REG_T DoRedo(DWORD hMem)
+__declspec(dllexport) REG_T DoRedo(DWORD hMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -274,7 +273,7 @@ Nxt:
 
 } // DoRedo
 
-REG_T SaveUndo(DWORD hMem, DWORD nFun, DWORD cp, DWORD lp, DWORD cb)
+__declspec(dllexport) REG_T SaveUndo(DWORD hMem, DWORD nFun, DWORD cp, DWORD lp, DWORD cb)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -349,7 +348,7 @@ REG_T SaveUndo(DWORD hMem, DWORD nFun, DWORD cp, DWORD lp, DWORD cb)
 
 } // SaveUndo
 
-REG_T Undo(RAEDT *raedt, DWORD hMem, DWORD hWin)
+__declspec(dllexport) REG_T Undo(RAEDT *raedt, DWORD hMem, DWORD hWin)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -366,7 +365,7 @@ REG_T Undo(RAEDT *raedt, DWORD hMem, DWORD hWin)
 		eax = DoUndo(ebx);
 		eax = SetBlockFromCp(ebx, ((EDIT *)ebx)->cpMin, FALSE);
 	} // endif
-	eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin);
+	eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin, &ecx, &edx);
 	eax = SetCaretVisible(hWin, ((RAEDT *)esi)->cpy);
 	eax = SetCaret(ebx, ((RAEDT *)esi)->cpy);
 	eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edta.hwnd);
@@ -377,7 +376,7 @@ REG_T Undo(RAEDT *raedt, DWORD hMem, DWORD hWin)
 
 } // Undo
 
-REG_T Redo(RAEDT *raedt, DWORD hMem, DWORD hWin)
+__declspec(dllexport) REG_T Redo(RAEDT *raedt, DWORD hMem, DWORD hWin)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -395,7 +394,7 @@ REG_T Redo(RAEDT *raedt, DWORD hMem, DWORD hWin)
 		eax = DoRedo(ebx);
 		eax = SetBlockFromCp(ebx, ((EDIT *)ebx)->cpMin, FALSE);
 	} // endif
-	eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin);
+	eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin, &ecx, &edx);
 	eax = SetCaretVisible(hWin, ((RAEDT *)esi)->cpy);
 	eax = SetCaret(ebx, ((RAEDT *)esi)->cpy);
 	eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edta.hwnd);
@@ -406,7 +405,7 @@ REG_T Redo(RAEDT *raedt, DWORD hMem, DWORD hWin)
 
 } // Redo
 
-REG_T GetUndo(DWORD hMem, DWORD nCount, DWORD lpMem)
+__declspec(dllexport) REG_T GetUndo(DWORD hMem, DWORD nCount, DWORD lpMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -500,7 +499,7 @@ REG_T GetUndo(DWORD hMem, DWORD nCount, DWORD lpMem)
 
 } // GetUndo
 
-REG_T SetUndo(DWORD hMem, DWORD nSize, DWORD lpMem)
+__declspec(dllexport) REG_T SetUndo(DWORD hMem, DWORD nSize, DWORD lpMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;

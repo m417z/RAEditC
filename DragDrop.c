@@ -1,5 +1,39 @@
 #include <windows.h>
 #include "Data.h"
+
+//REG_T IsEqualGUID(REG_T rguid1, REG_T rguid2)                                                                 ;
+REG_T IDropTarget_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObject)                                       ;
+REG_T IDropTarget_AddRef(REG_T pthis)                                                                           ;
+REG_T IDropTarget_Release(REG_T pthis)                                                                          ;
+REG_T IDropTarget_DragEnter(REG_T pthis, REG_T lpDataObject, REG_T grfKeyState, POINT pt, REG_T lpdwEffect)     ;
+REG_T IDropTarget_DragOver(REG_T pthis, REG_T grfKeyState, POINT pt, REG_T lpdwEffect)                          ;
+REG_T IDropTarget_DragLeave(REG_T pthis)                                                                        ;
+REG_T IDropTarget_Drop(REG_T pthis, REG_T lpDataObject, REG_T grfKeyState, POINT pt, REG_T lpdwEffect)          ;
+REG_T IDropSource_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObject)                                       ;
+REG_T IDropSource_AddRef(REG_T pthis)                                                                           ;
+REG_T IDropSource_Release(REG_T pthis)                                                                          ;
+REG_T IDropSource_QueryContinueDrag(REG_T pthis, REG_T fEscapePressed, REG_T grfKeyState)                       ;
+REG_T IDropSource_GiveFeedback(REG_T pthis, REG_T dwEffect)                                                     ;
+REG_T IDO_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObject)                                               ;
+REG_T IDO_AddRef(REG_T pthis)                                                                                   ;
+REG_T IDO_Release(REG_T pthis)                                                                                  ;
+REG_T IDO_GetData(REG_T pthis, REG_T pFormatetc, REG_T pmedium)                                                 ;
+REG_T IDO_GetDataHere(REG_T pthis, REG_T pFormatetc, REG_T pmedium)                                             ;
+REG_T IDO_QueryGetData(REG_T pthis, REG_T pFormatetc)                                                           ;
+REG_T IDO_GetCanonicalFormatEtc(REG_T pthis, REG_T pFormatetcIn, REG_T pFormatetcOut)                           ;
+REG_T IDO_SetData(REG_T pthis, REG_T pFormatetc, REG_T pmedium, REG_T fRelease)                                 ;
+REG_T IDO_EnumFormatEtc(REG_T pthis, REG_T dwDirection, REG_T ppenumFormatetc)                                  ;
+REG_T IDO_DAdvise(REG_T pthis, REG_T pFormatetc, REG_T advf, REG_T pAdvSink, REG_T pdwConnection)               ;
+REG_T IDO_DUnadvise(REG_T pthis, REG_T dwConnection)                                                            ;
+REG_T IDO_EnumDAdvise(REG_T pthis, REG_T ppenumAdvise)                                                          ;
+REG_T IEnumFORMATETC_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObject)                                    ;
+REG_T IEnumFORMATETC_AddRef(REG_T pthis)                                                                        ;
+REG_T IEnumFORMATETC_Release(REG_T pthis)                                                                       ;
+REG_T IEnumFORMATETC_Next(REG_T pthis, REG_T celt, REG_T rgelt, REG_T pceltFetched)                             ;
+REG_T IEnumFORMATETC_Skip(REG_T pthis, REG_T celt)                                                              ;
+REG_T IEnumFORMATETC_Reset(REG_T pthis)                                                                         ;
+REG_T IEnumFORMATETC_Clone(REG_T pthis, REG_T ppenum)                                                           ;
+
 /*
 REG_T IsEqualGUID(REG_T rguid1, REG_T rguid2)
 {
@@ -22,10 +56,10 @@ REG_T IDropTarget_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObject)
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 
 	// PrintText 'IDropTarget_QueryInterface'
-	eax = IsEqualGUID(iid, &IID_IDropTarget);
+	eax = IsEqualGUID(iid, IID_IDropTarget);
 	if(!eax)
 	{
-		eax = IsEqualGUID(iid, &IID_IUnknown);
+		eax = IsEqualGUID(iid, IID_IUnknown);
 	} // endif
 	edx = ppvObject;
 	if(eax)
@@ -183,7 +217,7 @@ REG_T IDropTarget_DragOver(REG_T pthis, REG_T grfKeyState, POINT pt, REG_T lpdwE
 			} // endif
 			eax = GetClientRect(((IDropTarget *)edi)->hwnd, &rect);
 			ecx = ((EDIT *)ebx)->fntinfo.fntht;
-			ecx /= 1;
+			ecx /= 2;
 			eax = pt.y;
 			edx = eax+ecx;
 			if(eax<ecx)
@@ -350,10 +384,10 @@ REG_T IDropSource_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObject)
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 
 	// PrintText 'IDropSource_QueryInterface'
-	eax = IsEqualGUID(iid, &IID_IDropSource);
+	eax = IsEqualGUID(iid, IID_IDropSource);
 	if(!eax)
 	{
-		eax = IsEqualGUID(iid, &IID_IUnknown);
+		eax = IsEqualGUID(iid, IID_IUnknown);
 	} // endif
 	edx = ppvObject;
 	if(eax)
@@ -444,10 +478,10 @@ REG_T IDO_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObject)
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 
 	// PrintText 'IDataObject_QueryInterface'
-	eax = IsEqualGUID(iid, &IID_IDataObject);
+	eax = IsEqualGUID(iid, IID_IDataObject);
 	if(!eax)
 	{
-		eax = IsEqualGUID(iid, &IID_IUnknown);
+		eax = IsEqualGUID(iid, IID_IUnknown);
 	} // endif
 	edx = ppvObject;
 	if(eax)
@@ -521,7 +555,7 @@ REG_T IDO_GetData(REG_T pthis, REG_T pFormatetc, REG_T pmedium)
 					{
 						eax = -eax;
 					} // endif
-					eax *= 1;
+					eax *= 2;
 					eax++;
 					eax = xGlobalAlloc(GMEM_SHARE | GMEM_MOVEABLE | GMEM_ZEROINIT, eax);
 					hCMem = eax;
@@ -650,7 +684,7 @@ REG_T IDO_EnumFormatEtc(REG_T pthis, REG_T dwDirection, REG_T ppenumFormatetc)
 	// PrintText 'IDataObject_EnumFormatEtc'
 	if(dwDirection==DATADIR_GET)
 	{
-		eax = &pIEnumFORMATETC;
+		eax = pIEnumFORMATETC;
 		edx = ppenumFormatetc;
 		*(DWORD *)edx = eax;
 		eax = S_OK;
@@ -703,10 +737,10 @@ REG_T IEnumFORMATETC_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObject)
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 
 	// PrintText 'IEnumFORMATETC_QueryInterface'
-	eax = IsEqualGUID(iid, &IID_IEnumFORMATETC);
+	eax = IsEqualGUID(iid, IID_IEnumFORMATETC);
 	if(!eax)
 	{
-		eax = IsEqualGUID(iid, &IID_IUnknown);
+		eax = IsEqualGUID(iid, IID_IUnknown);
 	} // endif
 	edx = ppvObject;
 	if(eax)

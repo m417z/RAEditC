@@ -1,11 +1,9 @@
-#include <windows.h>
-#include <commctrl.h>
-#include "Data.h"
+#include "Paint.h"
 
-typedef REG_T (* BOOKMARKPAINTCALLBACKPROTO)(HWND hWnd, DWORD line);
+typedef REG_T WINAPI (* BOOKMARKPAINTCALLBACKPROTO)(HWND hWnd, DWORD line);
 typedef BOOKMARKPAINTCALLBACKPROTO BOOKMARKPAINTCALLBACKPTR;
 
-REG_T DrawLine(DWORD hMem, DWORD lpChars, DWORD nLine, DWORD cp, DWORD hDC, DWORD lpRect)
+__declspec(dllexport) REG_T DrawLine(DWORD hMem, DWORD lpChars, DWORD nLine, DWORD cp, DWORD hDC, DWORD lpRect)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -703,7 +701,7 @@ anon_1:
 				{
 					temp1 = rect.top;
 					eax = ((EDIT *)ebx)->fntinfo.linespace;
-					eax /= 1;
+					eax /= 2;
 					rect.top += eax;
 					eax = lCol;
 					eax >>= 24;
@@ -802,7 +800,7 @@ anon_1:
 			if(eax)
 			{
 				ecx = ((EDIT *)ebx)->fntinfo.fntht;
-				ecx /= 1;
+				ecx /= 2;
 				edi = rect.top;
 				while(ecx)
 				{
@@ -1252,7 +1250,7 @@ anon_6:
 
 } // DrawLine
 
-REG_T SetBlockMarkers(DWORD hMem, DWORD nLine, DWORD nMax)
+__declspec(dllexport) REG_T SetBlockMarkers(DWORD hMem, DWORD nLine, DWORD nMax)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1415,7 +1413,7 @@ BlockRootStart:
 
 } // SetBlockMarkers
 
-REG_T DrawChangedState(DWORD hMem, HDC hDC, DWORD lpLine, DWORD x, DWORD y)
+__declspec(dllexport) REG_T DrawChangedState(DWORD hMem, HDC hDC, DWORD lpLine, DWORD x, DWORD y)
 {
 	REG_T eax = 0, ecx, edx, ebx, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1471,7 +1469,7 @@ REG_T DrawChangedState(DWORD hMem, HDC hDC, DWORD lpLine, DWORD x, DWORD y)
 } // DrawChangedState
 
 // This proc does all the painting and drawing
-REG_T RAEditPaint(HWND hWin)
+__declspec(dllexport) REG_T RAEditPaint(HWND hWin)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1691,7 +1689,7 @@ anon_8:
 						eax -= ps.rcPaint.left;
 						edx = ((EDIT *)ebx)->fntinfo.fntht;
 						// sub		edx,7
-						edx /= 1;
+						edx /= 2;
 						edx -= 5;
 						edx += rect1.top;
 						eax = ImageList_Draw(hIml, 3, mDC, eax, edx, ILD_TRANSPARENT);
@@ -1704,7 +1702,7 @@ anon_8:
 						eax -= ps.rcPaint.left;
 						edx = ((EDIT *)ebx)->fntinfo.fntht;
 						// sub		edx,7
-						edx /= 1;
+						edx /= 2;
 						edx -= 5;
 						edx += rect1.top;
 						eax = ImageList_Draw(hIml, 6, mDC, eax, edx, ILD_TRANSPARENT);
@@ -1736,7 +1734,7 @@ anon_8:
 						eax -= ps.rcPaint.left;
 						edx = ((EDIT *)ebx)->fntinfo.fntht;
 						// sub		edx,7
-						edx /= 1;
+						edx /= 2;
 						edx -= 5;
 						edx += rect1.top;
 						eax = ImageList_Draw(hIml, ecx, mDC, eax, edx, ILD_NORMAL);
@@ -1836,7 +1834,7 @@ anon_9:
 			eax = MoveToEx(mDC, eax, edx, NULL);
 			eax = temp1;
 			edx = ((EDIT *)ebx)->fntinfo.fntht;
-			edx /= 1;
+			edx /= 2;
 			edx += rect1.top;
 			temp1 = edx;
 			eax = LineTo(mDC, eax, edx);
@@ -1884,7 +1882,7 @@ anon_9:
 } // RAEditPaint
 
 // This proc does all the painting and drawing
-REG_T RAEditPaintNoBuff(HWND hWin)
+__declspec(dllexport) REG_T RAEditPaintNoBuff(HWND hWin)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -2086,7 +2084,7 @@ anon_10:
 						eax -= 15+12;
 						edx = ((EDIT *)ebx)->fntinfo.fntht;
 						// sub		edx,7
-						edx /= 1;
+						edx /= 2;
 						edx -= 5;
 						edx += rect1.top;
 						eax = ImageList_Draw(hIml, 3, ps.hdc, eax, edx, ILD_TRANSPARENT);
@@ -2098,7 +2096,7 @@ anon_10:
 						eax -= 15+12;
 						edx = ((EDIT *)ebx)->fntinfo.fntht;
 						// sub		edx,7
-						edx /= 1;
+						edx /= 2;
 						edx -= 5;
 						edx += rect1.top;
 						eax = ImageList_Draw(hIml, 6, ps.hdc, eax, edx, ILD_TRANSPARENT);
@@ -2129,7 +2127,7 @@ anon_10:
 						eax -= 15;
 						edx = ((EDIT *)ebx)->fntinfo.fntht;
 						// sub		edx,7
-						edx /= 1;
+						edx /= 2;
 						edx -= 5;
 						edx += rect1.top;
 						eax = ImageList_Draw(hIml, ecx, ps.hdc, eax, edx, ILD_NORMAL);
@@ -2212,7 +2210,7 @@ anon_11:
 			eax = MoveToEx(ps.hdc, eax, edx, NULL);
 			eax = temp1;
 			edx = ((EDIT *)ebx)->fntinfo.fntht;
-			edx /= 1;
+			edx /= 2;
 			edx += rect1.top;
 			temp1 = edx;
 			eax = LineTo(ps.hdc, eax, edx);

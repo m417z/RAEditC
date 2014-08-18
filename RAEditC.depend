@@ -1,10 +1,12 @@
 # depslib dependency file v1.0
-1408314104 source:c:\users\rammichael\desktop\raeditc\block.c
+1408324561 source:c:\users\rammichael\desktop\raeditc\block.c
+	"Block.h"
+	"Function.h"
+	"Position.h"
+
+1408320702 c:\users\rammichael\desktop\raeditc\block.h
 	<windows.h>
 	"Data.h"
-
-1408266988 c:\users\rammichael\desktop\raeditc\block.h
-	<windows.h>
 
 1408312595 c:\users\rammichael\desktop\raeditc\data.h
 	"RegisterTypes.h"
@@ -17,16 +19,15 @@
 	<windows.h>
 	<richedit.h>
 
-1408279610 source:c:\users\rammichael\desktop\raeditc\clipboard.c
-	<windows.h>
-	"Data.h"
+1408324561 source:c:\users\rammichael\desktop\raeditc\clipboard.c
+	"ClipBoard.h"
+	"Memory.h"
 
 1408310679 source:c:\users\rammichael\desktop\raeditc\data.c
 	"Data.h"
 
-1408279610 source:c:\users\rammichael\desktop\raeditc\edit.c
-	<windows.h>
-	"Data.h"
+1408324561 source:c:\users\rammichael\desktop\raeditc\edit.c
+	"Edit.h"
 
 1408266419 source:c:\users\rammichael\desktop\raeditc\main.cpp
 	"main.h"
@@ -34,41 +35,70 @@
 1385320478 c:\users\rammichael\desktop\raeditc\main.h
 	<windows.h>
 
-1408280348 source:c:\users\rammichael\desktop\raeditc\memory.c
-	<windows.h>
-	"Data.h"
+1408320834 source:c:\users\rammichael\desktop\raeditc\memory.c
+	"Memory.h"
 
-1408280538 source:c:\users\rammichael\desktop\raeditc\misc.c
-	<windows.h>
-	"Data.h"
+1408324561 source:c:\users\rammichael\desktop\raeditc\misc.c
+	"Misc.h"
+	"Function.h"
 
-1408313173 source:c:\users\rammichael\desktop\raeditc\raedit.c
+1408318992 source:c:\users\rammichael\desktop\raeditc\raedit.c
 	<windows.h>
 	<commctrl.h>
 	"Data.h"
 
-1408312266 source:c:\users\rammichael\desktop\raeditc\raeditdll.c
+1408318992 source:c:\users\rammichael\desktop\raeditc\raeditdll.c
 	<windows.h>
 	"Data.h"
 
-1408314104 source:c:\users\rammichael\desktop\raeditc\function.c
+1408319948 source:c:\users\rammichael\desktop\raeditc\function.c
 	<windows.h>
 	"Data.h"
 
-1408312815 source:c:\users\rammichael\desktop\raeditc\paint.c
-	<windows.h>
-	<commctrl.h>
-	"Data.h"
+1408320898 source:c:\users\rammichael\desktop\raeditc\paint.c
+	"Paint.h"
 
-1408313002 source:c:\users\rammichael\desktop\raeditc\position.c
+1408318992 source:c:\users\rammichael\desktop\raeditc\position.c
 	<windows.h>
 	"Data.h"
 
-1408313210 source:c:\users\rammichael\desktop\raeditc\undo.c
-	<windows.h>
-	"Data.h"
+1408324561 source:c:\users\rammichael\desktop\raeditc\undo.c
+	"Undo.h"
 
 1180225730 source:c:\users\rammichael\desktop\raeditc\res\raeditres.rc
 
 1408313911 source:c:\users\rammichael\desktop\raeditc\res\raeditver.rc
+
+1408320831 c:\users\rammichael\desktop\raeditc\memory.h
+	<windows.h>
+	"Data.h"
+
+1408320899 c:\users\rammichael\desktop\raeditc\paint.h
+	<windows.h>
+	<commctrl.h>
+	"Data.h"
+
+1408320400 c:\users\rammichael\desktop\raeditc\function.h
+	<windows.h>
+	"Data.h"
+
+1408324612 c:\users\rammichael\desktop\raeditc\position.h
+	<windows.h>
+	"Data.h"
+
+1408320749 c:\users\rammichael\desktop\raeditc\clipboard.h
+	<windows.h>
+	"Data.h"
+
+1408320794 c:\users\rammichael\desktop\raeditc\edit.h
+	<windows.h>
+	"Data.h"
+
+1408320858 c:\users\rammichael\desktop\raeditc\misc.h
+	<windows.h>
+	"Data.h"
+
+1408320983 c:\users\rammichael\desktop\raeditc\undo.h
+	<windows.h>
+	"Data.h"
 

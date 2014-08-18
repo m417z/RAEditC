@@ -1,7 +1,8 @@
-#include <windows.h>
-#include "Data.h"
+#include "Misc.h"
 
-REG_T SetFont(DWORD hMem, DWORD lpRafont)
+#include "Function.h"
+
+__declspec(dllexport) REG_T SetFont(DWORD hMem, DWORD lpRafont)
 {
 	REG_T eax = 0, ecx, edx, ebx, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -88,7 +89,7 @@ REG_T SetFont(DWORD hMem, DWORD lpRafont)
 
 } // SetFont
 
-REG_T SetColor(DWORD hMem, DWORD lpRAColor)
+__declspec(dllexport) REG_T SetColor(DWORD hMem, DWORD lpRAColor)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -117,7 +118,7 @@ REG_T SetColor(DWORD hMem, DWORD lpRAColor)
 
 } // SetColor
 
-REG_T DestroyBrushes(DWORD hMem)
+__declspec(dllexport) REG_T DestroyBrushes(DWORD hMem)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -162,7 +163,7 @@ REG_T DestroyBrushes(DWORD hMem)
 
 } // DestroyBrushes
 
-REG_T CreateBrushes(DWORD hMem)
+__declspec(dllexport) REG_T CreateBrushes(DWORD hMem)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -187,7 +188,7 @@ REG_T CreateBrushes(DWORD hMem)
 
 } // CreateBrushes
 
-REG_T DwToAscii(DWORD dwVal, DWORD lpAscii)
+__declspec(dllexport) REG_T DwToAscii(DWORD dwVal, DWORD lpAscii)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -232,7 +233,7 @@ anon_1:
 
 } // DwToAscii
 /*
-REG_T strlen(DWORD lpSource)
+__declspec(dllexport) REG_T strlen(DWORD lpSource)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -284,13 +285,13 @@ lb1:
 
 } // strlen
 */
-REG_T GetChar(DWORD hMem, DWORD cp)
+__declspec(dllexport) REG_T GetChar(DWORD hMem, DWORD cp)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
 
 	ebx = hMem;
-	eax = GetCharPtr(ebx, cp);
+	eax = GetCharPtr(ebx, cp, &ecx, &edx);
 	edx *= 4;
 	if(edx==((EDIT *)ebx)->rpLineFree)
 	{
@@ -306,7 +307,7 @@ REG_T GetChar(DWORD hMem, DWORD cp)
 
 } // GetChar
 
-REG_T IsChar(void)
+__declspec(dllexport) REG_T IsChar(void)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -318,7 +319,7 @@ REG_T IsChar(void)
 
 } // IsChar
 
-REG_T IsCharLeadByte(DWORD hMem, DWORD cp)
+__declspec(dllexport) REG_T IsCharLeadByte(DWORD hMem, DWORD cp)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -326,7 +327,7 @@ REG_T IsCharLeadByte(DWORD hMem, DWORD cp)
 	ebx = hMem;
 	if(((EDIT *)ebx)->fntinfo.fDBCS)
 	{
-		eax = GetCharPtr(ebx, cp);
+		eax = GetCharPtr(ebx, cp, &ecx, &edx);
 		cp = eax;
 		edx = ((EDIT *)ebx)->rpChars;
 		edx += ((EDIT *)ebx)->hChars;
@@ -359,7 +360,7 @@ REG_T IsCharLeadByte(DWORD hMem, DWORD cp)
 
 } // IsCharLeadByte
 
-REG_T GetTextWidth(DWORD hMem, HDC hDC, DWORD lpText, DWORD nChars, DWORD lpRect)
+__declspec(dllexport) REG_T GetTextWidth(DWORD hMem, HDC hDC, DWORD lpText, DWORD nChars, DWORD lpRect)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -414,7 +415,7 @@ REG_T GetTextWidth(DWORD hMem, HDC hDC, DWORD lpText, DWORD nChars, DWORD lpRect
 
 } // GetTextWidth
 
-REG_T GetBlockRange(DWORD lpSrc, DWORD lpDst)
+__declspec(dllexport) REG_T GetBlockRange(DWORD lpSrc, DWORD lpDst)
 {
 	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -445,7 +446,7 @@ REG_T GetBlockRange(DWORD lpSrc, DWORD lpDst)
 
 } // GetBlockRange
 
-REG_T GetBlockRects(DWORD hMem, DWORD lpRects)
+__declspec(dllexport) REG_T GetBlockRects(DWORD hMem, DWORD lpRects)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -494,7 +495,7 @@ REG_T GetBlockRects(DWORD hMem, DWORD lpRects)
 
 } // GetBlockRects
 
-REG_T InvalidateBlock(DWORD hMem, DWORD lpOldRects)
+__declspec(dllexport) REG_T InvalidateBlock(DWORD hMem, DWORD lpOldRects)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;

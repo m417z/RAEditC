@@ -1,7 +1,6 @@
-#include <windows.h>
-#include "Data.h"
+#include "Position.h"
 
-REG_T GetTopFromYp(DWORD hMem, DWORD hWin, DWORD yp)
+__declspec(dllexport) REG_T GetTopFromYp(DWORD hMem, DWORD hWin, DWORD yp)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -122,7 +121,7 @@ anon_1:
 // eax=Char index in line
 // ecx=Char index
 // edx=Line number
-REG_T GetCharPtr(DWORD hMem, DWORD cp)
+__declspec(dllexport) REG_T GetCharPtr(DWORD hMem, DWORD cp, DWORD *pdwCharIndex, DWORD *pdwLineNumber)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -144,7 +143,7 @@ REG_T GetCharPtr(DWORD hMem, DWORD cp)
 	}
 	else
 	{
-		edx /= 1;
+		edx /= 2;
 		if(eax>=edx)
 		{
 			ecx = ((EDIT *)ebx)->cpLine;
@@ -205,12 +204,14 @@ anon_3:
 	((EDIT *)ebx)->line = edx;
 	eax = ecx;
 	ecx = temp1;
+    *pdwCharIndex = ecx;
+    *pdwLineNumber = edx;
 	return eax;
 
 } // GetCharPtr
 
 // eax=Char index
-REG_T GetCpFromLine(DWORD hMem, DWORD nLine)
+__declspec(dllexport) REG_T GetCpFromLine(DWORD hMem, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -253,7 +254,7 @@ REG_T GetCpFromLine(DWORD hMem, DWORD nLine)
 
 } // GetCpFromLine
 
-REG_T GetLineFromCp(DWORD hMem, DWORD cp)
+__declspec(dllexport) REG_T GetLineFromCp(DWORD hMem, DWORD cp)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -306,7 +307,7 @@ REG_T GetLineFromCp(DWORD hMem, DWORD cp)
 
 } // GetLineFromCp
 
-REG_T GetYpFromLine(DWORD hMem, DWORD nLine)
+__declspec(dllexport) REG_T GetYpFromLine(DWORD hMem, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -363,7 +364,7 @@ anon_5: ;
 
 } // GetYpFromLine
 
-REG_T GetLineFromYp(DWORD hMem, DWORD y)
+__declspec(dllexport) REG_T GetLineFromYp(DWORD hMem, DWORD y)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -427,7 +428,7 @@ anon_7: ;
 
 } // GetLineFromYp
 
-REG_T GetCpFromXp(DWORD hMem, DWORD lpChars, DWORD x, DWORD fNoAdjust)
+__declspec(dllexport) REG_T GetCpFromXp(DWORD hMem, DWORD lpChars, DWORD x, DWORD fNoAdjust)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -455,7 +456,7 @@ REG_T GetCpFromXp(DWORD hMem, DWORD lpChars, DWORD x, DWORD fNoAdjust)
 	lastright = eax;
 	esi = lpChars;
 	edi = ((CHARS *)esi)->len;
-	edi /= 1;
+	edi /= 2;
 	edx = edi;
 	ecx = 0;
 anon_8:
@@ -464,7 +465,7 @@ anon_8:
 	TestIt();
 	edx = temp3;
 	ecx = temp2;
-	edx /= 1;
+	edx /= 2;
 	if(R_SIGNED(eax) > (SDWORD)x)
 	{
 		edi -= edx;
@@ -509,7 +510,7 @@ anon_8:
 		{
 			edx -= eax;
 			edx = -edx;
-			edx /= 1;
+			edx /= 2;
 			eax -= edx;
 		} // endif
 		if(R_SIGNED(eax) > (SDWORD)x)
@@ -535,7 +536,7 @@ anon_8:
 
 } // GetCpFromXp
 
-REG_T GetPosFromChar(DWORD hMem, DWORD cp, DWORD lpPoint)
+__declspec(dllexport) REG_T GetPosFromChar(DWORD hMem, DWORD cp, DWORD lpPoint)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -580,7 +581,7 @@ REG_T GetPosFromChar(DWORD hMem, DWORD cp, DWORD lpPoint)
 
 } // GetPosFromChar
 
-REG_T GetCharFromPos(DWORD hMem, DWORD cpy, DWORD x, DWORD y)
+__declspec(dllexport) REG_T GetCharFromPos(DWORD hMem, DWORD cpy, DWORD x, DWORD y)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -632,7 +633,7 @@ Ex:
 
 } // GetCharFromPos
 
-REG_T GetCaretPoint(DWORD hMem, DWORD cp, DWORD cpy, DWORD lpPoint)
+__declspec(dllexport) REG_T GetCaretPoint(DWORD hMem, DWORD cp, DWORD cpy, DWORD lpPoint)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -662,7 +663,7 @@ REG_T GetCaretPoint(DWORD hMem, DWORD cp, DWORD cpy, DWORD lpPoint)
 
 } // GetCaretPoint
 
-REG_T SetCaret(DWORD hMem, DWORD cpy)
+__declspec(dllexport) REG_T SetCaret(DWORD hMem, DWORD cpy)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -696,7 +697,7 @@ REG_T SetCaret(DWORD hMem, DWORD cpy)
 
 } // SetCaret
 
-REG_T ScrollEdit(DWORD hMem, DWORD hWin, DWORD x, DWORD y)
+__declspec(dllexport) REG_T ScrollEdit(DWORD hMem, DWORD hWin, DWORD x, DWORD y)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -754,7 +755,7 @@ REG_T ScrollEdit(DWORD hMem, DWORD hWin, DWORD x, DWORD y)
 
 } // ScrollEdit
 
-REG_T InvalidateEdit(DWORD hMem, DWORD hWin)
+__declspec(dllexport) REG_T InvalidateEdit(DWORD hMem, DWORD hWin)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -779,7 +780,7 @@ REG_T InvalidateEdit(DWORD hMem, DWORD hWin)
 
 } // InvalidateEdit
 
-REG_T InvalidateLine(DWORD hMem, DWORD hWin, DWORD nLine)
+__declspec(dllexport) REG_T InvalidateLine(DWORD hMem, DWORD hWin, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -816,7 +817,7 @@ REG_T InvalidateLine(DWORD hMem, DWORD hWin, DWORD nLine)
 
 } // InvalidateLine
 
-REG_T InvalidateSelection(DWORD hMem, DWORD hWin, DWORD cpMin, DWORD cpMax)
+__declspec(dllexport) REG_T InvalidateSelection(DWORD hMem, DWORD hWin, DWORD cpMin, DWORD cpMax)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -846,7 +847,7 @@ REG_T InvalidateSelection(DWORD hMem, DWORD hWin, DWORD cpMin, DWORD cpMax)
 		eax = -eax;
 		if(eax<10000)
 		{
-			eax = GetCharPtr(ebx, cpMin);
+			eax = GetCharPtr(ebx, cpMin, &ecx, &edx);
 			nLine = edx;
 			eax = ((EDIT *)ebx)->cpLine;
 anon_9:
@@ -868,7 +869,7 @@ anon_9:
 
 } // InvalidateSelection
 
-REG_T SetCaretVisible(DWORD hWin, DWORD cpy)
+__declspec(dllexport) REG_T SetCaretVisible(DWORD hWin, DWORD cpy)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1034,7 +1035,7 @@ anon_10:
 
 } // SetCaretVisible
 
-REG_T GetBlockCp(DWORD hMem, DWORD nLine, DWORD nPos)
+__declspec(dllexport) REG_T GetBlockCp(DWORD hMem, DWORD nLine, DWORD nPos)
 {
 	REG_T eax = 0, ecx, edx, ebx, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1063,7 +1064,7 @@ REG_T GetBlockCp(DWORD hMem, DWORD nLine, DWORD nPos)
 
 } // GetBlockCp
 
-REG_T SetCpxMax(DWORD hMem, DWORD hWin)
+__declspec(dllexport) REG_T SetCpxMax(DWORD hMem, DWORD hWin)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1089,7 +1090,7 @@ REG_T SetCpxMax(DWORD hMem, DWORD hWin)
 
 } // SetCpxMax
 
-REG_T SetBlockFromCp(DWORD hMem, DWORD cp, DWORD fShift)
+__declspec(dllexport) REG_T SetBlockFromCp(DWORD hMem, DWORD cp, DWORD fShift)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -1099,7 +1100,7 @@ REG_T SetBlockFromCp(DWORD hMem, DWORD cp, DWORD fShift)
 	eax = cp;
 	((EDIT *)ebx)->cpMin = eax;
 	((EDIT *)ebx)->cpMax = eax;
-	eax = GetCharPtr(ebx, cp);
+	eax = GetCharPtr(ebx, cp, &ecx, &edx);
 	eax = GetPosFromChar(ebx, cp, &pt);
 	eax = pt.x;
 	eax -= ((EDIT *)ebx)->linenrwt;

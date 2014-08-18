@@ -1,7 +1,8 @@
-#include <windows.h>
-#include "Data.h"
+#include "ClipBoard.h"
 
-REG_T SetClipData(LPSTR lpData, DWORD dwSize)
+#include "Memory.h"
+
+__declspec(dllexport) REG_T SetClipData(LPSTR lpData, DWORD dwSize)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -48,7 +49,7 @@ exit3:
 
 } // SetClipData
 
-REG_T EditCopy(DWORD hMem, DWORD lpCMem)
+__declspec(dllexport) REG_T EditCopy(DWORD hMem, DWORD lpCMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -66,7 +67,7 @@ REG_T EditCopy(DWORD hMem, DWORD lpCMem)
 	} // endif
 	cpMin = eax;
 	cpMax = edx;
-	eax = GetCharPtr(ebx, cpMin);
+	eax = GetCharPtr(ebx, cpMin, &ecx, &edx);
 	ecx = eax;
 	edi = lpCMem;
 	edx = cpMin;
@@ -100,7 +101,7 @@ REG_T EditCopy(DWORD hMem, DWORD lpCMem)
 
 } // EditCopy
 
-REG_T EditCopyBlock(DWORD hMem, DWORD lpCMem)
+__declspec(dllexport) REG_T EditCopyBlock(DWORD hMem, DWORD lpCMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -159,7 +160,7 @@ REG_T EditCopyBlock(DWORD hMem, DWORD lpCMem)
 
 } // EditCopyBlock
 
-REG_T EditCopyNoLF(DWORD hMem, DWORD lpCMem)
+__declspec(dllexport) REG_T EditCopyNoLF(DWORD hMem, DWORD lpCMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -177,7 +178,7 @@ REG_T EditCopyNoLF(DWORD hMem, DWORD lpCMem)
 	} // endif
 	cpMin = eax;
 	cpMax = edx;
-	eax = GetCharPtr(ebx, cpMin);
+	eax = GetCharPtr(ebx, cpMin, &ecx, &edx);
 	ecx = eax;
 	edi = lpCMem;
 	edx = cpMin;
@@ -206,7 +207,7 @@ REG_T EditCopyNoLF(DWORD hMem, DWORD lpCMem)
 
 } // EditCopyNoLF
 
-REG_T Copy(DWORD hMem)
+__declspec(dllexport) REG_T Copy(DWORD hMem)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -257,7 +258,7 @@ REG_T Copy(DWORD hMem)
 
 } // Copy
 
-REG_T EditPaste(DWORD hMem, DWORD hData)
+__declspec(dllexport) REG_T EditPaste(DWORD hMem, DWORD hData)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -309,7 +310,7 @@ REG_T EditPaste(DWORD hMem, DWORD hData)
 
 } // EditPaste
 
-REG_T EditPasteBlock(DWORD hMem, DWORD hData)
+__declspec(dllexport) REG_T EditPasteBlock(DWORD hMem, DWORD hData)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -374,7 +375,7 @@ anon_1:
 			if(eax==edx)
 			{
 				temp3 = edx;
-				eax = GetCharPtr(ebx, edx);
+				eax = GetCharPtr(ebx, edx, &ecx, &edx);
 				edx = temp3;
 				eax = InsertChar(ebx, edx, VK_SPACE);
 				nSpc++;
@@ -403,7 +404,7 @@ anon_1:
 		} // endif
 		eax = temp3;
 		temp3 = eax;
-		eax = GetCharPtr(ebx, eax);
+		eax = GetCharPtr(ebx, eax, &ecx, &edx);
 		ecx = temp3;
 		edi -= ecx;
 		edx = ((EDIT *)ebx)->rpChars;
@@ -435,7 +436,7 @@ anon_1:
 
 } // EditPasteBlock
 
-REG_T Paste(DWORD hMem, DWORD hWin, DWORD hData)
+__declspec(dllexport) REG_T Paste(DWORD hMem, DWORD hWin, DWORD hData)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -468,7 +469,7 @@ REG_T Paste(DWORD hMem, DWORD hWin, DWORD hData)
 		((EDIT *)ebx)->cpMax = eax;
 		eax = EditPasteBlock(ebx, hData);
 	} // endif
-	eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin);
+	eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin, &ecx, &edx);
 	eax = SetCaretVisible(hWin, ((RAEDT *)esi)->cpy);
 	eax = SetCaret(ebx, ((RAEDT *)esi)->cpy);
 	eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edta.hwnd);
@@ -479,7 +480,7 @@ REG_T Paste(DWORD hMem, DWORD hWin, DWORD hData)
 
 } // Paste
 
-REG_T Cut(DWORD hMem, DWORD hWin)
+__declspec(dllexport) REG_T Cut(DWORD hMem, DWORD hWin)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -515,7 +516,7 @@ REG_T Cut(DWORD hMem, DWORD hWin)
 		((EDIT *)ebx)->cpMin = eax;
 		((EDIT *)ebx)->cpMax = eax;
 	} // endif
-	eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin);
+	eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin, &ecx, &edx);
 	eax = SetCaretVisible(hWin, ((RAEDT *)esi)->cpy);
 	eax = SetCaret(ebx, ((RAEDT *)esi)->cpy);
 	eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edta.hwnd);
@@ -526,7 +527,7 @@ REG_T Cut(DWORD hMem, DWORD hWin)
 
 } // Cut
 
-REG_T ConvertCase(DWORD hMem, DWORD nFunction)
+__declspec(dllexport) REG_T ConvertCase(DWORD hMem, DWORD nFunction)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -561,7 +562,7 @@ REG_T ConvertCase(DWORD hMem, DWORD nFunction)
 
 } // ConvertCase
 
-REG_T ConvertIndent(DWORD hMem, DWORD nFunction)
+__declspec(dllexport) REG_T ConvertIndent(DWORD hMem, DWORD nFunction)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;

@@ -35,7 +35,7 @@ DLL_EXPORT BOOL APIENTRY DllMain(HINSTANCE hInst, DWORD reason, LPVOID reserved1
 // x=RAEdit.dll,1
 // Copy RAEdit.dll to c:\windows\system
 //
-REG_T GetDef(DWORD nInx)
+__declspec(dllexport) REG_T GetDef(DWORD nInx)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
@@ -58,7 +58,7 @@ REG_T GetDef(DWORD nInx)
 
 } // GetDef
 
-REG_T GetDefEx(DWORD nInx)
+__declspec(dllexport) REG_T GetDefEx(DWORD nInx)
 {
 	REG_T eax = 0, ecx, edx;
 	REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
