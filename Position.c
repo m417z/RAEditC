@@ -3,7 +3,7 @@
 #include "Block.h"
 #include "Misc.h"
 
-REG_T GetTopFromYp(DWORD hMem, DWORD hWin, DWORD yp)
+REG_T GetTopFromYp(DWORD hMem, HWND hWin, DWORD yp)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3;
@@ -195,11 +195,11 @@ anon_3:
 		((EDIT *)ebx)->cpLine = ecx;
 		ecx = ((CHARS *)edi)->len;
 	} // endif
-	esi -= ((EDIT *)ebx)->hLine;
+	esi -= (ULONG_PTR)((EDIT *)ebx)->hLine;
 	((EDIT *)ebx)->rpLine = esi;
 	edx = esi;
 	edx /= 4;
-	edi -= ((EDIT *)ebx)->hChars;
+	edi -= (ULONG_PTR)((EDIT *)ebx)->hChars;
 	((EDIT *)ebx)->rpChars = edi;
 	((EDIT *)ebx)->line = edx;
 	eax = ecx;
@@ -689,7 +689,7 @@ REG_T SetCaret(DWORD hMem, DWORD cpy)
 
 } // SetCaret
 
-REG_T ScrollEdit(DWORD hMem, DWORD hWin, DWORD x, DWORD y)
+REG_T ScrollEdit(DWORD hMem, HWND hWin, DWORD x, DWORD y)
 {
 	REG_T eax = 0, ebx, esi;
 	REG_T temp1;
@@ -747,7 +747,7 @@ REG_T ScrollEdit(DWORD hMem, DWORD hWin, DWORD x, DWORD y)
 
 } // ScrollEdit
 
-REG_T InvalidateEdit(DWORD hMem, DWORD hWin)
+REG_T InvalidateEdit(DWORD hMem, HWND hWin)
 {
 	REG_T eax = 0, ebx, esi;
 
@@ -771,7 +771,7 @@ REG_T InvalidateEdit(DWORD hMem, DWORD hWin)
 
 } // InvalidateEdit
 
-REG_T InvalidateLine(DWORD hMem, DWORD hWin, DWORD nLine)
+REG_T InvalidateLine(DWORD hMem, HWND hWin, DWORD nLine)
 {
 	REG_T eax = 0, ecx, ebx, esi;
 	RECT rect;
@@ -807,7 +807,7 @@ REG_T InvalidateLine(DWORD hMem, DWORD hWin, DWORD nLine)
 
 } // InvalidateLine
 
-REG_T InvalidateSelection(DWORD hMem, DWORD hWin, DWORD cpMin, DWORD cpMax)
+REG_T InvalidateSelection(DWORD hMem, HWND hWin, DWORD cpMin, DWORD cpMax)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1;
@@ -859,7 +859,7 @@ anon_9:
 
 } // InvalidateSelection
 
-REG_T SetCaretVisible(DWORD hWin, DWORD cpy)
+REG_T SetCaretVisible(HWND hWin, DWORD cpy)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2;
@@ -1053,7 +1053,7 @@ REG_T GetBlockCp(DWORD hMem, DWORD nLine, DWORD nPos)
 
 } // GetBlockCp
 
-REG_T SetCpxMax(DWORD hMem, DWORD hWin)
+REG_T SetCpxMax(DWORD hMem, HWND hWin)
 {
 	REG_T eax = 0, ebx, esi;
 	POINT pt;

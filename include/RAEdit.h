@@ -1,5 +1,4 @@
-#ifndef _RAEDIT_H_
-#define _RAEDIT_H_
+#pragma once
 
 #include <windows.h>
 #include <richedit.h>
@@ -264,10 +263,10 @@ struct tagRASELCHANGE {
 	WORD        seltyp;                     // SEL_TEXT or SEL_OBJECT
 	int         line;                       // Line number
 	int         cpLine;                     // Character position of first character
-	DWORD       lpLine;                     // Pointer to line
+	HANDLE      lpLine;                     // Pointer to line
 	DWORD       nlines;                     // Total number of lines
 	DWORD       nhidden;                    // Total number of hidden lines
-	DWORD       fchanged;                   // TRUE if changed since last
+	BOOL        fchanged;                   // TRUE if changed since last
 	DWORD       npage;                      // Page number
 	DWORD       nWordGroup;                 // Hilite word group(0-15)
 };
@@ -305,9 +304,7 @@ struct tagBLOCKRANGE {
 };
 typedef struct tagBLOCKRANGE BLOCKRANGE;
 
-#pragma pack(pop)
-
 extern void WINAPI InstallRAEdit(HINSTANCE hInst, BOOL fGlobal);
 extern void WINAPI UnInstallRAEdit(void);
 
-#endif // _RAEDIT_H_
+#pragma pack(pop)

@@ -42,7 +42,7 @@ REG_T InsertNewLine(DWORD hMem, DWORD nLine, DWORD nSize)
 	((EDIT *)ebx)->rpLineFree += sizeof(LINE);
 	eax = ((EDIT *)ebx)->rpCharsFree;
 	((LINE *)esi)->rpChars = eax;
-	esi -= ((EDIT *)ebx)->hLine;
+	esi -= (ULONG_PTR)((EDIT *)ebx)->hLine;
 	((EDIT *)ebx)->rpLine = esi;
 	esi = eax;
 	esi += ((EDIT *)ebx)->hChars;
@@ -55,7 +55,7 @@ REG_T InsertNewLine(DWORD hMem, DWORD nLine, DWORD nSize)
 	((EDIT *)ebx)->rpCharsFree += eax;
 	((CHARS *)esi)->len = 0;
 	((CHARS *)esi)->state = STATE_CHANGED;
-	esi -= ((EDIT *)ebx)->hChars;
+	esi -= (ULONG_PTR)((EDIT *)ebx)->hChars;
 	((EDIT *)ebx)->rpChars = esi;
 	return eax;
 
@@ -134,7 +134,7 @@ REG_T ExpandCharLine(DWORD hMem)
 		edx = ((EDIT *)ebx)->rpLine;
 		edx += ((EDIT *)ebx)->hLine;
 		eax = edi;
-		eax -= ((EDIT *)ebx)->hChars;
+		eax -= (ULONG_PTR)((EDIT *)ebx)->hChars;
 		((LINE *)edx)->rpChars = eax;
 		((EDIT *)ebx)->rpChars = eax;
 		temp1 = esi;
@@ -315,7 +315,7 @@ REG_T InsertChar(DWORD hMem, DWORD cp, DWORD nChr)
 			ecx++;
 			edx++;
 		} // endw
-		// Update lenght of old and new line
+		// Update length of old and new line
 		((CHARS *)edi)->len = edx;
 		((CHARS *)esi)->len -= edx;
 		eax = ((CHARS *)esi)->len;

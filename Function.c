@@ -6,9 +6,6 @@
 #include "Position.h"
 #include "Undo.h"
 
-typedef REG_T CALLBACK (* EDITSTREAMCALLBACKPROTO)(DWORD dwCookie, DWORD pbBuff, DWORD cb, DWORD pcb);
-typedef EDITSTREAMCALLBACKPROTO EDITSTREAMCALLBACKPTR;
-
 REG_T FindTheText(DWORD hMem, DWORD pFind, DWORD fMC, DWORD fWW, DWORD fWhiteSpace, DWORD cpMin, DWORD cpMax, DWORD fDir, DWORD *pnIgnore)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
@@ -2360,16 +2357,8 @@ anon_13:
 	{
 		edx = lParam;
 		((EDITSTREAM *)edx)->dwError = 0;
-		// lea		eax,dwRead
-		// push	eax
-		// mov		eax,MAXSTREAM
-		// push	eax
-		// mov		eax,esi
-		// push	eax
-		// push	((EDITSTREAM *)edx)->dwCookie
-		// call	((EDITSTREAM *)edx)->pfnCallback
 		eax = &dwRead;
-		eax = ((EDITSTREAMCALLBACKPTR)((EDITSTREAM *)edx)->pfnCallback)(((EDITSTREAM *)edx)->dwCookie, esi, MAXSTREAM, eax);
+		eax = ((EDITSTREAMCALLBACK)((EDITSTREAM *)edx)->pfnCallback)(((EDITSTREAM *)edx)->dwCookie, esi, MAXSTREAM, eax);
 		return;
 
 	}
@@ -2438,23 +2427,12 @@ Ex:
 		eax = MultiByteToWideChar(CP_ACP, 0, hCMem, nChars, eax, MAXSTREAM+1024);
 		edx = lParam;
 		((EDITSTREAM *)edx)->dwError = 0;
-		// lea		eax,dwWrite
-		// push	eax
-		// mov		eax,nChars
-		// shl		eax,1
-		// push	eax
-		// mov		eax,hCMem
-		// add		eax,MAXSTREAM+1024
-		// push	eax
-		// mov		eax,((EDITSTREAM *)edx)->dwCookie
-		// push	eax
-		// call	((EDITSTREAM *)edx)->pfnCallback
 		eax = &dwWrite;
 		ecx = nChars;
 		ecx *= 2;
 		edx = hCMem;
 		edx += MAXSTREAM+1024;
-		eax = ((EDITSTREAMCALLBACKPTR)((EDITSTREAM *)edx)->pfnCallback)(((EDITSTREAM *)edx)->dwCookie, edx, ecx, eax);
+		eax = ((EDITSTREAMCALLBACK)((EDITSTREAM *)edx)->pfnCallback)(((EDITSTREAM *)edx)->dwCookie, edx, ecx, eax);
 		return;
 
 	}
@@ -2471,7 +2449,7 @@ Ex:
 		// push	eax
 		// call	((EDITSTREAM *)edx)->pfnCallback
 		eax = &dwWrite;
-		eax = ((EDITSTREAMCALLBACKPTR)((EDITSTREAM *)edx)->pfnCallback)(((EDITSTREAM *)edx)->dwCookie, hCMem, nChars, eax);
+		eax = ((EDITSTREAMCALLBACK)((EDITSTREAM *)edx)->pfnCallback)(((EDITSTREAM *)edx)->dwCookie, hCMem, nChars, eax);
 		return;
 
 	}
@@ -2483,7 +2461,7 @@ Ex:
 		edx = 0;
 		nChars = ecx;
 		eax = esi;
-		eax -= ((EDIT *)ebx)->hLine;
+		eax -= (ULONG_PTR)((EDIT *)ebx)->hLine;
 		if(eax<((EDIT *)ebx)->rpLineFree)
 		{
 			temp1 = esi;
@@ -2994,10 +2972,8 @@ REG_T BracketMatch(DWORD hMem, DWORD nChr, DWORD cp)
 	{
 		eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edta.hwnd);
 		eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edtb.hwnd);
-		eax = 0;
-		eax--;
-		((EDIT *)ebx)->cpbrst = eax;
-		((EDIT *)ebx)->cpbren = eax;
+		((EDIT *)ebx)->cpbrst = -1;
+		((EDIT *)ebx)->cpbren = -1;
 	} // endif
 	RBYTE_LOW(eax) = (BYTE)nChr;
 	ecx = 0;

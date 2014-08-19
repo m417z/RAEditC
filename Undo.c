@@ -353,7 +353,7 @@ REG_T SaveUndo(DWORD hMem, DWORD nFun, DWORD cp, DWORD lp, DWORD cb)
 
 } // SaveUndo
 
-REG_T Undo(RAEDT *raedt, DWORD hMem, DWORD hWin)
+REG_T Undo(RAEDT *raedt, DWORD hMem, HWND hWin)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 
@@ -379,7 +379,7 @@ REG_T Undo(RAEDT *raedt, DWORD hMem, DWORD hWin)
 
 } // Undo
 
-REG_T Redo(RAEDT *raedt, DWORD hMem, DWORD hWin)
+REG_T Redo(RAEDT *raedt, DWORD hMem, HWND hWin)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 

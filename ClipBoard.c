@@ -436,7 +436,7 @@ anon_1:
 
 } // EditPasteBlock
 
-REG_T Paste(DWORD hMem, DWORD hWin, DWORD hData)
+REG_T Paste(DWORD hMem, HWND hWin, DWORD hData)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	BLOCKRANGE blrg;
@@ -478,7 +478,7 @@ REG_T Paste(DWORD hMem, DWORD hWin, DWORD hData)
 
 } // Paste
 
-REG_T Cut(DWORD hMem, DWORD hWin)
+REG_T Cut(DWORD hMem, HWND hWin)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 

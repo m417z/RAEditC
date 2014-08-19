@@ -1,7 +1,11 @@
 #pragma once
 
+#include <windows.h>
+#include <commctrl.h>
 #include "RegisterTypes.h"
 #include "include/RAEdit.h"
+
+#pragma pack(push, 1)
 
 #define MAXLINEMEM				(8*1024)
 #define MAXCHARMEM				(24*1024)
@@ -24,56 +28,56 @@
 #define UNDO_INSERTBLOCK		5
 #define UNDO_DELETEBLOCK		6
 
-#pragma pack(push, 1)
+typedef int CALLBACK (* BOOKMARK_PAINT_CALLBACK)(HWND hWnd, DWORD line);
 
 struct tagTIMER {
-	DWORD hwnd;
-	DWORD umsg;
-	DWORD lparam;
-	DWORD wparam;
+	HWND hwnd;
+	UINT umsg;
+	LPARAM lparam;
+	WPARAM wparam;
 };
 typedef struct tagTIMER TIMER;
 
 struct tagRABRUSH {
-	DWORD hBrBck;		// Back color brush
-	DWORD hBrSelBck;		// Sel back color brush
-	DWORD hBrHilite1;		// Line hilite 1
-	DWORD hBrHilite2;		// Line hilite 2
-	DWORD hBrHilite3;		// Line hilite 3
-	DWORD hBrSelBar;		// Selection bar
-	DWORD hPenSelbar;		// Selection bar pen
+	HBRUSH hBrBck;		// Back color brush
+	HBRUSH hBrSelBck;		// Sel back color brush
+	HBRUSH hBrHilite1;		// Line hilite 1
+	HBRUSH hBrHilite2;		// Line hilite 2
+	HBRUSH hBrHilite3;		// Line hilite 3
+	HBRUSH hBrSelBar;		// Selection bar
+	HBRUSH hPenSelbar;		// Selection bar pen
 };
 typedef struct tagRABRUSH RABRUSH;
 
 struct tagWORDINFO {
-	DWORD len;		// Length
-	DWORD rpprev;		// Relative pointer to previous
+	ULONG_PTR len;		// Length
+	ULONG_PTR rpprev;		// Relative pointer to previous
 	DWORD color;		// Color (high byte is font 0-3)
 	DWORD fend;		// End flag
 };
 typedef struct tagWORDINFO WORDINFO;
 
 struct tagRAFONTINFO {
-	DWORD charset;		// Character set
-	DWORD fDBCS;		// Use double byte characters
+	BYTE charset;		// Character set
+	BYTE fDBCS;		// Use double byte characters
 	DWORD fntwt;		// Font width
 	DWORD fntht;		// Font height
 	DWORD spcwt;		// Space width
 	DWORD tabwt;		// Tab width
 	DWORD italic;		// Height shift
-	DWORD monospace;		// Font is monospaced
+	BOOL monospace;		// Font is monospaced
 	DWORD linespace;		// Extra line spacing
 };
 typedef struct tagRAFONTINFO RAFONTINFO;
 
 struct tagLINE {
-	DWORD rpChars;		// Relative pointer to CHARS
+	ULONG_PTR rpChars;		// Relative pointer to CHARS
 };
 typedef struct tagLINE LINE;
 
 struct tagCHARS {
-	DWORD len;		// Actual String len
-	DWORD max;		// Max String len
+	ULONG_PTR len;		// Actual String len
+	ULONG_PTR max;		// Max String len
 	DWORD state;		// Line state
 	DWORD bmid;		// Bookmark ID
 	DWORD errid;		// Error ID
@@ -81,17 +85,17 @@ struct tagCHARS {
 typedef struct tagCHARS CHARS;
 
 struct tagRAUNDO {
-	DWORD rpPrev;		// Relative pointer to previous
+	ULONG_PTR rpPrev;		// Relative pointer to previous
 	DWORD undoid;		// Undo ID
-	DWORD cp;		// Character position
-	DWORD cb;		// Size in bytes
+	ULONG_PTR cp;		// Character position
+	ULONG_PTR cb;		// Size in bytes
 	BYTE fun;		// Function
 };
 typedef struct tagRAUNDO RAUNDO;
 
 struct tagRAEDT {
-	DWORD hwnd;		// Handle of edit a or b
-	DWORD hvscroll;		// Handle of scroll bar
+	HWND hwnd;		// Handle of edit a or b
+	HWND hvscroll;		// Handle of scroll bar
 	DWORD cpxmax;		// Last cursor pos x
 	DWORD cpy;		// Scroll position
 	DWORD cp;		// Character position
@@ -103,38 +107,38 @@ struct tagRAEDT {
 typedef struct tagRAEDT RAEDT;
 
 struct tagEDIT {
-	DWORD hwnd;		// Handle of main window
+	HWND hwnd;		// Handle of main window
 	DWORD fstyle;		// Window style
-	DWORD ID;		// Window ID
-	DWORD hpar;		// Handle of parent window
+	LONG_PTR ID;		// Window ID
+	HWND hpar;		// Handle of parent window
 	RAEDT edta;
 	RAEDT edtb;
-	DWORD hhscroll;		// Handle of horizontal scrollbar
-	DWORD hgrip;		// Handle of sizegrip
-	DWORD hnogrip;		// Handle of nosizegrip
-	DWORD hsbtn;		// Handle of splitt button
-	DWORD hlin;		// Handle of linenumber button
-	DWORD hexp;		// Handle of expand button
-	DWORD hcol;		// Handle of collapse button
-	DWORD hlock;		// Handle of lock button
-	DWORD hsta;		// Handle of state window
-	DWORD htt;		// Handle of tooltip
+	HWND hhscroll;		// Handle of horizontal scrollbar
+	HWND hgrip;		// Handle of sizegrip
+	HWND hnogrip;		// Handle of nosizegrip
+	HWND hsbtn;		// Handle of splitt button
+	HWND hlin;		// Handle of linenumber button
+	HWND hexp;		// Handle of expand button
+	HWND hcol;		// Handle of collapse button
+	HWND hlock;		// Handle of lock button
+	HWND hsta;		// Handle of state window
+	HWND htt;		// Handle of tooltip
 	DWORD fresize;		// Resize in action flag
 	DWORD fsplitt;		// Splitt factor
 	DWORD nsplitt;		// Splitt height
 
-	DWORD hHeap;	// Handle of heap
-	DWORD hLine;		// Handle of line pointer mem
-	DWORD cbLine;		// Size of line pointer mem
-	DWORD rpLine;		// Relative pointer into line pointer mem
-	DWORD rpLineFree;		// Pointer to free line pointer
-	DWORD hChars;		// Handle of character mem
-	DWORD cbChars;		// Size of character mem
-	DWORD rpChars;		// Relative pointer into character mem
-	DWORD rpCharsFree;		// Relative pointer to free character
-	DWORD hUndo;		// Handle of undo memory
-	DWORD cbUndo;		// Size of undo memory
-	DWORD rpUndo;		// Relative pointer to free (last)
+	HANDLE hHeap;	// Handle of heap
+	HANDLE hLine;		// Handle of line pointer mem
+	ULONG_PTR cbLine;		// Size of line pointer mem
+	ULONG_PTR rpLine;		// Relative pointer into line pointer mem
+	ULONG_PTR rpLineFree;		// Pointer to free line pointer
+	HANDLE hChars;		// Handle of character mem
+	ULONG_PTR cbChars;		// Size of character mem
+	ULONG_PTR rpChars;		// Relative pointer into character mem
+	ULONG_PTR rpCharsFree;		// Relative pointer to free character
+	HANDLE hUndo;		// Handle of undo memory
+	ULONG_PTR cbUndo;		// Size of undo memory
+	ULONG_PTR rpUndo;		// Relative pointer to free (last)
 	DWORD line;		// Linenumber
 	DWORD cpLine;		// Character position for start of line
 
@@ -146,43 +150,41 @@ struct tagEDIT {
 	DWORD nPageBreak;		// Page break
 	DWORD cpMin;		// Selection min
 	DWORD cpMax;		// Selection max
-	DWORD fOvr;		// Insert / Overwrite
+	BOOL fOvr;		// Insert / Overwrite
 	DWORD nHidden;		// Number of hidden lines
 	DWORD cpx;		// Scroll position
-	DWORD focus;		// Handle of edit having focus
-	DWORD fCaretHide;		// Caret is hidden
-	DWORD fChanged;		// Content changed
-	DWORD fHideSel;		// Hide selection
-	DWORD fIndent;		// Auto indent
+	HANDLE focus;		// Handle of edit having focus
+	BOOL fCaretHide;		// Caret is hidden
+	BOOL fChanged;		// Content changed
+	BOOL fHideSel;		// Hide selection
+	BOOL fIndent;		// Auto indent
 	RACOLOR clr;
 	RABRUSH br;
 	DWORD nTab;		// Tab size
 	RAFONT fnt;
 	RAFONTINFO fntinfo;
-	DWORD lpBmCB;		// Bookmark paint callback
+	BOOKMARK_PAINT_CALLBACK lpBmCB;		// Bookmark paint callback
 	DWORD nchange;		// Used by EN_SELCHANGE
 	DWORD nlastchange;		// Used by EN_SELCHANGE
 	DWORD nWordGroup;		// Hilite word group
-	DWORD fExpandTab;		// TRUE/FALSE Epand tabs to spaces
+	BOOL fExpandTab;		// TRUE/FALSE Epand tabs to spaces
 	CHARRANGE savesel;
-	DWORD htlt;		// Scroll tooltip
+	HWND htlt;		// Scroll tooltip
 	DWORD nMode;		// Block selection
 	BLOCKRANGE blrg;
 	DWORD lockundoid;
 	DWORD ccmntblocks;
-	DWORD cpbrst;
-	DWORD cpbren;
+	DWORD cpbrst; // bracket start
+	DWORD cpbren; // bracket end
 	DWORD cpselbar;
-	DWORD fLock;
+	BOOL fLock;
 	DWORD nCursorWordType;
 	DWORD fstyleex;
-	DWORD funicode;
+	BOOL funicode;
 	DWORD fhilite;
 	DWORD lastline;
 };
 typedef struct tagEDIT EDIT;
-
-#pragma pack(pop)
 
 #define IDB_RAEDITBUTTON		100
 #define IDC_HSPLITTCUR			101
@@ -235,37 +237,37 @@ extern char szLine[32];
 
 // data?
 
-extern DWORD hInstance;
-extern DWORD hBmpLnr;
-extern DWORD hBmpExp;
-extern DWORD hBmpCol;
-extern DWORD hBmpLck;
-extern DWORD hHSCur;
-extern DWORD hSelCur;
-extern DWORD hIml;
-extern DWORD hBrTlt;
-extern DWORD SBWT;
-extern DWORD OldStateProc;
-extern DWORD OldSplittBtnProc;
-extern DWORD OldFakeToolTipProc;
-extern DWORD hWrdMem;
-extern DWORD cbWrdMem;
-extern DWORD rpWrdFree;
+extern HINSTANCE hInstance;
+extern HBITMAP hBmpLnr;
+extern HBITMAP hBmpExp;
+extern HBITMAP hBmpCol;
+extern HBITMAP hBmpLck;
+extern HCURSOR hHSCur;
+extern HCURSOR hSelCur;
+extern HIMAGELIST hIml;
+extern HBRUSH hBrTlt;
+extern DWORD SBWT; // Scroll bar width, GetSystemMetrics(SM_CXVSCROLL)
+extern WNDPROC OldStateProc;
+extern WNDPROC OldSplittBtnProc;
+extern WNDPROC OldFakeToolTipProc;
+extern void *hWrdMem;
+extern ULONG_PTR cbWrdMem;
+extern ULONG_PTR rpWrdFree;
 extern DWORD fSelState;
 extern DWORD iYp;
-extern DWORD fOnBM;
+extern BOOL fOnBM;
 extern DWORD fOnSel;
-extern DWORD nBmid;
+extern DWORD nBmid; // Bookmark id
 extern DWORD nUndoid;
-extern DWORD fSize;
-extern DWORD TimerID;
+extern BOOL fSize;
+extern UINT_PTR TimerID;
 extern TIMER tmr1;
 extern TIMER tmr2;
 extern POINT ptDrag;
-extern DWORD hDragWin;
-extern DWORD hDragSourceMem;
+extern HWND hDragWin;
+extern EDIT *hDragSourceMem;
 extern CHARRANGE cpDragSource;
-extern DWORD peff;
+extern DWORD peff; // Drop effect
 extern DWORD MpX;
 extern DWORD MpY;
 extern DWORD fTlln;
@@ -273,4 +275,6 @@ extern BYTE blockdefs[4096];
 extern BYTE bracketstart[16];
 extern BYTE bracketend[16];
 extern BYTE bracketcont[16];
-extern DWORD fNoSaveUndo;
+extern BOOL fNoSaveUndo;
+
+#pragma pack(pop)

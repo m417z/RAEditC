@@ -110,37 +110,37 @@ char szLine[32] = "Ln: ";
 
 // data?
 
-DWORD hInstance;
-DWORD hBmpLnr;
-DWORD hBmpExp;
-DWORD hBmpCol;
-DWORD hBmpLck;
-DWORD hHSCur;
-DWORD hSelCur;
-DWORD hIml;
-DWORD hBrTlt;
-DWORD SBWT;
-DWORD OldStateProc;
-DWORD OldSplittBtnProc;
-DWORD OldFakeToolTipProc;
-DWORD hWrdMem;
-DWORD cbWrdMem;
-DWORD rpWrdFree;
+HINSTANCE hInstance;
+HBITMAP hBmpLnr;
+HBITMAP hBmpExp;
+HBITMAP hBmpCol;
+HBITMAP hBmpLck;
+HCURSOR hHSCur;
+HCURSOR hSelCur;
+HIMAGELIST hIml;
+HBRUSH hBrTlt;
+DWORD SBWT; // Scroll bar width, GetSystemMetrics(SM_CXVSCROLL)
+WNDPROC OldStateProc;
+WNDPROC OldSplittBtnProc;
+WNDPROC OldFakeToolTipProc;
+void *hWrdMem;
+ULONG_PTR cbWrdMem;
+ULONG_PTR rpWrdFree;
 DWORD fSelState;
 DWORD iYp;
-DWORD fOnBM;
+BOOL fOnBM;
 DWORD fOnSel;
-DWORD nBmid;
+DWORD nBmid; // Bookmark id
 DWORD nUndoid;
-DWORD fSize;
-DWORD TimerID;
+BOOL fSize;
+UINT_PTR TimerID;
 TIMER tmr1;
 TIMER tmr2;
 POINT ptDrag;
-DWORD hDragWin;
-DWORD hDragSourceMem;
+HWND hDragWin;
+EDIT *hDragSourceMem;
 CHARRANGE cpDragSource;
-DWORD peff;
+DWORD peff; // Drop effect
 DWORD MpX;
 DWORD MpY;
 DWORD fTlln;
@@ -148,4 +148,4 @@ BYTE blockdefs[4096];
 BYTE bracketstart[16];
 BYTE bracketend[16];
 BYTE bracketcont[16];
-DWORD fNoSaveUndo;
+BOOL fNoSaveUndo;

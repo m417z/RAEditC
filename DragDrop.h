@@ -10,7 +10,7 @@ typedef struct
     const IDropTargetVtbl *lpVtbl;
 	DWORD refcount;
 	DWORD valid;
-	DWORD hwnd;
+	HWND hwnd;
 	DWORD cp;
 } IDropTargetImpl;
 

@@ -5,9 +5,6 @@
 #include "Misc.h"
 #include "Position.h"
 
-typedef REG_T WINAPI (* BOOKMARKPAINTCALLBACKPROTO)(HWND hWnd, DWORD line);
-typedef BOOKMARKPAINTCALLBACKPROTO BOOKMARKPAINTCALLBACKPTR;
-
 REG_T DrawLine(DWORD hMem, DWORD lpChars, DWORD nLine, DWORD cp, DWORD hDC, DWORD lpRect)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
@@ -1711,13 +1708,8 @@ anon_8:
 					}
 					else if(eax)
 					{
-						// dec		esi
-						// push	esi
-						// inc		esi
-						// push	((EDIT *)ebx)->hwnd
-						// call	eax
 						ecx = esi-1;
-						eax = ((BOOKMARKPAINTCALLBACKPTR)eax)(((EDIT *)ebx)->hwnd, ecx);
+						eax = ((BOOKMARK_PAINT_CALLBACK)eax)(((EDIT *)ebx)->hwnd, ecx);
 						ecx = eax;
 					} // endif
 					if(ecx)
@@ -2100,13 +2092,8 @@ anon_10:
 					}
 					else if(eax)
 					{
-						// dec		esi
-						// push	esi
-						// inc		esi
-						// push	((EDIT *)ebx)->hwnd
-						// call	eax
 						ecx = esi-1;
-						eax = ((BOOKMARKPAINTCALLBACKPTR)eax)(((EDIT *)ebx)->hwnd, ecx);
+						eax = ((BOOKMARK_PAINT_CALLBACK)eax)(((EDIT *)ebx)->hwnd, ecx);
 						ecx = eax;
 					} // endif
 					if(ecx)

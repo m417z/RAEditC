@@ -14,7 +14,7 @@
 #define EM_SETIMESTATUS 0x00d8
 #define EM_GETIMESTATUS 0x00d9
 
-REG_T TimerProc(DWORD hWin, DWORD uMsg, DWORD idEvent, DWORD dwTime)
+REG_T TimerProc(HWND hWin, UINT uMsg, UINT_PTR idEvent, DWORD dwTime)
 {
 	REG_T eax = 0;
 
@@ -601,7 +601,7 @@ REG_T StateProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	if(uMsg==WM_PAINT)
 	{
 		eax = BeginPaint(hWin, &ps);
-		eax = GetWindowLong(hWin, GWL_USERDATA);
+		eax = GetWindowLongPtr(hWin, GWLP_USERDATA);
 		ebx = eax;
 		if(((EDIT *)ebx)->fstyle&STYLE_READONLY)
 		{
@@ -3405,7 +3405,7 @@ anon_6: ;
 	{
 		eax = GetParent(hWin);
 		eax = GetWindowLong(eax, 0);
-		eax = SetWindowLong(hWin, 0, eax);
+		eax = SetWindowLongPtr(hWin, 0, eax);
 	}
 	else if(eax==WM_WINDOWPOSCHANGED)
 	{
@@ -4223,8 +4223,8 @@ anon_7:
 		case REM_SUBCLASS:
 			// wParam=0
 			// lParam=lpWndProc
-			eax = SetWindowLong(((EDIT *)ebx)->edta.hwnd, GWL_WNDPROC, lParam);
-			eax = SetWindowLong(((EDIT *)ebx)->edtb.hwnd, GWL_WNDPROC, lParam);
+			eax = SetWindowLongPtr(((EDIT *)ebx)->edta.hwnd, GWLP_WNDPROC, lParam);
+			eax = SetWindowLongPtr(((EDIT *)ebx)->edtb.hwnd, GWLP_WNDPROC, lParam);
 			return eax;
 
 		case REM_SETSPLIT:
@@ -5785,7 +5785,7 @@ anon_8:
 			// lParam=lpText
 			if(!wParam)
 			{
-				fNoSaveUndo++;
+				fNoSaveUndo = TRUE;
 			} // endif
 			eax = IsSelectionLocked(ebx, ((EDIT *)ebx)->cpMin, ((EDIT *)ebx)->cpMax);
 			if(eax!=0)
@@ -5816,8 +5816,8 @@ anon_8:
 			eax = SetCpxMax(ebx, ((RAEDT *)esi)->hwnd);
 			eax = SelChange(ebx, SEL_TEXT);
 			nUndoid++;
+			fNoSaveUndo = FALSE;
 			eax = 0;
-			fNoSaveUndo = eax;
 			return eax;
 
 		case EM_GETLINECOUNT:
@@ -6166,14 +6166,14 @@ anon_8:
 		eax = xHeapAlloc(eax, HEAP_GENERATE_EXCEPTIONS | HEAP_ZERO_MEMORY, edx);
 		ebx = eax;
 		// Save the pointer
-		eax = SetWindowLong(hWin, 0, ebx);
+		eax = SetWindowLongPtr(hWin, 0, ebx);
 		eax = hWin;
 		((EDIT *)ebx)->hwnd = eax;
 		eax = GetParent(eax);
 		((EDIT *)ebx)->hpar = eax;
 		eax = GetWindowLong(hWin, GWL_STYLE);
 		((EDIT *)ebx)->fstyle = eax;
-		eax = GetWindowLong(((EDIT *)ebx)->hwnd, GWL_ID);
+		eax = GetWindowLongPtr(((EDIT *)ebx)->hwnd, GWLP_ID);
 		((EDIT *)ebx)->ID = eax;
 		AllocMem();
 		((EDIT *)ebx)->nlinenrwt = LNRWT;
@@ -6212,7 +6212,7 @@ anon_8:
 		((EDIT *)ebx)->hsbtn = eax;
 		edx = szSplitterBar;
 		SetToolTip();
-		eax = SetWindowLong(((EDIT *)ebx)->hsbtn, GWL_WNDPROC, &SplittBtnProc);
+		eax = SetWindowLongPtr(((EDIT *)ebx)->hsbtn, GWLP_WNDPROC, &SplittBtnProc);
 		OldSplittBtnProc = eax;
 
 		eax = CreateWindowEx(NULL, szEditClassName, NULL, WS_CLIPSIBLINGS | WS_CHILD | WS_VISIBLE, 0, 0, 0, 0, hWin, NULL, hInstance, 0);
@@ -6237,14 +6237,14 @@ anon_8:
 		((EDIT *)ebx)->hsta = eax;
 		edx = szChanged;
 		SetToolTip();
-		eax = SetWindowLong(((EDIT *)ebx)->hsta, GWL_USERDATA, ebx);
-		eax = SetWindowLong(((EDIT *)ebx)->hsta, GWL_WNDPROC, &StateProc);
+		eax = SetWindowLongPtr(((EDIT *)ebx)->hsta, GWLP_USERDATA, ebx);
+		eax = SetWindowLongPtr(((EDIT *)ebx)->hsta, GWLP_WNDPROC, &StateProc);
 		OldStateProc = eax;
 
 		eax = CreateWindowEx(NULL, szStatic, NULL, WS_POPUP | WS_BORDER | SS_OWNERDRAW, 0, 0, 0, 0, hWin, NULL, hInstance, 0);
 		((EDIT *)ebx)->htlt = eax;
 
-		eax = SetWindowLong(eax, GWL_WNDPROC, FakeToolTipProc);
+		eax = SetWindowLongPtr(eax, GWLP_WNDPROC, FakeToolTipProc);
 		OldFakeToolTipProc = eax;
 		eax = SendMessage(((EDIT *)ebx)->htt, WM_GETFONT, 0, 0);
 		eax = SendMessage(((EDIT *)ebx)->htlt, WM_SETFONT, eax, FALSE);
@@ -6288,7 +6288,7 @@ anon_8:
 			eax = RevokeDragDrop(((EDIT *)ebx)->edta.hwnd);
 			eax = RevokeDragDrop(((EDIT *)ebx)->edtb.hwnd);
 		} // endif
-		eax = SetWindowLong(hWin, 0, 0);
+		eax = SetWindowLongPtr(hWin, 0, 0);
 		eax = DestroyWindow(((EDIT *)ebx)->htt);
 		eax = DestroyWindow(((EDIT *)ebx)->hsbtn);
 		eax = DestroyWindow(((EDIT *)ebx)->edta.hvscroll);
