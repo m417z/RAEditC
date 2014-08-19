@@ -6,7 +6,7 @@
 #include "Position.h"
 #include "Undo.h"
 
-REG_T FindTheText(EDIT *pMem, REG_T pFind, DWORD fMC, DWORD fWW, DWORD fWhiteSpace, DWORD cpMin, DWORD cpMax, DWORD fDir, DWORD *pnIgnore)
+REG_T FindTheText(EDIT *pMem, REG_T pFind, DWORD fMC, DWORD fWW, DWORD fWhiteSpace, DWORD cpMin, DWORD cpMax, DWORD fDir, REG_T *pnIgnore)
 {
 	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T temp1;

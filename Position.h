@@ -4,7 +4,7 @@
 #include "Data.h"
 
 REG_T GetTopFromYp(EDIT *pMem, HWND hWin, DWORD yp);
-REG_T GetCharPtr(EDIT *pMem, DWORD cp, DWORD *pdwCharIndex, DWORD *pdwLineNumber);
+REG_T GetCharPtr(EDIT *pMem, DWORD cp, REG_T *pdwCharIndex, REG_T *pdwLineNumber);
 REG_T GetCpFromLine(EDIT *pMem, DWORD nLine);
 REG_T GetLineFromCp(EDIT *pMem, DWORD cp);
 REG_T GetYpFromLine(EDIT *pMem, DWORD nLine);

@@ -36,7 +36,7 @@ REG_T TimerProc(HWND hWin, UINT uMsg, UINT_PTR idEvent, DWORD dwTime)
 // Create a windowclass for the user control
 void WINAPI InstallRAEdit(HINSTANCE hInst, BOOL fGlobal)
 {
-	REG_T eax = 0;
+	REG_T eax = 0, ebx;
 	REG_T temp1;
 	WNDCLASSEX wc;
 	REG_T hBmp;

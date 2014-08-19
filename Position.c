@@ -120,7 +120,7 @@ anon_1:
 // eax=Char index in line
 // ecx=Char index
 // edx=Line number
-REG_T GetCharPtr(EDIT *pMem, DWORD cp, DWORD *pdwCharIndex, DWORD *pdwLineNumber)
+REG_T GetCharPtr(EDIT *pMem, DWORD cp, REG_T *pdwCharIndex, REG_T *pdwLineNumber)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1;
