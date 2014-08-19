@@ -2,8 +2,6 @@
 #include <commctrl.h>
 #include "Data.h"
 
-REG_T RAEditProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam);;
-REG_T RAWndProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam);;
 REG_T TimerProc(HWND hWin, UINT uMsg, UINT_PTR idEvent, DWORD dwTime);
 REG_T SetHiliteWords(DWORD nColor, DWORD lpWords);
 REG_T GetCharTabPtr(void);
