@@ -383,8 +383,7 @@ REG_T SetBlocks(DWORD hMem, DWORD lpLnrg, DWORD lpBlockDef)
 	eax = lpLnrg;
 	if(eax)
 	{
-		eax = ((LINERANGE *)eax)->lnMin;
-		nLine = eax;
+		nLine = ((LINERANGE *)eax)->lnMin;
 		eax = ((LINERANGE *)eax)->lnMax;
 		eax++;
 		eax++;
