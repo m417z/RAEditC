@@ -603,7 +603,7 @@ REG_T StateProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	if(uMsg==WM_PAINT)
 	{
 		eax = BeginPaint(hWin, &ps);
-		eax = GetWindowLongPtr(hWin, GWL_USERDATA);
+		eax = GetWindowLongPtr(hWin, GWLP_USERDATA);
 		pMem = eax;
 		if(pMem->fstyle&STYLE_READONLY)
 		{
@@ -6248,7 +6248,7 @@ anon_8:
 		pMem->hsta = eax;
 		edx = szChanged;
 		SetToolTip();
-		eax = SetWindowLongPtr(pMem->hsta, GWL_USERDATA, pMem);
+		eax = SetWindowLongPtr(pMem->hsta, GWLP_USERDATA, pMem);
 		eax = SetWindowLongPtr(pMem->hsta, GWLP_WNDPROC, &StateProc);
 		OldStateProc = eax;
 
