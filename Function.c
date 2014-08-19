@@ -488,12 +488,9 @@ REG_T IsLine(EDIT *pMem, DWORD nLine, REG_T lpszTest)
     eax = -1;
 	if(edi<pMem->rpLineFree && *(BYTE *)esi)
 	{
-		if(*(BYTE *)esi)
-		{
-			edi = nLine;
-			edi *= sizeof(LINE);
-			TestLine();
-		} // endif
+        edi = nLine;
+        edi *= sizeof(LINE);
+        TestLine();
 	} // endif
 	return eax;
 
