@@ -149,6 +149,7 @@ REG_T WINAPI IDropTarget_DragEnter(REG_T pthis, REG_T lpDataObject, REG_T grfKey
 	REG_T temp1;
 	STGMEDIUM medium;
 	FORMATETC fmte;
+	EDIT *pMem;
 
 	// PrintText 'IDropTarget_DragEnter'
 	esi = lpDataObject;
@@ -171,8 +172,8 @@ REG_T WINAPI IDropTarget_DragEnter(REG_T pthis, REG_T lpDataObject, REG_T grfKey
 		if(eax)
 		{
 			((IDropTargetImpl *)edi)->hwnd = ebx;
-			ebx = eax;
-			if(!(((EDIT *)ebx)->fstyle & STYLE_READONLY))
+			pMem = eax;
+			if(!(pMem->fstyle & STYLE_READONLY))
 			{
 				fmte.cfFormat = CF_TEXT;
 				fmte.ptd = NULL;
@@ -217,6 +218,7 @@ REG_T WINAPI IDropTarget_DragOver(REG_T pthis, REG_T grfKeyState, POINT pt, REG_
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1;
 	RECT rect;
+	EDIT *pMem;
 
 	// PrintText 'IDropTarget_DragOver'
 	edi = pthis;
@@ -235,19 +237,19 @@ REG_T WINAPI IDropTarget_DragOver(REG_T pthis, REG_T grfKeyState, POINT pt, REG_
 		if(eax)
 		{
 			((IDropTargetImpl *)edi)->hwnd = ebx;
-			ebx = eax;
+			pMem = eax;
 			eax = SetFocus(((IDropTargetImpl *)edi)->hwnd);
 			eax = ((IDropTargetImpl *)edi)->hwnd;
-			if(eax==((EDIT *)ebx)->edta.hwnd)
+			if(eax==pMem->edta.hwnd)
 			{
-				esi = &((EDIT *)ebx)->edta;
+				esi = &pMem->edta;
 			}
 			else
 			{
-				esi = &((EDIT *)ebx)->edtb;
+				esi = &pMem->edtb;
 			} // endif
 			eax = GetClientRect(((IDropTargetImpl *)edi)->hwnd, &rect);
-			ecx = ((EDIT *)ebx)->fntinfo.fntht;
+			ecx = pMem->fntinfo.fntht;
 			ecx /= 2;
 			eax = pt.y;
 			edx = eax+ecx;
@@ -263,28 +265,28 @@ REG_T WINAPI IDropTarget_DragOver(REG_T pthis, REG_T grfKeyState, POINT pt, REG_
 			{
 				eax = pt.x;
 				edx = eax+32;
-				ecx = ((EDIT *)ebx)->selbarwt;
-				ecx += ((EDIT *)ebx)->linenrwt;
+				ecx = pMem->selbarwt;
+				ecx += pMem->linenrwt;
 				if(eax<ecx)
 				{
-					eax = SendMessage(((IDropTargetImpl *)edi)->hwnd, WM_HSCROLL, SB_LINEUP, ((EDIT *)ebx)->hhscroll);
+					eax = SendMessage(((IDropTargetImpl *)edi)->hwnd, WM_HSCROLL, SB_LINEUP, pMem->hhscroll);
 				}
 				else if(edx>rect.right)
 				{
-					eax = SendMessage(((IDropTargetImpl *)edi)->hwnd, WM_HSCROLL, SB_LINEDOWN, ((EDIT *)ebx)->hhscroll);
+					eax = SendMessage(((IDropTargetImpl *)edi)->hwnd, WM_HSCROLL, SB_LINEDOWN, pMem->hhscroll);
 				} // endif
 			} // endif
-			eax = GetCharFromPos(ebx, ((RAEDT *)esi)->cpy, pt.x, pt.y);
+			eax = GetCharFromPos(pMem, ((RAEDT *)esi)->cpy, pt.x, pt.y);
 			edx = eax;
 			((IDropTargetImpl *)edi)->cp = eax;
-			eax = GetPosFromChar(ebx, edx, &pt);
+			eax = GetPosFromChar(pMem, edx, &pt);
 			eax = pt.x;
-			eax -= ((EDIT *)ebx)->cpx;
+			eax -= pMem->cpx;
 			edx = pt.y;
 			edx -= ((RAEDT *)esi)->cpy;
 			eax = SetCaretPos(eax, edx);
 			eax = ShowCaret(((IDropTargetImpl *)edi)->hwnd);
-			((EDIT *)ebx)->fCaretHide = FALSE;
+			pMem->fCaretHide = FALSE;
 			edx = lpdwEffect;
 			if(grfKeyState & MK_CONTROL)
 			{
@@ -304,6 +306,7 @@ REG_T WINAPI IDropTarget_DragOver(REG_T pthis, REG_T grfKeyState, POINT pt, REG_
 REG_T WINAPI IDropTarget_DragLeave(REG_T pthis)
 {
 	REG_T eax = 0, ebx, edi;
+	EDIT *pMem;
 
 	// PrintText 'IDropTarget_DragLeave'
 	edi = pthis;
@@ -312,11 +315,11 @@ REG_T WINAPI IDropTarget_DragLeave(REG_T pthis)
 		eax = GetWindowLong(((IDropTargetImpl *)edi)->hwnd, 0);
 		if(eax)
 		{
-			ebx = eax;
-			if(!((EDIT *)ebx)->fCaretHide)
+			pMem = eax;
+			if(!pMem->fCaretHide)
 			{
 				eax = HideCaret(((IDropTargetImpl *)edi)->hwnd);
-				((EDIT *)ebx)->fCaretHide = TRUE;
+				pMem->fCaretHide = TRUE;
 			} // endif
 		} // endif
 		((IDropTargetImpl *)edi)->hwnd = 0;
@@ -331,6 +334,7 @@ REG_T WINAPI IDropTarget_Drop(REG_T pthis, REG_T lpDataObject, REG_T grfKeyState
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	STGMEDIUM medium;
 	FORMATETC fmte;
+	EDIT *pMem;
 
 	// PrintText 'IDropTarget_Drop'
 	esi = lpDataObject;
@@ -344,7 +348,7 @@ REG_T WINAPI IDropTarget_Drop(REG_T pthis, REG_T lpDataObject, REG_T grfKeyState
 		eax = GetWindowLong(((IDropTargetImpl *)edi)->hwnd, 0);
 		if(eax)
 		{
-			ebx = eax;
+			pMem = eax;
 			fmte.cfFormat = CF_TEXT;
 			fmte.ptd = NULL;
 			fmte.dwAspect = DVASPECT_CONTENT;
@@ -358,18 +362,18 @@ REG_T WINAPI IDropTarget_Drop(REG_T pthis, REG_T lpDataObject, REG_T grfKeyState
 				edx = ((IDropTargetImpl *)edi)->hwnd;
 				edx = hDragWin;
 				// Test if Drop is on top of Drag
-				if((edx!=((EDIT *)ebx)->edta.hwnd && edx!=((EDIT *)ebx)->edtb.hwnd) || eax<=cpDragSource.cpMin || eax>=cpDragSource.cpMax)
+				if((edx!=pMem->edta.hwnd && edx!=pMem->edtb.hwnd) || eax<=cpDragSource.cpMin || eax>=cpDragSource.cpMax)
 				{
-					((EDIT *)ebx)->cpMin = eax;
-					((EDIT *)ebx)->cpMax = eax;
-					if(eax<=cpDragSource.cpMin && (edx==((EDIT *)ebx)->edta.hwnd || edx==((EDIT *)ebx)->edtb.hwnd))
+					pMem->cpMin = eax;
+					pMem->cpMax = eax;
+					if(eax<=cpDragSource.cpMin && (edx==pMem->edta.hwnd || edx==pMem->edtb.hwnd))
 					{
 						ecx = cpDragSource.cpMax;
 						ecx -= cpDragSource.cpMin;
 						cpDragSource.cpMin += ecx;
 						cpDragSource.cpMax += ecx;
 					} // endif
-					eax = Paste(ebx, ((IDropTargetImpl *)edi)->hwnd, medium.hGlobal);
+					eax = Paste(pMem, ((IDropTargetImpl *)edi)->hwnd, medium.hGlobal);
 					edx = lpdwEffect;
 					if(grfKeyState & MK_CONTROL)
 					{
@@ -555,6 +559,7 @@ REG_T WINAPI IDO_GetData(REG_T pthis, REG_T pFormatetc, REG_T pmedium)
 {
 	REG_T eax = 0, edx, ebx, esi;
 	DWORD hCMem;
+	EDIT *pMem;
 
 	// PrintText 'IDataObject_GetData'
 	esi = pFormatetc;
@@ -566,9 +571,9 @@ REG_T WINAPI IDO_GetData(REG_T pthis, REG_T pFormatetc, REG_T pmedium)
 			{
 				if(((FORMATETC *)esi)->tymed==TYMED_HGLOBAL)
 				{
-					ebx = hDragSourceMem;
-					eax = ((EDIT *)ebx)->cpMin;
-					eax -= ((EDIT *)ebx)->cpMax;
+					pMem = hDragSourceMem;
+					eax = pMem->cpMin;
+					eax -= pMem->cpMax;
 					if(R_SIGNED(eax) < 0)
 					{
 						eax = -eax;
@@ -578,7 +583,7 @@ REG_T WINAPI IDO_GetData(REG_T pthis, REG_T pFormatetc, REG_T pmedium)
 					eax = xGlobalAlloc(GMEM_SHARE | GMEM_MOVEABLE | GMEM_ZEROINIT, eax);
 					hCMem = eax;
 					eax = GlobalLock(hCMem);
-					eax = EditCopy(ebx, eax);
+					eax = EditCopy(pMem, eax);
 					eax = GlobalUnlock(hCMem);
 					edx = pmedium;
 					((STGMEDIUM *)edx)->tymed = TYMED_HGLOBAL;

@@ -34,32 +34,31 @@ REG_T xHeapAlloc(DWORD h, DWORD t, DWORD s)
 
 } // xHeapAlloc
 
-REG_T ExpandLineMem(DWORD hMem)
+REG_T ExpandLineMem(EDIT *pMem)
 {
 	REG_T eax = 0, ecx, ebx, esi, edi;
 	REG_T temp1;
 
-	ebx = hMem;
-	eax = ((EDIT *)ebx)->rpLineFree;
+	eax = pMem->rpLineFree;
 	eax += MAXLINEMEM;
 	eax >>= 12;
 	eax++;
 	eax <<= 12;
-	if(eax>((EDIT *)ebx)->cbLine)
+	if(eax>pMem->cbLine)
 	{
-		esi = ((EDIT *)ebx)->hLine;
-		edi = ((EDIT *)ebx)->cbLine;
-		((EDIT *)ebx)->cbLine += MAXLINEMEM;
-		eax = HeapAlloc(((EDIT *)ebx)->hHeap, HEAP_GENERATE_EXCEPTIONS | HEAP_ZERO_MEMORY, ((EDIT *)ebx)->cbLine);
+		esi = pMem->hLine;
+		edi = pMem->cbLine;
+		pMem->cbLine += MAXLINEMEM;
+		eax = HeapAlloc(pMem->hHeap, HEAP_GENERATE_EXCEPTIONS | HEAP_ZERO_MEMORY, pMem->cbLine);
 		if(!eax)
 		{
-			((EDIT *)ebx)->cbLine = edi;
-			eax = MessageBox(((EDIT *)ebx)->hwnd, szMemFailLine, szToolTip, MB_OK);
+			pMem->cbLine = edi;
+			eax = MessageBox(pMem->hwnd, szMemFailLine, szToolTip, MB_OK);
 			eax = 0;
 		}
 		else
 		{
-			((EDIT *)ebx)->hLine = eax;
+			pMem->hLine = eax;
 			ecx = edi;
 			edi = eax;
 			temp1 = esi;
@@ -72,7 +71,7 @@ REG_T ExpandLineMem(DWORD hMem)
 				ecx--;
 			}
 			esi = temp1;
-			eax = HeapFree(((EDIT *)ebx)->hHeap, 0, esi);
+			eax = HeapFree(pMem->hHeap, 0, esi);
 		} // endif
 	} // endif
 	return eax;
@@ -83,10 +82,11 @@ REG_T GarbageCollection(DWORD lpEdit, DWORD lpLine, DWORD lpSrc, DWORD lpDst)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1;
+	EDIT *pMem;
 
 	eax = lpLine;
-	ebx = lpEdit;
-	ecx = ((EDIT *)ebx)->rpLineFree;
+	pMem = lpEdit;
+	ecx = pMem->rpLineFree;
 	lpLine += ecx;
 	edi = lpDst;
 anon_1:
@@ -125,79 +125,77 @@ anon_1:
 		goto anon_1;
 	} // endif
 	edi -= lpDst;
-	((EDIT *)ebx)->rpCharsFree = edi;
+	pMem->rpCharsFree = edi;
 	return eax;
 
 } // GarbageCollection
 
-REG_T ExpandCharMem(DWORD hMem, DWORD nLen)
+REG_T ExpandCharMem(EDIT *pMem, DWORD nLen)
 {
 	REG_T eax = 0, ebx, esi, edi;
 
-	ebx = hMem;
 	eax = nLen;
 	eax >>= 12;
 	eax++;
 	eax <<= 12;
-	eax += ((EDIT *)ebx)->rpCharsFree;
+	eax += pMem->rpCharsFree;
 	eax += MAXCHARMEM;
-	if(eax>((EDIT *)ebx)->cbChars)
+	if(eax>pMem->cbChars)
 	{
-		esi = ((EDIT *)ebx)->hChars;
-		edi = ((EDIT *)ebx)->cbChars;
+		esi = pMem->hChars;
+		edi = pMem->cbChars;
 		eax = nLen;
 		eax >>= 12;
 		eax++;
 		eax <<= 12;
 		eax += MAXCHARMEM;
-		((EDIT *)ebx)->cbChars += eax;
-		eax = HeapAlloc(((EDIT *)ebx)->hHeap, HEAP_GENERATE_EXCEPTIONS | HEAP_ZERO_MEMORY, ((EDIT *)ebx)->cbChars);
+		pMem->cbChars += eax;
+		eax = HeapAlloc(pMem->hHeap, HEAP_GENERATE_EXCEPTIONS | HEAP_ZERO_MEMORY, pMem->cbChars);
 		if(!eax)
 		{
-			((EDIT *)ebx)->cbChars = edi;
-			eax = MessageBox(((EDIT *)ebx)->hwnd, szMemFailChar, szToolTip, MB_OK);
+			pMem->cbChars = edi;
+			eax = MessageBox(pMem->hwnd, szMemFailChar, szToolTip, MB_OK);
 			eax = 0;
 		}
 		else
 		{
-			((EDIT *)ebx)->hChars = eax;
-			eax = GarbageCollection(ebx, ((EDIT *)ebx)->hLine, esi, ((EDIT *)ebx)->hChars);
-			eax = HeapFree(((EDIT *)ebx)->hHeap, 0, esi);
+			pMem->hChars = eax;
+			eax = GarbageCollection(pMem, pMem->hLine, esi, pMem->hChars);
+			eax = HeapFree(pMem->hHeap, 0, esi);
 		} // endif
 	} // endif
 	return eax;
 
 } // ExpandCharMem
 
-REG_T ExpandUndoMem(DWORD hMem, DWORD cb)
+REG_T ExpandUndoMem(EDIT *pMem, DWORD cb)
 {
 	REG_T eax = 0, ecx, ebx, esi, edi;
 	REG_T temp1;
 
-	ebx = hMem;
-	eax = ((EDIT *)ebx)->rpUndo;
+	eax = pMem->rpUndo;
 	eax += cb;
 	eax += 8*1024;
 	eax >>= 12;
 	eax++;
 	eax <<= 12;
-	if(eax>((EDIT *)ebx)->cbUndo)
+	if(eax>pMem->cbUndo)
 	{
-		esi = ((EDIT *)ebx)->hUndo;
-		edi = ((EDIT *)ebx)->cbUndo;
+		esi = pMem->hUndo;
+		edi = pMem->cbUndo;
 		eax += MAXUNDOMEM;
 		eax &= 0x0FFFFFF00;
-		((EDIT *)ebx)->cbUndo = eax;
-		eax = HeapAlloc(((EDIT *)ebx)->hHeap, HEAP_GENERATE_EXCEPTIONS | HEAP_ZERO_MEMORY, ((EDIT *)ebx)->cbUndo);
+		pMem->cbUndo = eax;
+		eax = HeapAlloc(pMem->hHeap, HEAP_GENERATE_EXCEPTIONS | HEAP_ZERO_MEMORY, pMem->cbUndo);
 		if(!eax)
 		{
-			((EDIT *)ebx)->cbUndo = edi;
-			eax = MessageBox(((EDIT *)ebx)->hwnd, szMemFailUndo, szToolTip, MB_OK);
+			pMem->cbUndo = edi;
+			eax = MessageBox(pMem->hwnd, szMemFailUndo, szToolTip, MB_OK);
 			eax = 0;
 		}
 		else
 		{
-			((EDIT *)ebx)->hUndo = eax;
+			pMem->hUndo = eax;
 			ecx = edi;
 			edi = eax;
 			temp1 = esi;
@@ -210,7 +208,7 @@ REG_T ExpandUndoMem(DWORD hMem, DWORD cb)
 				ecx--;
 			}
 			esi = temp1;
-			eax = HeapFree(((EDIT *)ebx)->hHeap, 0, esi);
+			eax = HeapFree(pMem->hHeap, 0, esi);
 		} // endif
 	} // endif
 	return eax;

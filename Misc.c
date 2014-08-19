@@ -3,7 +3,7 @@
 #include "Function.h"
 #include "Position.h"
 
-REG_T SetFont(DWORD hMem, DWORD lpRafont)
+REG_T SetFont(EDIT *pMem, DWORD lpRafont)
 {
 	REG_T eax = 0, edx, ebx;
 	REG_T temp1, temp2;
@@ -13,25 +13,24 @@ REG_T SetFont(DWORD hMem, DWORD lpRafont)
 	POINT pt;
 	TEXTMETRIC tm;
 
-	ebx = hMem;
 	edx = lpRafont;
 	eax = ((RAFONT *)edx)->hFont;
-	((EDIT *)ebx)->fnt.hFont = eax;
+	pMem->fnt.hFont = eax;
 	eax = ((RAFONT *)edx)->hIFont;
-	((EDIT *)ebx)->fnt.hIFont = eax;
+	pMem->fnt.hIFont = eax;
 	eax = ((RAFONT *)edx)->hLnrFont;
-	((EDIT *)ebx)->fnt.hLnrFont = eax;
-	eax = GetDC(((EDIT *)ebx)->hwnd);
+	pMem->fnt.hLnrFont = eax;
+	eax = GetDC(pMem->hwnd);
 	hDC = eax;
-	eax = SelectObject(hDC, ((EDIT *)ebx)->fnt.hFont);
+	eax = SelectObject(hDC, pMem->fnt.hFont);
 	temp1 = eax;
 	// Get height & width
 	eax = GetTextExtentPoint32(hDC, szX, 1, &pt);
 	eax = pt.x;
-	((EDIT *)ebx)->fntinfo.fntwt = eax;
+	pMem->fntinfo.fntwt = eax;
 	eax = pt.y;
-	eax += ((EDIT *)ebx)->fntinfo.linespace;
-	((EDIT *)ebx)->fntinfo.fntht = eax;
+	eax += pMem->fntinfo.linespace;
+	pMem->fntinfo.fntht = eax;
 	// Test if monospaced font
 	eax = GetTextExtentPoint32(hDC, szW, 1, &pt);
 	temp2 = pt.x;
@@ -39,19 +38,19 @@ REG_T SetFont(DWORD hMem, DWORD lpRafont)
 	eax = temp2;
 	if(eax==pt.x)
 	{
-		((EDIT *)ebx)->fntinfo.monospace = TRUE;
+		pMem->fntinfo.monospace = TRUE;
 	}
 	else
 	{
-		((EDIT *)ebx)->fntinfo.monospace = FALSE;
+		pMem->fntinfo.monospace = FALSE;
 	} // endif
 	// Get space width
 	eax = GetTextExtentPoint32(hDC, szSpace, 1, &pt);
 	eax = pt.x;
-	((EDIT *)ebx)->fntinfo.spcwt = eax;
+	pMem->fntinfo.spcwt = eax;
 	// Get tab width
 	dtp.cbSize = sizeof(dtp);
-	eax = ((EDIT *)ebx)->nTab;
+	eax = pMem->nTab;
 	dtp.iTabLength = eax;
 	dtp.iLeftMargin = 0;
 	dtp.iRightMargin = 0;
@@ -62,27 +61,27 @@ REG_T SetFont(DWORD hMem, DWORD lpRafont)
 	rect.bottom = 0;
 	eax = DrawTextEx(hDC, szTab, 1, &rect, DT_EDITCONTROL | DT_CALCRECT | DT_SINGLELINE | DT_NOPREFIX | DT_EXPANDTABS | DT_TABSTOP, &dtp);
 	eax = rect.right;
-	((EDIT *)ebx)->fntinfo.tabwt = eax;
+	pMem->fntinfo.tabwt = eax;
 	// Check if DBCS
 	eax = GetTextMetrics(hDC, &tm);
 	eax = (BYTE)tm.tmCharSet;
-	((EDIT *)ebx)->fntinfo.charset = eax;
+	pMem->fntinfo.charset = eax;
 	// SHIFTJIS_CHARSET		equ 128
 	// HANGEUL_CHARSET		equ 129
 	// GB2312_CHARSET			equ 134
 	// CHINESEBIG5_CHARSET	equ 136
-	((EDIT *)ebx)->fntinfo.fDBCS = 0;
+	pMem->fntinfo.fDBCS = 0;
 	if(eax==134 || eax==136 || eax==128 || eax==129)
 	{
-		((EDIT *)ebx)->fntinfo.fDBCS = eax;
+		pMem->fntinfo.fDBCS = eax;
 	} // endif
 	// Check if italic has same height
-	eax = SelectObject(hDC, ((EDIT *)ebx)->fnt.hIFont);
+	eax = SelectObject(hDC, pMem->fnt.hIFont);
 	eax = GetTextExtentPoint32(hDC, szX, 1, &pt);
 	eax = pt.y;
-	eax += ((EDIT *)ebx)->fntinfo.linespace;
-	eax -= ((EDIT *)ebx)->fntinfo.fntht;
-	((EDIT *)ebx)->fntinfo.italic = eax;
+	eax += pMem->fntinfo.linespace;
+	eax -= pMem->fntinfo.fntht;
+	pMem->fntinfo.italic = eax;
 	eax = temp1;
 	eax = SelectObject(hDC, eax);
 	eax = ReleaseDC(0, hDC);
@@ -90,70 +89,68 @@ REG_T SetFont(DWORD hMem, DWORD lpRafont)
 
 } // SetFont
 
-REG_T SetColor(DWORD hMem, DWORD lpRAColor)
+REG_T SetColor(EDIT *pMem, DWORD lpRAColor)
 {
 	REG_T eax = 0, edx, ebx;
 
-	ebx = hMem;
 	edx = lpRAColor;
 	eax = ((RACOLOR *)edx)->bckcol;
-	((EDIT *)ebx)->clr.bckcol = eax;
+	pMem->clr.bckcol = eax;
 	eax = ((RACOLOR *)edx)->txtcol;
-	((EDIT *)ebx)->clr.txtcol = eax;
+	pMem->clr.txtcol = eax;
 	eax = ((RACOLOR *)edx)->selbckcol;
-	((EDIT *)ebx)->clr.selbckcol = eax;
+	pMem->clr.selbckcol = eax;
 	eax = ((RACOLOR *)edx)->seltxtcol;
-	((EDIT *)ebx)->clr.seltxtcol = eax;
+	pMem->clr.seltxtcol = eax;
 	eax = ((RACOLOR *)edx)->cmntcol;
-	((EDIT *)ebx)->clr.cmntcol = eax;
+	pMem->clr.cmntcol = eax;
 	eax = ((RACOLOR *)edx)->strcol;
-	((EDIT *)ebx)->clr.strcol = eax;
+	pMem->clr.strcol = eax;
 	eax = ((RACOLOR *)edx)->oprcol;
-	((EDIT *)ebx)->clr.oprcol = eax;
+	pMem->clr.oprcol = eax;
 	eax = ((RACOLOR *)edx)->selbarbck;
-	((EDIT *)ebx)->clr.selbarbck = eax;
+	pMem->clr.selbarbck = eax;
 	eax = ((RACOLOR *)edx)->lnrcol;
-	((EDIT *)ebx)->clr.lnrcol = eax;
+	pMem->clr.lnrcol = eax;
 	return eax;
 
 } // SetColor
 
-REG_T DestroyBrushes(DWORD hMem)
+REG_T DestroyBrushes(EDIT *pMem)
 {
 	REG_T eax = 0, ebx;
 
-	ebx = hMem;
-	eax = ((EDIT *)ebx)->br.hBrBck;
+	eax = pMem->br.hBrBck;
 	if(eax)
 	{
 		eax = DeleteObject(eax);
 	} // endif
-	eax = ((EDIT *)ebx)->br.hBrSelBck;
+	eax = pMem->br.hBrSelBck;
 	if(eax)
 	{
 		eax = DeleteObject(eax);
 	} // endif
-	eax = ((EDIT *)ebx)->br.hBrHilite1;
+	eax = pMem->br.hBrHilite1;
 	if(eax)
 	{
 		eax = DeleteObject(eax);
 	} // endif
-	eax = ((EDIT *)ebx)->br.hBrHilite2;
+	eax = pMem->br.hBrHilite2;
 	if(eax)
 	{
 		eax = DeleteObject(eax);
 	} // endif
-	eax = ((EDIT *)ebx)->br.hBrHilite3;
+	eax = pMem->br.hBrHilite3;
 	if(eax)
 	{
 		eax = DeleteObject(eax);
 	} // endif
-	eax = ((EDIT *)ebx)->br.hBrSelBar;
+	eax = pMem->br.hBrSelBar;
 	if(eax)
 	{
 		eax = DeleteObject(eax);
 	} // endif
-	eax = ((EDIT *)ebx)->br.hPenSelbar;
+	eax = pMem->br.hPenSelbar;
 	if(eax)
 	{
 		eax = DeleteObject(eax);
@@ -162,26 +159,25 @@ REG_T DestroyBrushes(DWORD hMem)
 
 } // DestroyBrushes
 
-REG_T CreateBrushes(DWORD hMem)
+REG_T CreateBrushes(EDIT *pMem)
 {
 	REG_T eax = 0, ebx;
 
-	ebx = hMem;
-	eax = DestroyBrushes(ebx);
-	eax = CreateSolidBrush(((EDIT *)ebx)->clr.bckcol);
-	((EDIT *)ebx)->br.hBrBck = eax;
-	eax = CreateSolidBrush(((EDIT *)ebx)->clr.selbckcol);
-	((EDIT *)ebx)->br.hBrSelBck = eax;
-	eax = CreateSolidBrush(((EDIT *)ebx)->clr.hicol1);
-	((EDIT *)ebx)->br.hBrHilite1 = eax;
-	eax = CreateSolidBrush(((EDIT *)ebx)->clr.hicol2);
-	((EDIT *)ebx)->br.hBrHilite2 = eax;
-	eax = CreateSolidBrush(((EDIT *)ebx)->clr.hicol3);
-	((EDIT *)ebx)->br.hBrHilite3 = eax;
-	eax = CreateSolidBrush(((EDIT *)ebx)->clr.selbarbck);
-	((EDIT *)ebx)->br.hBrSelBar = eax;
-	eax = CreatePen(PS_SOLID, 1, ((EDIT *)ebx)->clr.selbarpen);
-	((EDIT *)ebx)->br.hPenSelbar = eax;
+	eax = DestroyBrushes(pMem);
+	eax = CreateSolidBrush(pMem->clr.bckcol);
+	pMem->br.hBrBck = eax;
+	eax = CreateSolidBrush(pMem->clr.selbckcol);
+	pMem->br.hBrSelBck = eax;
+	eax = CreateSolidBrush(pMem->clr.hicol1);
+	pMem->br.hBrHilite1 = eax;
+	eax = CreateSolidBrush(pMem->clr.hicol2);
+	pMem->br.hBrHilite2 = eax;
+	eax = CreateSolidBrush(pMem->clr.hicol3);
+	pMem->br.hBrHilite3 = eax;
+	eax = CreateSolidBrush(pMem->clr.selbarbck);
+	pMem->br.hBrSelBar = eax;
+	eax = CreatePen(PS_SOLID, 1, pMem->clr.selbarpen);
+	pMem->br.hPenSelbar = eax;
 	return eax;
 
 } // CreateBrushes
@@ -280,21 +276,20 @@ lb1:
 
 } // strlen
 */
-REG_T GetChar(DWORD hMem, DWORD cp)
+REG_T GetChar(EDIT *pMem, DWORD cp)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 
-	ebx = hMem;
-	eax = GetCharPtr(ebx, cp, &ecx, &edx);
+	eax = GetCharPtr(pMem, cp, &ecx, &edx);
 	edx *= 4;
-	if(edx==((EDIT *)ebx)->rpLineFree)
+	if(edx==pMem->rpLineFree)
 	{
 		eax = 0;
 	}
 	else
 	{
-		eax += ((EDIT *)ebx)->rpChars;
-		eax += ((EDIT *)ebx)->hChars;
+		eax += pMem->rpChars;
+		eax += pMem->hChars;
 		eax = *(BYTE *)(eax+sizeof(CHARS));
 	} // endif
 	return eax;
@@ -312,17 +307,16 @@ REG_T IsChar(BYTE ch)
 
 } // IsChar
 
-REG_T IsCharLeadByte(DWORD hMem, DWORD cp)
+REG_T IsCharLeadByte(EDIT *pMem, DWORD cp)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 
-	ebx = hMem;
-	if(((EDIT *)ebx)->fntinfo.fDBCS)
+	if(pMem->fntinfo.fDBCS)
 	{
-		eax = GetCharPtr(ebx, cp, &ecx, &edx);
+		eax = GetCharPtr(pMem, cp, &ecx, &edx);
 		cp = eax;
-		edx = ((EDIT *)ebx)->rpChars;
-		edx += ((EDIT *)ebx)->hChars;
+		edx = pMem->rpChars;
+		edx += pMem->hChars;
 		edx += sizeof(CHARS);
 		ecx = 0;
 		while(ecx<=cp)
@@ -352,15 +346,14 @@ REG_T IsCharLeadByte(DWORD hMem, DWORD cp)
 
 } // IsCharLeadByte
 
-REG_T GetTextWidth(DWORD hMem, HDC hDC, DWORD lpText, DWORD nChars, DWORD lpRect)
+REG_T GetTextWidth(EDIT *pMem, HDC hDC, DWORD lpText, DWORD nChars, DWORD lpRect)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	DRAWTEXTPARAMS dtp;
 
-	ebx = hMem;
-	if(((EDIT *)ebx)->fntinfo.monospace)
+	if(pMem->fntinfo.monospace)
 	{
-		eax = ((EDIT *)ebx)->fntinfo.fntht;
+		eax = pMem->fntinfo.fntht;
 		esi = lpRect;
 		eax += ((RECT *)esi)->top;
 		((RECT *)esi)->bottom = eax;
@@ -371,9 +364,9 @@ REG_T GetTextWidth(DWORD hMem, HDC hDC, DWORD lpText, DWORD nChars, DWORD lpRect
 		{
 			if(*(BYTE *)(esi+ecx)==VK_TAB)
 			{
-				eax += ((EDIT *)ebx)->nTab;
-				eax /= ((EDIT *)ebx)->nTab;
-				eax *= ((EDIT *)ebx)->nTab;
+				eax += pMem->nTab;
+				eax /= pMem->nTab;
+				eax *= pMem->nTab;
 			}
 			else
 			{
@@ -381,7 +374,7 @@ REG_T GetTextWidth(DWORD hMem, HDC hDC, DWORD lpText, DWORD nChars, DWORD lpRect
 			} // endif
 			ecx++;
 		} // endw
-		eax *= ((EDIT *)ebx)->fntinfo.fntwt;
+		eax *= pMem->fntinfo.fntwt;
 		esi = lpRect;
 		eax += ((RECT *)esi)->left;
 		((RECT *)esi)->right = eax;
@@ -389,7 +382,7 @@ REG_T GetTextWidth(DWORD hMem, HDC hDC, DWORD lpText, DWORD nChars, DWORD lpRect
 	else
 	{
 		dtp.cbSize = sizeof(dtp);
-		eax = ((EDIT *)ebx)->nTab;
+		eax = pMem->nTab;
 		dtp.iTabLength = eax;
 		eax = 0;
 		dtp.iLeftMargin = eax;
@@ -398,7 +391,7 @@ REG_T GetTextWidth(DWORD hMem, HDC hDC, DWORD lpText, DWORD nChars, DWORD lpRect
 		eax = DrawTextEx(hDC, lpText, nChars, lpRect, DT_EDITCONTROL | DT_CALCRECT | DT_SINGLELINE | DT_NOPREFIX | DT_EXPANDTABS | DT_TABSTOP, &dtp);
 		edx = lpRect;
 		eax = ((RECT *)edx)->top;
-		eax += ((EDIT *)ebx)->fntinfo.fntht;
+		eax += pMem->fntinfo.fntht;
 		((RECT *)edx)->bottom = eax;
 	} // endif
 	return eax;
@@ -436,34 +429,33 @@ REG_T GetBlockRange(DWORD lpSrc, DWORD lpDst)
 
 } // GetBlockRange
 
-REG_T GetBlockRects(DWORD hMem, DWORD lpRects)
+REG_T GetBlockRects(EDIT *pMem, DWORD lpRects)
 {
 	REG_T eax = 0, ecx, ebx, esi, edi;
 	BLOCKRANGE blrg;
 
 	auto void GetRect(void);
 
-	ebx = hMem;
-	eax = GetBlockRange(& ((EDIT *)ebx)->blrg, &blrg);
+	eax = GetBlockRange(& pMem->blrg, &blrg);
 	edi = lpRects;
-	esi = &((EDIT *)ebx)->edta;
+	esi = &pMem->edta;
 	GetRect();
 	edi += sizeof(RECT);
-	esi = &((EDIT *)ebx)->edtb;
+	esi = &pMem->edtb;
 	GetRect();
 	return eax;
 
 	void GetRect(void)
 	{
-		eax = GetYpFromLine(ebx, blrg.lnMin);
+		eax = GetYpFromLine(pMem, blrg.lnMin);
 		eax -= ((RAEDT *)esi)->cpy;
 		((RECT *)edi)->top = eax;
 		eax = blrg.lnMax;
-		eax = GetYpFromLine(ebx, eax);
+		eax = GetYpFromLine(pMem, eax);
 		eax -= ((RAEDT *)esi)->cpy;
-		eax += ((EDIT *)ebx)->fntinfo.fntht;
+		eax += pMem->fntinfo.fntht;
 		((RECT *)edi)->bottom = eax;
-		ecx = ((EDIT *)ebx)->fntinfo.fntwt;
+		ecx = pMem->fntinfo.fntwt;
 		eax = blrg.clMin;
 		eax *= ecx;
 		((RECT *)edi)->left = eax;
@@ -471,10 +463,10 @@ REG_T GetBlockRects(DWORD hMem, DWORD lpRects)
 		eax++;
 		eax *= ecx;
 		((RECT *)edi)->right = eax;
-		eax = ((EDIT *)ebx)->cpx;
+		eax = pMem->cpx;
 		eax = -eax;
-		eax += ((EDIT *)ebx)->linenrwt;
-		eax += ((EDIT *)ebx)->selbarwt;
+		eax += pMem->linenrwt;
+		eax += pMem->selbarwt;
 		((RECT *)edi)->left += eax;
 		((RECT *)edi)->right += eax;
 		return;
@@ -483,7 +475,7 @@ REG_T GetBlockRects(DWORD hMem, DWORD lpRects)
 
 } // GetBlockRects
 
-REG_T InvalidateBlock(DWORD hMem, DWORD lpOldRects)
+REG_T InvalidateBlock(EDIT *pMem, DWORD lpOldRects)
 {
 	REG_T eax = 0, edx, ebx, esi, edi;
 	RECT newrects[2];
@@ -493,31 +485,28 @@ REG_T InvalidateBlock(DWORD hMem, DWORD lpOldRects)
 
 	auto void DoRect(void);
 
-	ebx = hMem;
-	eax = ((EDIT *)ebx)->fntinfo.fntwt;
+	eax = pMem->fntinfo.fntwt;
 	wt = eax;
-	eax = ((EDIT *)ebx)->fntinfo.fntht;
+	eax = pMem->fntinfo.fntht;
 	ht = eax;
 	esi = lpOldRects;
 	edi = &newrects;
-	eax = GetBlockRects(ebx, edi);
-	eax = ((EDIT *)ebx)->edta.rc.bottom;
-	eax -= ((EDIT *)ebx)->edta.rc.top;
+	eax = GetBlockRects(pMem, edi);
+	eax = pMem->edta.rc.bottom;
+	eax -= pMem->edta.rc.top;
 	if(eax)
 	{
-		eax = ((EDIT *)ebx)->edta.hwnd;
+		eax = pMem->edta.hwnd;
 		DoRect();
 	} // endif
 	esi += sizeof(RECT);
 	edi += sizeof(RECT);
-	eax = ((EDIT *)ebx)->edtb.hwnd;
+	eax = pMem->edtb.hwnd;
 	DoRect();
 	return eax;
 
 	void DoRect(void)
 	{
-		REG_T temp1;
-		temp1 = ebx;
 		ebx = eax;
 		// Left part
 		eax = ((RECT *)esi)->left;
@@ -662,7 +651,6 @@ REG_T InvalidateBlock(DWORD hMem, DWORD lpOldRects)
 			eax = InvalidateRect(ebx, &rect, TRUE);
 			eax = UpdateWindow(ebx);
 		} // endif
-		ebx = temp1;
 		return;
 
 	}

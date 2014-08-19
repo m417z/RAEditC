@@ -6,25 +6,24 @@
 #include "Position.h"
 #include "Undo.h"
 
-REG_T InsertNewLine(DWORD hMem, DWORD nLine, DWORD nSize)
+REG_T InsertNewLine(EDIT *pMem, DWORD nLine, DWORD nSize)
 {
 	REG_T eax = 0, ecx, ebx, esi, edi;
 	REG_T temp1;
 
-	ebx = hMem;
 	eax = nSize;
 	// shl		eax,1
-	eax = ExpandCharMem(ebx, eax);
-	eax = ExpandLineMem(ebx);
+	eax = ExpandCharMem(pMem, eax);
+	eax = ExpandLineMem(pMem);
 	eax = nLine;
 	eax *= 4;
-	esi = ((EDIT *)ebx)->hLine;
+	esi = pMem->hLine;
 	esi += eax;
-	if(eax<((EDIT *)ebx)->rpLineFree)
+	if(eax<pMem->rpLineFree)
 	{
 		temp1 = esi;
-		edi = ((EDIT *)ebx)->rpLineFree;
-		edi += ((EDIT *)ebx)->hLine;
+		edi = pMem->rpLineFree;
+		edi += pMem->hLine;
 		ecx = edi;
 		ecx -= esi;
 		esi = edi;
@@ -39,44 +38,43 @@ REG_T InsertNewLine(DWORD hMem, DWORD nLine, DWORD nSize)
 		}
 		esi = temp1;
 	} // endif
-	((EDIT *)ebx)->rpLineFree += sizeof(LINE);
-	eax = ((EDIT *)ebx)->rpCharsFree;
+	pMem->rpLineFree += sizeof(LINE);
+	eax = pMem->rpCharsFree;
 	((LINE *)esi)->rpChars = eax;
-	esi -= (ULONG_PTR)((EDIT *)ebx)->hLine;
-	((EDIT *)ebx)->rpLine = esi;
+	esi -= (ULONG_PTR)pMem->hLine;
+	pMem->rpLine = esi;
 	esi = eax;
-	esi += ((EDIT *)ebx)->hChars;
+	esi += pMem->hChars;
 	eax = nSize;
 	eax >>= 8;
 	eax <<= 8;
 	eax += MAXFREE;
 	((CHARS *)esi)->max = eax;
 	eax += sizeof(CHARS);
-	((EDIT *)ebx)->rpCharsFree += eax;
+	pMem->rpCharsFree += eax;
 	((CHARS *)esi)->len = 0;
 	((CHARS *)esi)->state = STATE_CHANGED;
-	esi -= (ULONG_PTR)((EDIT *)ebx)->hChars;
-	((EDIT *)ebx)->rpChars = esi;
+	esi -= (ULONG_PTR)pMem->hChars;
+	pMem->rpChars = esi;
 	return eax;
 
 } // InsertNewLine
 
-REG_T AddNewLine(DWORD hMem, DWORD lpLine, DWORD nSize)
+REG_T AddNewLine(EDIT *pMem, DWORD lpLine, DWORD nSize)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 
-	ebx = hMem;
-	eax = ExpandLineMem(ebx);
-	eax = ExpandCharMem(ebx, nSize);
-	edx = ((EDIT *)ebx)->rpCharsFree;
-	esi = ((EDIT *)ebx)->hLine;
-	eax = ((EDIT *)ebx)->rpLineFree;
+	eax = ExpandLineMem(pMem);
+	eax = ExpandCharMem(pMem, nSize);
+	edx = pMem->rpCharsFree;
+	esi = pMem->hLine;
+	eax = pMem->rpLineFree;
 	esi = esi+eax-sizeof(LINE);
 	eax = ((LINE *)esi)->rpChars;
 	((LINE *)(esi+sizeof(LINE)))->rpChars = eax;
-	((EDIT *)ebx)->rpLineFree += sizeof(LINE);
+	pMem->rpLineFree += sizeof(LINE);
 	((LINE *)esi)->rpChars = edx;
-	edi = ((EDIT *)ebx)->hChars;
+	edi = pMem->hChars;
 	edi += edx;
 	eax = nSize;
 	((CHARS *)edi)->len = eax;
@@ -85,7 +83,7 @@ REG_T AddNewLine(DWORD hMem, DWORD lpLine, DWORD nSize)
 	((CHARS *)edi)->bmid = 0;
 	((CHARS *)edi)->errid = 0;
 	eax += sizeof(CHARS);
-	((EDIT *)ebx)->rpCharsFree += eax;
+	pMem->rpCharsFree += eax;
 	ecx = nSize;
 	esi = lpLine;
 	edi = edi+sizeof(CHARS);
@@ -100,43 +98,42 @@ REG_T AddNewLine(DWORD hMem, DWORD lpLine, DWORD nSize)
 
 } // AddNewLine
 
-REG_T ExpandCharLine(DWORD hMem)
+REG_T ExpandCharLine(EDIT *pMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2;
 
-	ebx = hMem;
-	esi = ((EDIT *)ebx)->rpChars;
+	esi = pMem->rpChars;
 	eax = esi;
-	esi += ((EDIT *)ebx)->hChars;
+	esi += pMem->hChars;
 	eax += ((CHARS *)esi)->max;
 	eax += sizeof(CHARS);
-	if(eax==((EDIT *)ebx)->rpCharsFree)
+	if(eax==pMem->rpCharsFree)
 	{
 		// Is at end of chars, just expand
 		((CHARS *)esi)->max += MAXFREE;
-		((EDIT *)ebx)->rpCharsFree += MAXFREE;
-		eax = ((EDIT *)ebx)->rpCharsFree;
+		pMem->rpCharsFree += MAXFREE;
+		eax = pMem->rpCharsFree;
 	}
 	else
 	{
 		// Move the line to end of buffer
 		eax = ((CHARS *)esi)->max;
 		eax += MAXFREE+sizeof(CHARS);
-		eax = ExpandCharMem(ebx, eax);
-		esi = ((EDIT *)ebx)->rpChars;
-		esi += ((EDIT *)ebx)->hChars;
-		edi = ((EDIT *)ebx)->rpCharsFree;
-		edi += ((EDIT *)ebx)->hChars;
+		eax = ExpandCharMem(pMem, eax);
+		esi = pMem->rpChars;
+		esi += pMem->hChars;
+		edi = pMem->rpCharsFree;
+		edi += pMem->hChars;
 		ecx = ((CHARS *)esi)->max;
 		ecx += sizeof(CHARS);
-		((EDIT *)ebx)->rpCharsFree += ecx;
-		edx = ((EDIT *)ebx)->rpLine;
-		edx += ((EDIT *)ebx)->hLine;
+		pMem->rpCharsFree += ecx;
+		edx = pMem->rpLine;
+		edx += pMem->hLine;
 		eax = edi;
-		eax -= (ULONG_PTR)((EDIT *)ebx)->hChars;
+		eax -= (ULONG_PTR)pMem->hChars;
 		((LINE *)edx)->rpChars = eax;
-		((EDIT *)ebx)->rpChars = eax;
+		pMem->rpChars = eax;
 		temp1 = esi;
 		temp2 = edi;
 		while(ecx > 0)
@@ -149,87 +146,85 @@ REG_T ExpandCharLine(DWORD hMem)
 		edi = temp2;
 		esi = temp1;
 		((CHARS *)edi)->max += MAXFREE;
-		((EDIT *)ebx)->rpCharsFree += MAXFREE;
+		pMem->rpCharsFree += MAXFREE;
 		((CHARS *)esi)->state |= STATE_GARBAGE;
 	} // endif
 	return eax;
 
 } // ExpandCharLine
 
-REG_T DeleteLine(DWORD hMem, DWORD nLine)
+REG_T DeleteLine(EDIT *pMem, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 
-	ebx = hMem;
-	esi = ((EDIT *)ebx)->hLine;
+	esi = pMem->hLine;
 	edi = 0;
 	eax = nLine;
 	eax *= 4;
-	if(eax<((EDIT *)ebx)->rpLineFree)
+	if(eax<pMem->rpLineFree)
 	{
-		edi = ((EDIT *)ebx)->hChars;
+		edi = pMem->hChars;
 		edx = *(DWORD *)(esi+eax+sizeof(LINE));
-		((EDIT *)ebx)->rpChars = edx;
+		pMem->rpChars = edx;
 		edi += *(DWORD *)(esi+eax);
 		if(((CHARS *)edi)->state&STATE_HIDDEN)
 		{
-			((EDIT *)ebx)->nHidden--;
+			pMem->nHidden--;
 		} // endif
 		((CHARS *)edi)->state |= STATE_GARBAGE;
-		while(eax<((EDIT *)ebx)->rpLineFree)
+		while(eax<pMem->rpLineFree)
 		{
 			ecx = *(DWORD *)(esi+eax+sizeof(LINE));
 			*(DWORD *)(esi+eax) = ecx;
 			eax += sizeof(LINE);
 		} // endw
-		((EDIT *)ebx)->rpLineFree -= sizeof(LINE);
+		pMem->rpLineFree -= sizeof(LINE);
 	} // endif
 	eax = edi;
 	return eax;
 
 } // DeleteLine
 
-REG_T InsertChar(DWORD hMem, DWORD cp, DWORD nChr)
+REG_T InsertChar(EDIT *pMem, DWORD cp, DWORD nChr)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2;
 
-	ebx = hMem;
-	eax = ExpandLineMem(ebx);
-	eax = ExpandCharMem(ebx, MAXCHARMEM);
+	eax = ExpandLineMem(pMem);
+	eax = ExpandCharMem(pMem, MAXCHARMEM);
 	edx = cp;
 	eax = 0;
-	if(edx<((EDIT *)ebx)->edta.topcp)
+	if(edx<pMem->edta.topcp)
 	{
-		((EDIT *)ebx)->edta.topyp = eax;
-		((EDIT *)ebx)->edta.topln = eax;
-		((EDIT *)ebx)->edta.topcp = eax;
+		pMem->edta.topyp = eax;
+		pMem->edta.topln = eax;
+		pMem->edta.topcp = eax;
 	} // endif
-	if(edx<((EDIT *)ebx)->edtb.topcp)
+	if(edx<pMem->edtb.topcp)
 	{
-		((EDIT *)ebx)->edtb.topyp = eax;
-		((EDIT *)ebx)->edtb.topln = eax;
-		((EDIT *)ebx)->edtb.topcp = eax;
+		pMem->edtb.topyp = eax;
+		pMem->edtb.topln = eax;
+		pMem->edtb.topcp = eax;
 	} // endif
-	eax = GetCharPtr(ebx, edx, &ecx, &edx);
+	eax = GetCharPtr(pMem, edx, &ecx, &edx);
 	edi = eax;
-	esi = ((EDIT *)ebx)->rpChars;
-	esi += ((EDIT *)ebx)->hChars;
+	esi = pMem->rpChars;
+	esi += pMem->hChars;
 	ecx = ((CHARS *)esi)->state;
 	if(ecx&STATE_HIDDEN)
 	{
-		eax = TestExpand(ebx, ((EDIT *)ebx)->line);
+		eax = TestExpand(pMem, pMem->line);
 	}
 	else
 	{
 		ecx &= STATE_BMMASK;
 		if((ecx==STATE_BM2 || ecx==STATE_BM8) && nChr==VK_RETURN)
 		{
-			eax = Expand(ebx, ((EDIT *)ebx)->line);
+			eax = Expand(pMem, pMem->line);
 		} // endif
 	} // endif
 	ecx = nChr;
-	if(((EDIT *)ebx)->fOvr && ecx!=0x0D)
+	if(pMem->fOvr && ecx!=0x0D)
 	{
 		if(edi<((CHARS *)esi)->len)
 		{
@@ -248,11 +243,11 @@ REG_T InsertChar(DWORD hMem, DWORD cp, DWORD nChr)
 	eax = ((CHARS *)esi)->len;
 	if(eax==((CHARS *)esi)->max)
 	{
-		eax = ExpandCharLine(ebx);
+		eax = ExpandCharLine(pMem);
 	} // endif
 	// Insert char
-	esi = ((EDIT *)ebx)->rpChars;
-	esi += ((EDIT *)ebx)->hChars;
+	esi = pMem->rpChars;
+	esi += pMem->hChars;
 	temp1 = esi;
 	temp2 = edi;
 	ecx = ((CHARS *)esi)->len;
@@ -279,14 +274,14 @@ REG_T InsertChar(DWORD hMem, DWORD cp, DWORD nChr)
 	if(ecx==0x0D)
 	{
 		// Break the line
-		eax = ((EDIT *)ebx)->rpLine;
+		eax = pMem->rpLine;
 		eax /= 4;
 		ecx = ((CHARS *)esi)->state;
 		ecx &= STATE_BMMASK;
 		if(ecx==STATE_BM2 || ecx==STATE_BM8)
 		{
 			temp1 = eax;
-			eax = TestExpand(ebx, eax);
+			eax = TestExpand(pMem, eax);
 			eax = temp1;
 		} // endif
 		// Save line number
@@ -297,17 +292,17 @@ REG_T InsertChar(DWORD hMem, DWORD cp, DWORD nChr)
 		ecx += ((CHARS *)esi)->len;
 		ecx -= edi;
 		// Insert a new line and expand the CHAR mem
-		eax = InsertNewLine(ebx, eax, ecx);
+		eax = InsertNewLine(pMem, eax, ecx);
 		// Find the pointer to old line characters
 		esi = temp1;
 		esi *= 4;
-		esi += ((EDIT *)ebx)->hLine;
+		esi += pMem->hLine;
 		esi = *(DWORD *)esi;
-		esi += ((EDIT *)ebx)->hChars;
+		esi += pMem->hChars;
 		ecx = edi;
 		edx = 0;
-		edi = ((EDIT *)ebx)->rpChars;
-		edi += ((EDIT *)ebx)->hChars;
+		edi = pMem->rpChars;
+		edi += pMem->hChars;
 		while(ecx<((CHARS *)esi)->len)
 		{
 			RBYTE_LOW(eax) = *(BYTE *)(esi+ecx+sizeof(CHARS));
@@ -319,8 +314,8 @@ REG_T InsertChar(DWORD hMem, DWORD cp, DWORD nChr)
 		((CHARS *)edi)->len = edx;
 		((CHARS *)esi)->len -= edx;
 		eax = ((CHARS *)esi)->len;
-		((EDIT *)ebx)->cpLine += eax;
-		((EDIT *)ebx)->line++;
+		pMem->cpLine += eax;
+		pMem->line++;
 		if(edx>1)
 		{
 			((CHARS *)esi)->state &= -1 ^ STATE_CHANGESAVED;
@@ -336,45 +331,44 @@ REG_T InsertChar(DWORD hMem, DWORD cp, DWORD nChr)
 	} // endif
 	eax = 0;
 Ex:
-	if(!((EDIT *)ebx)->fChanged)
+	if(!pMem->fChanged)
 	{
-		((EDIT *)ebx)->fChanged = TRUE;
+		pMem->fChanged = TRUE;
 		temp1 = eax;
-		eax = InvalidateRect(((EDIT *)ebx)->hsta, NULL, TRUE);
+		eax = InvalidateRect(pMem->hsta, NULL, TRUE);
 		eax = temp1;
 	} // endif
-	((EDIT *)ebx)->nchange++;
+	pMem->nchange++;
 	return eax;
 
 } // InsertChar
 
-REG_T DeleteChar(DWORD hMem, DWORD cp)
+REG_T DeleteChar(EDIT *pMem, DWORD cp)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3;
 
-	ebx = hMem;
 	edx = cp;
 	eax = 0;
-	if(edx<((EDIT *)ebx)->edta.topcp)
+	if(edx<pMem->edta.topcp)
 	{
-		((EDIT *)ebx)->edta.topyp = eax;
-		((EDIT *)ebx)->edta.topln = eax;
-		((EDIT *)ebx)->edta.topcp = eax;
+		pMem->edta.topyp = eax;
+		pMem->edta.topln = eax;
+		pMem->edta.topcp = eax;
 	} // endif
-	if(edx<((EDIT *)ebx)->edtb.topcp)
+	if(edx<pMem->edtb.topcp)
 	{
-		((EDIT *)ebx)->edtb.topyp = eax;
-		((EDIT *)ebx)->edtb.topln = eax;
-		((EDIT *)ebx)->edtb.topcp = eax;
+		pMem->edtb.topyp = eax;
+		pMem->edtb.topln = eax;
+		pMem->edtb.topcp = eax;
 	} // endif
-	eax = GetCharPtr(ebx, edx, &ecx, &edx);
+	eax = GetCharPtr(pMem, edx, &ecx, &edx);
 	edi = eax;
-	esi = ((EDIT *)ebx)->rpChars;
-	esi += ((EDIT *)ebx)->hChars;
+	esi = pMem->rpChars;
+	esi += pMem->hChars;
 	if(((CHARS *)esi)->state&STATE_HIDDEN)
 	{
-		eax = TestExpand(ebx, ((EDIT *)ebx)->line);
+		eax = TestExpand(pMem, pMem->line);
 	} // endif
 	eax = *(BYTE *)(esi+edi+sizeof(CHARS));
 	temp1 = eax;
@@ -383,20 +377,20 @@ REG_T DeleteChar(DWORD hMem, DWORD cp)
 		edi = esi;
 		if(((CHARS *)esi)->len==1)
 		{
-			eax = DeleteLine(ebx, ((EDIT *)ebx)->line);
+			eax = DeleteLine(pMem, pMem->line);
 		}
 		else
 		{
-			temp2 = ((EDIT *)ebx)->fOvr;
-			((EDIT *)ebx)->fOvr = FALSE;
+			temp2 = pMem->fOvr;
+			pMem->fOvr = FALSE;
 			eax = cp;
 			eax++;
-			eax = GetCharPtr(ebx, eax, &ecx, &edx);
-			esi = ((EDIT *)ebx)->rpChars;
-			esi += ((EDIT *)ebx)->hChars;
+			eax = GetCharPtr(pMem, eax, &ecx, &edx);
+			esi = pMem->rpChars;
+			esi += pMem->hChars;
 			if(((CHARS *)esi)->len)
 			{
-				eax = DeleteLine(ebx, ((EDIT *)ebx)->line);
+				eax = DeleteLine(pMem, pMem->line);
 				if(eax)
 				{
 					esi = eax;
@@ -423,18 +417,18 @@ REG_T DeleteChar(DWORD hMem, DWORD cp)
 						{
 							break;
 						} // endif
-						eax = InsertChar(ebx, cp, eax);
+						eax = InsertChar(pMem, cp, eax);
 						edi++;
 						cp++;
 						eax = 0;
 					} // endw
 					temp3 = eax;
 					eax = GlobalFree(esi);
-					esi = ((EDIT *)ebx)->line;
+					esi = pMem->line;
 					esi *= 4;
-					esi += ((EDIT *)ebx)->hLine;
+					esi += pMem->hLine;
 					esi = ((LINE *)esi)->rpChars;
-					esi += ((EDIT *)ebx)->hChars;
+					esi += pMem->hChars;
 					eax = temp3;
 					if(!eax)
 					{
@@ -445,20 +439,20 @@ REG_T DeleteChar(DWORD hMem, DWORD cp)
 			else
 			{
 				((CHARS *)edi)->len--;
-				eax = DeleteLine(ebx, ((EDIT *)ebx)->line);
-				eax = GetCharPtr(ebx, 0, &ecx, &edx);
+				eax = DeleteLine(pMem, pMem->line);
+				eax = GetCharPtr(pMem, 0, &ecx, &edx);
 				esi = edi;
 			} // endif
 			((CHARS *)esi)->state &= -1 ^ STATE_CHANGESAVED;
 			((CHARS *)esi)->state |= STATE_CHANGED;
-			((EDIT *)ebx)->fOvr = temp2;
+			pMem->fOvr = temp2;
 		} // endif
-		if(!((EDIT *)ebx)->fChanged)
+		if(!pMem->fChanged)
 		{
-			((EDIT *)ebx)->fChanged = TRUE;
-			eax = InvalidateRect(((EDIT *)ebx)->hsta, NULL, TRUE);
+			pMem->fChanged = TRUE;
+			eax = InvalidateRect(pMem->hsta, NULL, TRUE);
 		} // endif
-		((EDIT *)ebx)->nchange++;
+		pMem->nchange++;
 	}
 	else if(RBYTE_LOW(eax) && ((CHARS *)esi)->len)
 	{
@@ -475,24 +469,23 @@ REG_T DeleteChar(DWORD hMem, DWORD cp)
 		} // endif
 		((CHARS *)esi)->state &= -1 ^ STATE_CHANGESAVED;
 		((CHARS *)esi)->state |= STATE_CHANGED;
-		if(!((EDIT *)ebx)->fChanged)
+		if(!pMem->fChanged)
 		{
-			((EDIT *)ebx)->fChanged = TRUE;
-			eax = InvalidateRect(((EDIT *)ebx)->hsta, NULL, TRUE);
+			pMem->fChanged = TRUE;
+			eax = InvalidateRect(pMem->hsta, NULL, TRUE);
 		} // endif
-		((EDIT *)ebx)->nchange++;
+		pMem->nchange++;
 	} // endif
 	eax = temp1;
 	return eax;
 
 } // DeleteChar
 
-REG_T DeleteSelection(DWORD hMem, DWORD cpMin, DWORD cpMax)
+REG_T DeleteSelection(EDIT *pMem, DWORD cpMin, DWORD cpMax)
 {
 	REG_T eax = 0, ebx, edi;
 	REG_T temp1, temp2;
 
-	ebx = hMem;
 	eax = cpMin;
 	if(eax>cpMax)
 	{
@@ -502,13 +495,13 @@ REG_T DeleteSelection(DWORD hMem, DWORD cpMin, DWORD cpMax)
 		cpMin = eax;
 	} // endif
 	temp1 = eax;
-	eax = GetLineFromCp(ebx, cpMin);
+	eax = GetLineFromCp(pMem, cpMin);
 	edi = eax;
-	eax = GetLineFromCp(ebx, cpMax);
+	eax = GetLineFromCp(pMem, cpMax);
 	while(edi<eax)
 	{
 		temp2 = eax;
-		eax = TestExpand(ebx, edi);
+		eax = TestExpand(pMem, edi);
 		eax = temp2;
 		edi++;
 	} // endw
@@ -524,7 +517,7 @@ REG_T DeleteSelection(DWORD hMem, DWORD cpMin, DWORD cpMax)
 		eax = cpMin;
 		while(eax!=cpMax)
 		{
-			eax = DeleteChar(hMem, eax);
+			eax = DeleteChar(pMem, eax);
 			*(BYTE *)edi = RBYTE_LOW(eax);
 			edi++;
 			cpMax--;
@@ -532,21 +525,20 @@ REG_T DeleteSelection(DWORD hMem, DWORD cpMin, DWORD cpMax)
 		} // endw
 		edi = temp2;
 		eax = temp1;
-		eax = SaveUndo(ebx, UNDO_DELETEBLOCK, cpMin, edi, eax);
+		eax = SaveUndo(pMem, UNDO_DELETEBLOCK, cpMin, edi, eax);
 		eax = GlobalFree(edi);
 		eax = cpMin;
-		((EDIT *)ebx)->cpMin = eax;
-		((EDIT *)ebx)->cpMax = eax;
+		pMem->cpMin = eax;
+		pMem->cpMax = eax;
 	} // endif
 	return eax;
 
 } // DeleteSelection
 
-REG_T DeleteSelectionBlock(DWORD hMem, DWORD lnMin, DWORD clMin, DWORD lnMax, DWORD clMax)
+REG_T DeleteSelectionBlock(EDIT *pMem, DWORD lnMin, DWORD clMin, DWORD lnMax, DWORD clMax)
 {
 	REG_T eax = 0, edx, ebx, esi, edi;
 
-	ebx = hMem;
 	eax = clMin;
 	edx = clMax;
 	if(eax!=edx)
@@ -566,24 +558,24 @@ REG_T DeleteSelectionBlock(DWORD hMem, DWORD lnMin, DWORD clMin, DWORD lnMax, DW
 		eax = lnMin;
 		while(eax<=lnMax)
 		{
-			eax = GetBlockCp(ebx, lnMin, clMin);
+			eax = GetBlockCp(pMem, lnMin, clMin);
 			esi = eax;
-			eax = GetChar(ebx, esi);
+			eax = GetChar(pMem, esi);
 			if(eax && eax!=VK_RETURN)
 			{
-				eax = GetBlockCp(ebx, lnMin, clMax);
+				eax = GetBlockCp(pMem, lnMin, clMax);
 				edi = eax;
 anon_1:
 				if(R_SIGNED(edi) > R_SIGNED(esi))
 				{
 					edi--;
-					eax = GetChar(ebx, edi);
+					eax = GetChar(pMem, edi);
 					if(!eax || eax==VK_RETURN)
 					{
 						goto anon_1;
 					} // endif
 					edi++;
-					eax = DeleteSelection(ebx, esi, edi);
+					eax = DeleteSelection(pMem, esi, edi);
 				} // endif
 			} // endif
 			lnMin++;
@@ -594,11 +586,10 @@ anon_1:
 
 } // DeleteSelectionBlock
 
-REG_T EditInsert(DWORD hMem, DWORD cp, DWORD lpBuff)
+REG_T EditInsert(EDIT *pMem, DWORD cp, DWORD lpBuff)
 {
 	REG_T eax = 0, ebx, esi, edi;
 
-	ebx = hMem;
 	esi = lpBuff;
 	edi = cp;
 	if(esi)
@@ -609,7 +600,7 @@ REG_T EditInsert(DWORD hMem, DWORD cp, DWORD lpBuff)
 			if(RBYTE_LOW(eax)!=0x0A)
 			{
 				eax = RBYTE_LOW(eax);
-				eax = InsertChar(ebx, edi, eax);
+				eax = InsertChar(pMem, edi, eax);
 				edi++;
 			} // endif
 			esi++;

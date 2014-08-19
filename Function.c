@@ -6,7 +6,7 @@
 #include "Position.h"
 #include "Undo.h"
 
-REG_T FindTheText(DWORD hMem, DWORD pFind, DWORD fMC, DWORD fWW, DWORD fWhiteSpace, DWORD cpMin, DWORD cpMax, DWORD fDir, DWORD *pnIgnore)
+REG_T FindTheText(EDIT *pMem, DWORD pFind, DWORD fMC, DWORD fWW, DWORD fWhiteSpace, DWORD cpMin, DWORD cpMax, DWORD fDir, DWORD *pnIgnore)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1;
@@ -59,11 +59,10 @@ REG_T FindTheText(DWORD hMem, DWORD pFind, DWORD fMC, DWORD fWW, DWORD fWhiteSpa
 	} // endw
 	*(BYTE *)edi = 0;
 	len[edx] = ecx;
-	ebx = hMem;
 	if(fDir==1)
 	{
 		// Down
-		eax = GetCharPtr(ebx, cpMin, &ecx, &edx);
+		eax = GetCharPtr(pMem, cpMin, &ecx, &edx);
 		nLine = edx;
 		ecx = eax;
 		cpMin -= ecx;
@@ -107,7 +106,7 @@ REG_T FindTheText(DWORD hMem, DWORD pFind, DWORD fMC, DWORD fWW, DWORD fWhiteSpa
 		// Up
 		eax = cpMin;
 		cp = eax;
-		eax = GetCharPtr(ebx, cpMin, &ecx, &edx);
+		eax = GetCharPtr(pMem, cpMin, &ecx, &edx);
 		nLine = edx;
 		ecx = eax;
 		edx = cpMin;
@@ -137,15 +136,15 @@ REG_T FindTheText(DWORD hMem, DWORD pFind, DWORD fMC, DWORD fWW, DWORD fWhiteSpa
 			edi = nLine;
 			edi *= 4;
 			eax = -1;
-			if(edi>=((EDIT *)ebx)->rpLineFree)
+			if(edi>=pMem->rpLineFree)
 			{
 				break;
 			} // endif
-			eax = GetCpFromLine(ebx, nLine);
+			eax = GetCpFromLine(pMem, nLine);
 			cpMin = eax;
-			edi += ((EDIT *)ebx)->hLine;
+			edi += pMem->hLine;
 			edi = ((LINE *)edi)->rpChars;
-			edi += ((EDIT *)ebx)->hChars;
+			edi += pMem->hChars;
 			ecx = ((CHARS *)edi)->len;
 			cpMin += ecx;
 			edx = cpMin;
@@ -248,11 +247,11 @@ TstFind2:
 	{
 		edi = nLine;
 		edi *= 4;
-		if(edi<((EDIT *)ebx)->rpLineFree)
+		if(edi<pMem->rpLineFree)
 		{
-			edi += ((EDIT *)ebx)->hLine;
+			edi += pMem->hLine;
 			edi = ((LINE *)edi)->rpChars;
-			edi += ((EDIT *)ebx)->hChars;
+			edi += pMem->hChars;
 			if(!esi)
 			{
 				eax = ((CHARS *)edi)->len;
@@ -315,11 +314,11 @@ Found:
 	{
 		edi = nLine;
 		edi *= 4;
-		if(edi<((EDIT *)ebx)->rpLineFree)
+		if(edi<pMem->rpLineFree)
 		{
-			edi += ((EDIT *)ebx)->hLine;
+			edi += pMem->hLine;
 			edi = ((LINE *)edi)->rpChars;
-			edi += ((EDIT *)ebx)->hChars;
+			edi += pMem->hChars;
 			if(!esi)
 			{
 				eax = ((CHARS *)edi)->len;
@@ -334,7 +333,7 @@ Found:
 			else
 			{
 					// carry with add operation
-				if(edi<((EDIT *)ebx)->hChars)
+				if(edi<pMem->hChars)
 				{
 					goto NotFoundUp;
 				} // endif
@@ -397,7 +396,7 @@ FoundUp:
 
 } // FindTheText
 
-REG_T FindTextEx(DWORD hMem, DWORD fFlag, DWORD lpFindTextEx)
+REG_T FindTextEx(EDIT *pMem, DWORD fFlag, DWORD lpFindTextEx)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	DWORD lpText;
@@ -405,7 +404,6 @@ REG_T FindTextEx(DWORD hMem, DWORD fFlag, DWORD lpFindTextEx)
 	DWORD fMC;
 	DWORD fWW;
 
-	ebx = hMem;
 	esi = lpFindTextEx;
 	eax = ((FINDTEXTEX *)esi)->lpstrText;
 	lpText = eax;
@@ -438,7 +436,7 @@ REG_T FindTextEx(DWORD hMem, DWORD fFlag, DWORD lpFindTextEx)
 			{
 				ecx = -2;
 			} // endif
-			eax = FindTheText(ebx, lpText, fMC, fWW, eax, ((FINDTEXTEX *)esi)->chrg.cpMin, ecx, 1, &edx);
+			eax = FindTheText(pMem, lpText, fMC, fWW, eax, ((FINDTEXTEX *)esi)->chrg.cpMin, ecx, 1, &edx);
 			len += edx;
 		}
 		else
@@ -449,7 +447,7 @@ REG_T FindTextEx(DWORD hMem, DWORD fFlag, DWORD lpFindTextEx)
 			{
 				eax++;
 			} // endif
-			eax = FindTheText(ebx, lpText, fMC, fWW, eax, ((FINDTEXTEX *)esi)->chrg.cpMin, ((FINDTEXTEX *)esi)->chrg.cpMax, -1, &edx);
+			eax = FindTheText(pMem, lpText, fMC, fWW, eax, ((FINDTEXTEX *)esi)->chrg.cpMin, ((FINDTEXTEX *)esi)->chrg.cpMax, -1, &edx);
 			len += edx;
 		} // endif
 		if(eax!=-1)
@@ -468,7 +466,7 @@ REG_T FindTextEx(DWORD hMem, DWORD fFlag, DWORD lpFindTextEx)
 
 } // FindTextEx
 
-REG_T IsLine(DWORD hMem, DWORD nLine, DWORD lpszTest)
+REG_T IsLine(EDIT *pMem, DWORD nLine, DWORD lpszTest)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	DWORD tmpesi;
@@ -484,12 +482,11 @@ REG_T IsLine(DWORD hMem, DWORD nLine, DWORD lpszTest)
 	auto void TestWord(void);
 
 	notfound = 0;
-	ebx = hMem;
 	edi = nLine;
 	edi *= 4;
 	esi = lpszTest;
     eax = -1;
-	if(edi<((EDIT *)ebx)->rpLineFree && *(BYTE *)esi)
+	if(edi<pMem->rpLineFree && *(BYTE *)esi)
 	{
 		if(*(BYTE *)esi)
 		{
@@ -505,17 +502,17 @@ REG_T IsLine(DWORD hMem, DWORD nLine, DWORD lpszTest)
 		REG_T temp1;
 		ecx = 0;
 		fCmnt = ecx;
-		edi += ((EDIT *)ebx)->hLine;
+		edi += pMem->hLine;
 		edi = ((LINE *)edi)->rpChars;
-		edi += ((EDIT *)ebx)->hChars;
+		edi += pMem->hChars;
 		if(((CHARS *)edi)->state&STATE_COMMENT)
 		{
 			RWORD(eax) = *(WORD *)esi;
-			if(((EDIT *)ebx)->ccmntblocks==1 && RWORD(eax)!='/*' && RWORD(eax)!='*/')
+			if(pMem->ccmntblocks==1 && RWORD(eax)!='/*' && RWORD(eax)!='*/')
 			{
 				goto Nf;
 			}
-			else if(((EDIT *)ebx)->ccmntblocks==2 && RWORD(eax)!='/\'' && RWORD(eax)!='\'/')
+			else if(pMem->ccmntblocks==2 && RWORD(eax)!='/\'' && RWORD(eax)!='\'/')
 			{
 				goto Nf;
 			} // endif
@@ -862,7 +859,7 @@ SkipSpcStart:
 		if(ecx<((CHARS *)edi)->len)
 		{
 			RBYTE_LOW(eax) = *(BYTE *)(edi+ecx+sizeof(CHARS));
-			if(RBYTE_LOW(eax)==VK_TAB || RBYTE_LOW(eax)==' ' || RBYTE_LOW(eax)==':' || (RBYTE_LOW(eax)=='*' && ((EDIT *)ebx)->ccmntblocks!=1))
+			if(RBYTE_LOW(eax)==VK_TAB || RBYTE_LOW(eax)==' ' || RBYTE_LOW(eax)==':' || (RBYTE_LOW(eax)=='*' && pMem->ccmntblocks!=1))
 			{
 				ecx++;
 				goto SkipSpcStart;
@@ -883,11 +880,11 @@ SkipSpcStart:
 					nLine++;
 					edi = nLine;
 					edi *= 4;
-					if(edi<((EDIT *)ebx)->rpLineFree)
+					if(edi<pMem->rpLineFree)
 					{
-						edi += ((EDIT *)ebx)->hLine;
+						edi += pMem->hLine;
 						edi = ((LINE *)edi)->rpChars;
-						edi += ((EDIT *)ebx)->hChars;
+						edi += pMem->hChars;
 						if(((CHARS *)edi)->state&STATE_COMMENT)
 						{
 							goto SkipSpcNf;
@@ -1303,19 +1300,18 @@ TestWordNf:
 
 } // IsLine
 
-REG_T SetBookMark(DWORD hMem, DWORD nLine, DWORD nType)
+REG_T SetBookMark(EDIT *pMem, DWORD nLine, DWORD nType)
 {
 	REG_T eax = 0, edx, ebx;
 
-	ebx = hMem;
 	edx = nLine;
 	edx *= 4;
 	eax = 0;
-	if(edx<((EDIT *)ebx)->rpLineFree)
+	if(edx<pMem->rpLineFree)
 	{
-		edx += ((EDIT *)ebx)->hLine;
+		edx += pMem->hLine;
 		edx = ((LINE *)edx)->rpChars;
-		edx += ((EDIT *)ebx)->hChars;
+		edx += pMem->hChars;
 		eax = nType;
 		eax <<= 4;
 		eax &= STATE_BMMASK;
@@ -1332,20 +1328,19 @@ REG_T SetBookMark(DWORD hMem, DWORD nLine, DWORD nType)
 
 } // SetBookMark
 
-REG_T GetBookMark(DWORD hMem, DWORD nLine)
+REG_T GetBookMark(EDIT *pMem, DWORD nLine)
 {
 	REG_T eax = 0, edx, ebx;
 
-	ebx = hMem;
 	eax = 0;
 	eax--;
 	edx = nLine;
 	edx *= 4;
-	if(edx<((EDIT *)ebx)->rpLineFree)
+	if(edx<pMem->rpLineFree)
 	{
-		edx += ((EDIT *)ebx)->hLine;
+		edx += pMem->hLine;
 		edx = ((LINE *)edx)->rpChars;
-		edx += ((EDIT *)ebx)->hChars;
+		edx += pMem->hChars;
 		eax = ((CHARS *)edx)->state;
 		eax &= STATE_BMMASK;
 		eax >>= 4;
@@ -1354,21 +1349,20 @@ REG_T GetBookMark(DWORD hMem, DWORD nLine)
 
 } // GetBookMark
 
-REG_T ClearBookMarks(DWORD hMem, DWORD nType)
+REG_T ClearBookMarks(EDIT *pMem, DWORD nType)
 {
 	REG_T eax = 0, ecx, edx, ebx, edi;
 
-	ebx = hMem;
 	nType &= 15;
 	eax = nType;
 	eax <<= 4;
 	edi = 0;
-	while(edi<((EDIT *)ebx)->rpLineFree)
+	while(edi<pMem->rpLineFree)
 	{
 		edx = edi;
-		edx += ((EDIT *)ebx)->hLine;
+		edx += pMem->hLine;
 		edx = ((LINE *)edx)->rpChars;
-		edx += ((EDIT *)ebx)->hChars;
+		edx += pMem->hChars;
 		ecx = ((CHARS *)edx)->state;
 		ecx &= STATE_BMMASK;
 		if(eax==ecx)
@@ -1385,12 +1379,11 @@ REG_T ClearBookMarks(DWORD hMem, DWORD nType)
 
 } // ClearBookMarks
 
-REG_T NextBookMark(DWORD hMem, DWORD nLine, DWORD nType)
+REG_T NextBookMark(EDIT *pMem, DWORD nLine, DWORD nType)
 {
 	REG_T eax = 0, ecx, edx, ebx, edi;
 	DWORD fExpand;
 
-	ebx = hMem;
 	eax = nType;
 	nType &= 15;
 	eax &= 0x80000000;
@@ -1400,12 +1393,12 @@ REG_T NextBookMark(DWORD hMem, DWORD nLine, DWORD nType)
 	edi *= 4;
 	eax = 0;
 	eax--;
-	while(edi<((EDIT *)ebx)->rpLineFree)
+	while(edi<pMem->rpLineFree)
 	{
 		edx = edi;
-		edx += ((EDIT *)ebx)->hLine;
+		edx += pMem->hLine;
 		edx = ((LINE *)edx)->rpChars;
-		edx += ((EDIT *)ebx)->hChars;
+		edx += pMem->hChars;
 		ecx = ((CHARS *)edx)->state;
 		ecx &= STATE_BMMASK;
 		ecx >>= 4;
@@ -1421,22 +1414,21 @@ REG_T NextBookMark(DWORD hMem, DWORD nLine, DWORD nType)
 
 } // NextBookMark
 
-REG_T NextBreakpoint(DWORD hMem, DWORD nLine)
+REG_T NextBreakpoint(EDIT *pMem, DWORD nLine)
 {
 	REG_T eax = 0, edx, ebx, edi;
 
-	ebx = hMem;
 	edi = nLine;
 	edi++;
 	edi *= 4;
 	eax = 0;
 	eax--;
-	while(edi<((EDIT *)ebx)->rpLineFree)
+	while(edi<pMem->rpLineFree)
 	{
 		edx = edi;
-		edx += ((EDIT *)ebx)->hLine;
+		edx += pMem->hLine;
 		edx = ((LINE *)edx)->rpChars;
-		edx += ((EDIT *)ebx)->hChars;
+		edx += pMem->hChars;
 		if(((CHARS *)edx)->state&STATE_BREAKPOINT)
 		{
 			eax = edi;
@@ -1449,22 +1441,21 @@ REG_T NextBreakpoint(DWORD hMem, DWORD nLine)
 
 } // NextBreakpoint
 
-REG_T NextError(DWORD hMem, DWORD nLine)
+REG_T NextError(EDIT *pMem, DWORD nLine)
 {
 	REG_T eax = 0, edx, ebx, edi;
 
-	ebx = hMem;
 	edi = nLine;
 	edi++;
 	edi *= 4;
 	eax = 0;
 	eax--;
-	while(edi<((EDIT *)ebx)->rpLineFree)
+	while(edi<pMem->rpLineFree)
 	{
 		edx = edi;
-		edx += ((EDIT *)ebx)->hLine;
+		edx += pMem->hLine;
 		edx = ((LINE *)edx)->rpChars;
-		edx += ((EDIT *)ebx)->hChars;
+		edx += pMem->hChars;
 		if(((CHARS *)edx)->errid)
 		{
 			eax = edi;
@@ -1477,12 +1468,11 @@ REG_T NextError(DWORD hMem, DWORD nLine)
 
 } // NextError
 
-REG_T PreviousBookMark(DWORD hMem, DWORD nLine, DWORD nType)
+REG_T PreviousBookMark(EDIT *pMem, DWORD nLine, DWORD nType)
 {
 	REG_T eax = 0, ecx, edx, ebx, edi;
 	DWORD fExpand;
 
-	ebx = hMem;
 	eax = nType;
 	nType &= 15;
 	eax &= 0x80000000;
@@ -1496,9 +1486,9 @@ REG_T PreviousBookMark(DWORD hMem, DWORD nLine, DWORD nType)
 	{
 anon_3:
 		edx = edi;
-		edx += ((EDIT *)ebx)->hLine;
+		edx += pMem->hLine;
 		edx = ((LINE *)edx)->rpChars;
-		edx += ((EDIT *)ebx)->hChars;
+		edx += pMem->hChars;
 		ecx = ((CHARS *)edx)->state;
 		ecx &= STATE_BMMASK;
 		ecx >>= 4;
@@ -1514,18 +1504,17 @@ anon_3:
 
 } // PreviousBookMark
 
-REG_T LockLine(DWORD hMem, DWORD nLine, DWORD fLock)
+REG_T LockLine(EDIT *pMem, DWORD nLine, DWORD fLock)
 {
 	REG_T eax = 0, ebx;
 
-	ebx = hMem;
 	eax = nLine;
 	eax *= 4;
-	if(eax<((EDIT *)ebx)->rpLineFree)
+	if(eax<pMem->rpLineFree)
 	{
-		eax += ((EDIT *)ebx)->hLine;
+		eax += pMem->hLine;
 		eax = ((LINE *)eax)->rpChars;
-		eax += ((EDIT *)ebx)->hChars;
+		eax += pMem->hChars;
 		if(fLock)
 		{
 			((CHARS *)eax)->state |= STATE_LOCKED;
@@ -1539,21 +1528,20 @@ REG_T LockLine(DWORD hMem, DWORD nLine, DWORD fLock)
 
 } // LockLine
 
-REG_T IsLineLocked(DWORD hMem, DWORD nLine)
+REG_T IsLineLocked(EDIT *pMem, DWORD nLine)
 {
 	REG_T eax = 0, edx, ebx;
 
-	ebx = hMem;
 	eax = 0;
-	if(!(((EDIT *)ebx)->fstyle&STYLE_READONLY))
+	if(!(pMem->fstyle&STYLE_READONLY))
 	{
 		edx = nLine;
 		edx *= 4;
-		if(edx<((EDIT *)ebx)->rpLineFree)
+		if(edx<pMem->rpLineFree)
 		{
-			edx += ((EDIT *)ebx)->hLine;
+			edx += pMem->hLine;
 			edx = ((LINE *)edx)->rpChars;
-			edx += ((EDIT *)ebx)->hChars;
+			edx += pMem->hChars;
 			eax = ((CHARS *)edx)->state;
 			eax &= STATE_LOCKED;
 		} // endif
@@ -1566,20 +1554,19 @@ REG_T IsLineLocked(DWORD hMem, DWORD nLine)
 
 } // IsLineLocked
 
-REG_T HideLine(DWORD hMem, DWORD nLine, DWORD fHide)
+REG_T HideLine(EDIT *pMem, DWORD nLine, DWORD fHide)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 
 	auto void SetYP(void);
 
-	ebx = hMem;
 	eax = nLine;
 	eax *= 4;
-	if(eax<((EDIT *)ebx)->rpLineFree)
+	if(eax<pMem->rpLineFree)
 	{
-		eax += ((EDIT *)ebx)->hLine;
+		eax += pMem->hLine;
 		eax = ((LINE *)eax)->rpChars;
-		eax += ((EDIT *)ebx)->hChars;
+		eax += pMem->hChars;
 		if(fHide)
 		{
 			if(!(((CHARS *)eax)->state&STATE_HIDDEN))
@@ -1588,7 +1575,7 @@ REG_T HideLine(DWORD hMem, DWORD nLine, DWORD fHide)
 				if(*(BYTE *)(eax+ecx+sizeof(CHARS)-1)==0x0D)
 				{
 					((CHARS *)eax)->state |= STATE_HIDDEN;
-					((EDIT *)ebx)->nHidden++;
+					pMem->nHidden++;
 					SetYP();
 					eax = 0;
 					eax++;
@@ -1601,7 +1588,7 @@ REG_T HideLine(DWORD hMem, DWORD nLine, DWORD fHide)
 			if(((CHARS *)eax)->state&STATE_HIDDEN)
 			{
 				((CHARS *)eax)->state &= -1 ^ STATE_HIDDEN;
-				((EDIT *)ebx)->nHidden--;
+				pMem->nHidden--;
 				SetYP();
 				eax = 0;
 				eax++;
@@ -1617,17 +1604,17 @@ Ex:
 	{
 		edx = nLine;
 		eax = 0;
-		if(edx<((EDIT *)ebx)->edta.topln)
+		if(edx<pMem->edta.topln)
 		{
-			((EDIT *)ebx)->edta.topyp = eax;
-			((EDIT *)ebx)->edta.topln = eax;
-			((EDIT *)ebx)->edta.topcp = eax;
+			pMem->edta.topyp = eax;
+			pMem->edta.topln = eax;
+			pMem->edta.topcp = eax;
 		} // endif
-		if(edx<((EDIT *)ebx)->edtb.topln)
+		if(edx<pMem->edtb.topln)
 		{
-			((EDIT *)ebx)->edtb.topyp = eax;
-			((EDIT *)ebx)->edtb.topln = eax;
-			((EDIT *)ebx)->edtb.topcp = eax;
+			pMem->edtb.topyp = eax;
+			pMem->edtb.topln = eax;
+			pMem->edtb.topcp = eax;
 		} // endif
 		return;
 
@@ -1635,18 +1622,17 @@ Ex:
 
 } // HideLine
 
-REG_T IsLineHidden(DWORD hMem, DWORD nLine)
+REG_T IsLineHidden(EDIT *pMem, DWORD nLine)
 {
 	REG_T eax = 0, ebx;
 
-	ebx = hMem;
 	eax = nLine;
 	eax *= 4;
-	if(eax<((EDIT *)ebx)->rpLineFree)
+	if(eax<pMem->rpLineFree)
 	{
-		eax += ((EDIT *)ebx)->hLine;
+		eax += pMem->hLine;
 		eax = ((LINE *)eax)->rpChars;
-		eax += ((EDIT *)ebx)->hChars;
+		eax += pMem->hChars;
 		eax = ((CHARS *)eax)->state;
 		eax &= STATE_HIDDEN;
 	}
@@ -1658,18 +1644,17 @@ REG_T IsLineHidden(DWORD hMem, DWORD nLine)
 
 } // IsLineHidden
 
-REG_T NoBlockLine(DWORD hMem, DWORD nLine, DWORD fNoBlock)
+REG_T NoBlockLine(EDIT *pMem, DWORD nLine, DWORD fNoBlock)
 {
 	REG_T eax = 0, ebx;
 
-	ebx = hMem;
 	eax = nLine;
 	eax *= 4;
-	if(eax<((EDIT *)ebx)->rpLineFree)
+	if(eax<pMem->rpLineFree)
 	{
-		eax += ((EDIT *)ebx)->hLine;
+		eax += pMem->hLine;
 		eax = ((LINE *)eax)->rpChars;
-		eax += ((EDIT *)ebx)->hChars;
+		eax += pMem->hChars;
 		if(fNoBlock)
 		{
 			((CHARS *)eax)->state |= STATE_NOBLOCK;
@@ -1683,18 +1668,17 @@ REG_T NoBlockLine(DWORD hMem, DWORD nLine, DWORD fNoBlock)
 
 } // NoBlockLine
 
-REG_T IsLineNoBlock(DWORD hMem, DWORD nLine)
+REG_T IsLineNoBlock(EDIT *pMem, DWORD nLine)
 {
 	REG_T eax = 0, ebx;
 
-	ebx = hMem;
 	eax = nLine;
 	eax *= 4;
-	if(eax<((EDIT *)ebx)->rpLineFree)
+	if(eax<pMem->rpLineFree)
 	{
-		eax += ((EDIT *)ebx)->hLine;
+		eax += pMem->hLine;
 		eax = ((LINE *)eax)->rpChars;
-		eax += ((EDIT *)ebx)->hChars;
+		eax += pMem->hChars;
 		eax = ((CHARS *)eax)->state;
 		eax &= STATE_NOBLOCK;
 	}
@@ -1706,18 +1690,17 @@ REG_T IsLineNoBlock(DWORD hMem, DWORD nLine)
 
 } // IsLineNoBlock
 
-REG_T AltHiliteLine(DWORD hMem, DWORD nLine, DWORD fAltHilite)
+REG_T AltHiliteLine(EDIT *pMem, DWORD nLine, DWORD fAltHilite)
 {
 	REG_T eax = 0, ebx;
 
-	ebx = hMem;
 	eax = nLine;
 	eax *= 4;
-	if(eax<((EDIT *)ebx)->rpLineFree)
+	if(eax<pMem->rpLineFree)
 	{
-		eax += ((EDIT *)ebx)->hLine;
+		eax += pMem->hLine;
 		eax = ((LINE *)eax)->rpChars;
-		eax += ((EDIT *)ebx)->hChars;
+		eax += pMem->hChars;
 		if(fAltHilite)
 		{
 			((CHARS *)eax)->state |= STATE_ALTHILITE;
@@ -1731,18 +1714,17 @@ REG_T AltHiliteLine(DWORD hMem, DWORD nLine, DWORD fAltHilite)
 
 } // AltHiliteLine
 
-REG_T IsLineAltHilite(DWORD hMem, DWORD nLine)
+REG_T IsLineAltHilite(EDIT *pMem, DWORD nLine)
 {
 	REG_T eax = 0, ebx;
 
-	ebx = hMem;
 	eax = nLine;
 	eax *= 4;
-	if(eax<((EDIT *)ebx)->rpLineFree)
+	if(eax<pMem->rpLineFree)
 	{
-		eax += ((EDIT *)ebx)->hLine;
+		eax += pMem->hLine;
 		eax = ((LINE *)eax)->rpChars;
-		eax += ((EDIT *)ebx)->hChars;
+		eax += pMem->hChars;
 		eax = ((CHARS *)eax)->state;
 		eax &= STATE_ALTHILITE;
 	}
@@ -1754,18 +1736,17 @@ REG_T IsLineAltHilite(DWORD hMem, DWORD nLine)
 
 } // IsLineAltHilite
 
-REG_T SetBreakpoint(DWORD hMem, DWORD nLine, DWORD fBreakpoint)
+REG_T SetBreakpoint(EDIT *pMem, DWORD nLine, DWORD fBreakpoint)
 {
 	REG_T eax = 0, ebx;
 
-	ebx = hMem;
 	eax = nLine;
 	eax *= 4;
-	if(eax<((EDIT *)ebx)->rpLineFree)
+	if(eax<pMem->rpLineFree)
 	{
-		eax += ((EDIT *)ebx)->hLine;
+		eax += pMem->hLine;
 		eax = ((LINE *)eax)->rpChars;
-		eax += ((EDIT *)ebx)->hChars;
+		eax += pMem->hChars;
 		if(fBreakpoint)
 		{
 			((CHARS *)eax)->state |= STATE_BREAKPOINT;
@@ -1779,18 +1760,17 @@ REG_T SetBreakpoint(DWORD hMem, DWORD nLine, DWORD fBreakpoint)
 
 } // SetBreakpoint
 
-REG_T SetError(DWORD hMem, DWORD nLine, DWORD nErrID)
+REG_T SetError(EDIT *pMem, DWORD nLine, DWORD nErrID)
 {
 	REG_T eax = 0, edx, ebx;
 
-	ebx = hMem;
 	eax = nLine;
 	eax *= 4;
-	if(eax<((EDIT *)ebx)->rpLineFree)
+	if(eax<pMem->rpLineFree)
 	{
-		eax += ((EDIT *)ebx)->hLine;
+		eax += pMem->hLine;
 		eax = ((LINE *)eax)->rpChars;
-		eax += ((EDIT *)ebx)->hChars;
+		eax += pMem->hChars;
 		edx = nErrID;
 		((CHARS *)eax)->errid = edx;
 	} // endif
@@ -1798,37 +1778,35 @@ REG_T SetError(DWORD hMem, DWORD nLine, DWORD nErrID)
 
 } // SetError
 
-REG_T GetError(DWORD hMem, DWORD nLine)
+REG_T GetError(EDIT *pMem, DWORD nLine)
 {
 	REG_T eax = 0, edx, ebx;
 
-	ebx = hMem;
 	edx = nLine;
 	edx *= 4;
 	eax = 0;
-	if(edx<((EDIT *)ebx)->rpLineFree)
+	if(edx<pMem->rpLineFree)
 	{
-		edx += ((EDIT *)ebx)->hLine;
+		edx += pMem->hLine;
 		edx = ((LINE *)edx)->rpChars;
-		edx += ((EDIT *)ebx)->hChars;
+		edx += pMem->hChars;
 		eax = ((CHARS *)edx)->errid;
 	} // endif
 	return eax;
 
 } // GetError
 
-REG_T SetRedText(DWORD hMem, DWORD nLine, DWORD fRed)
+REG_T SetRedText(EDIT *pMem, DWORD nLine, DWORD fRed)
 {
 	REG_T eax = 0, ebx;
 
-	ebx = hMem;
 	eax = nLine;
 	eax *= 4;
-	if(eax<((EDIT *)ebx)->rpLineFree)
+	if(eax<pMem->rpLineFree)
 	{
-		eax += ((EDIT *)ebx)->hLine;
+		eax += pMem->hLine;
 		eax = ((LINE *)eax)->rpChars;
-		eax += ((EDIT *)ebx)->hChars;
+		eax += pMem->hChars;
 		if(fRed)
 		{
 			((CHARS *)eax)->state |= STATE_REDTEXT;
@@ -1842,32 +1820,30 @@ REG_T SetRedText(DWORD hMem, DWORD nLine, DWORD fRed)
 
 } // SetRedText
 
-REG_T GetLineState(DWORD hMem, DWORD nLine)
+REG_T GetLineState(EDIT *pMem, DWORD nLine)
 {
 	REG_T eax = 0, edx, ebx;
 
-	ebx = hMem;
 	edx = nLine;
 	edx *= 4;
 	eax = 0;
-	if(edx<((EDIT *)ebx)->rpLineFree)
+	if(edx<pMem->rpLineFree)
 	{
-		edx += ((EDIT *)ebx)->hLine;
+		edx += pMem->hLine;
 		edx = ((LINE *)edx)->rpChars;
-		edx += ((EDIT *)ebx)->hChars;
+		edx += pMem->hChars;
 		eax = ((CHARS *)edx)->state;
 	} // endif
 	return eax;
 
 } // GetLineState
 
-REG_T IsSelectionLocked(DWORD hMem, DWORD cpMin, DWORD cpMax)
+REG_T IsSelectionLocked(EDIT *pMem, DWORD cpMin, DWORD cpMax)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	REG_T temp1;
 	DWORD nLineMax;
 
-	ebx = hMem;
 	eax = cpMin;
 	if(eax>cpMax)
 	{
@@ -1876,13 +1852,13 @@ REG_T IsSelectionLocked(DWORD hMem, DWORD cpMin, DWORD cpMax)
 		cpMax = temp1;
 		cpMin = eax;
 	} // endif
-	eax = GetCharPtr(ebx, cpMax, &ecx, &edx);
+	eax = GetCharPtr(pMem, cpMax, &ecx, &edx);
 	nLineMax = edx;
-	eax = GetCharPtr(ebx, cpMin, &ecx, &edx);
+	eax = GetCharPtr(pMem, cpMin, &ecx, &edx);
 	while(edx<=nLineMax)
 	{
 		temp1 = edx;
-		eax = IsLineLocked(ebx, edx);
+		eax = IsLineLocked(pMem, edx);
 		edx = temp1;
 		if(eax!=0)
 		{
@@ -1896,24 +1872,23 @@ Ex:
 } // IsSelectionLocked
 
 
-REG_T TrimSpace(DWORD hMem, DWORD nLine, DWORD fLeft)
+REG_T TrimSpace(EDIT *pMem, DWORD nLine, DWORD fLeft)
 {
 	REG_T eax = 0, ecx, edx, ebx, edi;
 	REG_T temp1, temp2, temp3;
 	DWORD cp;
 
-	ebx = hMem;
 	edi = nLine;
-	eax = GetCpFromLine(ebx, edi);
+	eax = GetCpFromLine(pMem, edi);
 	cp = eax;
 	edi *= 4;
 	edx = 0;
 	ecx = 0;
-	if(edi<((EDIT *)ebx)->rpLineFree)
+	if(edi<pMem->rpLineFree)
 	{
-		edi += ((EDIT *)ebx)->hLine;
+		edi += pMem->hLine;
 		edi = ((LINE *)edi)->rpChars;
-		edi += ((EDIT *)ebx)->hChars;
+		edi += pMem->hChars;
 		edx = ((CHARS *)edi)->len;
 		if(edx)
 		{
@@ -1951,7 +1926,7 @@ anon_4:
 				if(ecx)
 				{
 					temp3 = ecx;
-					eax = SaveUndo(ebx, UNDO_DELETEBLOCK, eax, edx, ecx);
+					eax = SaveUndo(pMem, UNDO_DELETEBLOCK, eax, edx, ecx);
 					ecx = temp3;
 				} // endif
 				eax = temp2;
@@ -1975,22 +1950,22 @@ anon_4:
 	{
 		temp1 = edx;
 		eax = 0;
-		((EDIT *)ebx)->edta.topyp = eax;
-		((EDIT *)ebx)->edta.topln = eax;
-		((EDIT *)ebx)->edta.topcp = eax;
-		((EDIT *)ebx)->edtb.topyp = eax;
-		((EDIT *)ebx)->edtb.topln = eax;
-		((EDIT *)ebx)->edtb.topcp = eax;
-		if(!((EDIT *)ebx)->fChanged)
+		pMem->edta.topyp = eax;
+		pMem->edta.topln = eax;
+		pMem->edta.topcp = eax;
+		pMem->edtb.topyp = eax;
+		pMem->edtb.topln = eax;
+		pMem->edtb.topcp = eax;
+		if(!pMem->fChanged)
 		{
-			((EDIT *)ebx)->fChanged = TRUE;
-			eax = InvalidateRect(((EDIT *)ebx)->hsta, NULL, TRUE);
+			pMem->fChanged = TRUE;
+			eax = InvalidateRect(pMem->hsta, NULL, TRUE);
 		} // endif
-		eax = GetTopFromYp(ebx, ((EDIT *)ebx)->edta.hwnd, ((EDIT *)ebx)->edta.cpy);
-		eax = GetTopFromYp(ebx, ((EDIT *)ebx)->edtb.hwnd, ((EDIT *)ebx)->edtb.cpy);
-		eax = InvalidateLine(ebx, ((EDIT *)ebx)->edta.hwnd, nLine);
-		eax = InvalidateLine(ebx, ((EDIT *)ebx)->edtb.hwnd, nLine);
-		((EDIT *)ebx)->nchange++;
+		eax = GetTopFromYp(pMem, pMem->edta.hwnd, pMem->edta.cpy);
+		eax = GetTopFromYp(pMem, pMem->edtb.hwnd, pMem->edtb.cpy);
+		eax = InvalidateLine(pMem, pMem->edta.hwnd, nLine);
+		eax = InvalidateLine(pMem, pMem->edtb.hwnd, nLine);
+		pMem->nchange++;
 		edx = temp1;
 	} // endif
 Ex:
@@ -1999,14 +1974,13 @@ Ex:
 
 } // TrimSpace
 
-REG_T SkipSpace(DWORD hMem, DWORD cp, DWORD fLeft)
+REG_T SkipSpace(EDIT *pMem, DWORD cp, DWORD fLeft)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 
-	ebx = hMem;
-	eax = GetCharPtr(ebx, cp, &ecx, &edx);
-	esi = ((EDIT *)ebx)->rpChars;
-	esi += ((EDIT *)ebx)->hChars;
+	eax = GetCharPtr(pMem, cp, &ecx, &edx);
+	esi = pMem->rpChars;
+	esi += pMem->hChars;
 	edx = eax;
 	if(!fLeft)
 	{
@@ -2034,20 +2008,19 @@ anon_6:
 			} // endif
 		} // endif
 	} // endif
-	eax = ((EDIT *)ebx)->cpLine;
+	eax = pMem->cpLine;
 	eax += edx;
 	return eax;
 
 } // SkipSpace
 
-REG_T SkipWhiteSpace(DWORD hMem, DWORD cp, DWORD fLeft)
+REG_T SkipWhiteSpace(EDIT *pMem, DWORD cp, DWORD fLeft)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 
-	ebx = hMem;
-	eax = GetCharPtr(ebx, cp, &ecx, &edx);
-	esi = ((EDIT *)ebx)->rpChars;
-	esi += ((EDIT *)ebx)->hChars;
+	eax = GetCharPtr(pMem, cp, &ecx, &edx);
+	esi = pMem->rpChars;
+	esi += pMem->hChars;
 	edx = eax;
 	if(!fLeft)
 	{
@@ -2077,20 +2050,19 @@ anon_8:
 			} // endif
 		} // endif
 	} // endif
-	eax = ((EDIT *)ebx)->cpLine;
+	eax = pMem->cpLine;
 	eax += edx;
 	return eax;
 
 } // SkipWhiteSpace
 
-REG_T GetWordStart(DWORD hMem, DWORD cp, DWORD nType)
+REG_T GetWordStart(EDIT *pMem, DWORD cp, DWORD nType)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 
-	ebx = hMem;
-	eax = GetCharPtr(ebx, cp, &ecx, &edx);
-	esi = ((EDIT *)ebx)->rpChars;
-	esi += ((EDIT *)ebx)->hChars;
+	eax = GetCharPtr(pMem, cp, &ecx, &edx);
+	esi = pMem->rpChars;
+	esi += pMem->hChars;
 	edx = eax;
 anon_9:
 	if(edx)
@@ -2143,38 +2115,36 @@ anon_9:
 			goto anon_9;
 		} // endif
 	} // endif
-	eax = ((EDIT *)ebx)->cpLine;
+	eax = pMem->cpLine;
 	eax += edx;
 	return eax;
 
 } // GetWordStart
 
-REG_T GetLineStart(DWORD hMem, DWORD cp)
+REG_T GetLineStart(EDIT *pMem, DWORD cp)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 
-	ebx = hMem;
-	eax = GetCharPtr(ebx, cp, &ecx, &edx);
-	eax = ((EDIT *)ebx)->cpLine;
+	eax = GetCharPtr(pMem, cp, &ecx, &edx);
+	eax = pMem->cpLine;
 	return eax;
 
 } // GetLineStart
 
-REG_T GetTabPos(DWORD hMem, DWORD cp)
+REG_T GetTabPos(EDIT *pMem, DWORD cp)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 
-	ebx = hMem;
-	eax = GetCharPtr(ebx, cp, &ecx, &edx);
-	esi = ((EDIT *)ebx)->rpChars;
-	esi += ((EDIT *)ebx)->hChars;
+	eax = GetCharPtr(pMem, cp, &ecx, &edx);
+	esi = pMem->rpChars;
+	esi += pMem->hChars;
 	edx = eax;
 	eax = 0;
 	ecx = 0;
 	while(R_SIGNED(ecx) < R_SIGNED(edx))
 	{
 		eax++;
-		if(*(BYTE *)(esi+ecx+sizeof(CHARS))==VK_TAB || eax==((EDIT *)ebx)->nTab)
+		if(*(BYTE *)(esi+ecx+sizeof(CHARS))==VK_TAB || eax==pMem->nTab)
 		{
 			eax = 0;
 		} // endif
@@ -2184,14 +2154,13 @@ REG_T GetTabPos(DWORD hMem, DWORD cp)
 
 } // GetTabPos
 
-REG_T GetWordEnd(DWORD hMem, DWORD cp, DWORD nType)
+REG_T GetWordEnd(EDIT *pMem, DWORD cp, DWORD nType)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 
-	ebx = hMem;
-	eax = GetCharPtr(ebx, cp, &ecx, &edx);
-	esi = ((EDIT *)ebx)->rpChars;
-	esi += ((EDIT *)ebx)->hChars;
+	eax = GetCharPtr(pMem, cp, &ecx, &edx);
+	esi = pMem->rpChars;
+	esi += pMem->hChars;
 	edx = eax;
 anon_10:
 	if(edx<((CHARS *)esi)->len)
@@ -2241,21 +2210,20 @@ anon_10:
 			goto anon_10;
 		} // endif
 	} // endif
-	eax = ((EDIT *)ebx)->cpLine;
+	eax = pMem->cpLine;
 	eax += edx;
 	return eax;
 
 
 } // GetWordEnd
 
-REG_T GetLineEnd(DWORD hMem, DWORD cp)
+REG_T GetLineEnd(EDIT *pMem, DWORD cp)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 
-	ebx = hMem;
-	eax = GetCharPtr(ebx, cp, &ecx, &edx);
-	esi = ((EDIT *)ebx)->rpChars;
-	esi += ((EDIT *)ebx)->hChars;
+	eax = GetCharPtr(pMem, cp, &ecx, &edx);
+	esi = pMem->rpChars;
+	esi += pMem->hChars;
 	edx = eax;
 anon_11:
 	if(edx<((CHARS *)esi)->len)
@@ -2268,7 +2236,7 @@ anon_11:
 			goto anon_11;
 		} // endif
 	} // endif
-	eax = ((EDIT *)ebx)->cpLine;
+	eax = pMem->cpLine;
 	eax += ((CHARS *)esi)->len;
 	eax--;
 	if(*(BYTE *)(esi+eax+sizeof(CHARS))==VK_RETURN)
@@ -2279,7 +2247,7 @@ anon_11:
 
 } // GetLineEnd
 
-REG_T StreamIn(DWORD hMem, DWORD lParam)
+REG_T StreamIn(EDIT *pMem, DWORD lParam)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1;
@@ -2289,7 +2257,6 @@ REG_T StreamIn(DWORD hMem, DWORD lParam)
 
 	auto void ReadChars(void);
 
-	ebx = hMem;
 	eax = xGlobalAlloc(GMEM_FIXED | GMEM_ZEROINIT, MAXSTREAM*3+4096);
 	hCMem = eax;
 	eax = GlobalLock(hCMem);
@@ -2313,7 +2280,7 @@ anon_12:
 			{
 				// Unicode
 				eax = 2;
-				((EDIT *)ebx)->funicode = TRUE;
+				pMem->funicode = TRUE;
 				fUnicode = eax;
 				esi += eax;
 				dwRead -= eax;
@@ -2321,7 +2288,7 @@ anon_12:
 			else
 			{
 				fUnicode = 1;
-				((EDIT *)ebx)->funicode = FALSE;
+				pMem->funicode = FALSE;
 			} // endif
 		} // endif
 		if(fUnicode==2)
@@ -2339,7 +2306,7 @@ anon_12:
 			eax = *(BYTE *)(esi+ecx);
 			if(eax!=0x0A)
 			{
-				eax = InsertChar(ebx, edi, eax);
+				eax = InsertChar(pMem, edi, eax);
 			} // endif
 			ecx = temp1;
 			edi++;
@@ -2350,7 +2317,7 @@ anon_12:
 anon_13:
 	eax = GlobalUnlock(hCMem);
 	eax = GlobalFree(hCMem);
-	((EDIT *)ebx)->nHidden = 0;
+	pMem->nHidden = 0;
 	return eax;
 
 	void ReadChars(void)
@@ -2365,7 +2332,7 @@ anon_13:
 
 } // StreamIn
 
-REG_T StreamOut(DWORD hMem, DWORD lParam)
+REG_T StreamOut(EDIT *pMem, DWORD lParam)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	DWORD dwWrite;
@@ -2376,12 +2343,11 @@ REG_T StreamOut(DWORD hMem, DWORD lParam)
 	auto void StreamAnsi(void);
 	auto void FillCMem(void);
 
-	ebx = hMem;
 	eax = xGlobalAlloc(GMEM_FIXED | GMEM_ZEROINIT, MAXSTREAM*3+4096);
 	hCMem = eax;
 	eax = GlobalLock(hCMem);
-	esi = ((EDIT *)ebx)->hLine;
-	if(((EDIT *)ebx)->funicode)
+	esi = pMem->hLine;
+	if(pMem->funicode)
 	{
 		// Save as unicode
 		eax = hCMem;
@@ -2461,13 +2427,13 @@ Ex:
 		edx = 0;
 		nChars = ecx;
 		eax = esi;
-		eax -= (ULONG_PTR)((EDIT *)ebx)->hLine;
-		if(eax<((EDIT *)ebx)->rpLineFree)
+		eax -= (ULONG_PTR)pMem->hLine;
+		if(eax<pMem->rpLineFree)
 		{
 			temp1 = esi;
 			edi = hCMem;
 			esi = ((LINE *)esi)->rpChars;
-			esi += ((EDIT *)ebx)->hChars;
+			esi += pMem->hChars;
 			while(ecx<((CHARS *)esi)->len)
 			{
 				RBYTE_LOW(eax) = *(BYTE *)(esi+ecx+sizeof(CHARS));
@@ -2486,7 +2452,7 @@ Ex:
 				{
 					temp2 = ecx;
 					temp3 = edx;
-					if(((EDIT *)ebx)->funicode)
+					if(pMem->funicode)
 					{
 						StreamUnicode();
 					}
@@ -2511,138 +2477,135 @@ Ex:
 
 } // StreamOut
 
-REG_T HiliteLine(DWORD hMem, DWORD nLine, DWORD nColor)
+REG_T HiliteLine(EDIT *pMem, DWORD nLine, DWORD nColor)
 {
 	REG_T eax = 0, edx, ebx;
 
-	ebx = hMem;
 	edx = nLine;
 	edx *= 4;
-	if(edx<((EDIT *)ebx)->rpLineFree)
+	if(edx<pMem->rpLineFree)
 	{
-		edx += ((EDIT *)ebx)->hLine;
+		edx += pMem->hLine;
 		edx = ((LINE *)edx)->rpChars;
-		edx += ((EDIT *)ebx)->hChars;
+		edx += pMem->hChars;
 		((CHARS *)edx)->state &= -1 ^ STATE_HILITEMASK;
 		eax = nColor;
 		eax &= STATE_HILITEMASK;
 		((CHARS *)edx)->state |= eax;
-		eax = InvalidateLine(ebx, ((EDIT *)ebx)->edta.hwnd, nLine);
-		eax = InvalidateLine(ebx, ((EDIT *)ebx)->edtb.hwnd, nLine);
+		eax = InvalidateLine(pMem, pMem->edta.hwnd, nLine);
+		eax = InvalidateLine(pMem, pMem->edtb.hwnd, nLine);
 	} // endif
 	eax = 0;
 	return eax;
 
 } // HiliteLine
 
-REG_T SelChange(DWORD hMem, DWORD nType)
+REG_T SelChange(EDIT *pMem, DWORD nType)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	RASELCHANGE sc;
 
-	ebx = hMem;
-	if(((EDIT *)ebx)->cpbrst!=-1)
+	if(pMem->cpbrst!=-1)
 	{
-		((EDIT *)ebx)->cpbrst = -1;
-		((EDIT *)ebx)->cpbren = -1;
-		eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edta.hwnd);
-		eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edtb.hwnd);
+		pMem->cpbrst = -1;
+		pMem->cpbren = -1;
+		eax = InvalidateEdit(pMem, pMem->edta.hwnd);
+		eax = InvalidateEdit(pMem, pMem->edtb.hwnd);
 	} // endif
-	eax = GetCharPtr(hMem, ((EDIT *)ebx)->cpMin, &ecx, &edx);
-	edx = ((EDIT *)ebx)->ID;
-	eax = ((EDIT *)ebx)->hwnd;
+	eax = GetCharPtr(pMem, pMem->cpMin, &ecx, &edx);
+	edx = pMem->ID;
+	eax = pMem->hwnd;
 	sc.nmhdr.hwndFrom = eax;
 	sc.nmhdr.idFrom = edx;
 	sc.nmhdr.code = EN_SELCHANGE;
-	if(!(((EDIT *)ebx)->nMode&MODE_BLOCK))
+	if(!(pMem->nMode&MODE_BLOCK))
 	{
-		eax = ((EDIT *)ebx)->cpMin;
+		eax = pMem->cpMin;
 		sc.chrg.cpMin = eax;
-		eax = ((EDIT *)ebx)->cpMax;
+		eax = pMem->cpMax;
 		sc.chrg.cpMax = eax;
 	}
 	else
 	{
-		eax = ((EDIT *)ebx)->cpLine;
-		eax += ((EDIT *)ebx)->blrg.clMin;
+		eax = pMem->cpLine;
+		eax += pMem->blrg.clMin;
 		sc.chrg.cpMin = eax;
 		sc.chrg.cpMax = eax;
 	} // endif
 	eax = nType;
 	sc.seltyp = RWORD(eax);
-	eax = ((EDIT *)ebx)->line;
+	eax = pMem->line;
 	sc.line = eax;
-	eax = ((EDIT *)ebx)->cpLine;
+	eax = pMem->cpLine;
 	sc.cpLine = eax;
-	eax = ((EDIT *)ebx)->rpChars;
-	eax += ((EDIT *)ebx)->hChars;
+	eax = pMem->rpChars;
+	eax += pMem->hChars;
 	sc.lpLine = eax;
-	eax = ((EDIT *)ebx)->rpLineFree;
+	eax = pMem->rpLineFree;
 	eax /= 4;
 	eax--;
 	sc.nlines = eax;
-	eax = ((EDIT *)ebx)->nHidden;
+	eax = pMem->nHidden;
 	sc.nhidden = eax;
-	eax = ((EDIT *)ebx)->nchange;
-	eax -= ((EDIT *)ebx)->nlastchange;
+	eax = pMem->nchange;
+	eax -= pMem->nlastchange;
 	if(eax)
 	{
-		((EDIT *)ebx)->nlastchange += eax;
+		pMem->nlastchange += eax;
 		eax = TRUE;
 	} // endif
 	sc.fchanged = eax;
-	ecx = ((EDIT *)ebx)->nPageBreak;
+	ecx = pMem->nPageBreak;
 	eax = 0;
 	if(ecx)
 	{
-		eax = ((EDIT *)ebx)->line;
+		eax = pMem->line;
 		eax /= ecx;
 	} // endif
 	sc.npage = eax;
-	eax = ((EDIT *)ebx)->nWordGroup;
+	eax = pMem->nWordGroup;
 	sc.nWordGroup = eax;
-	if(!((EDIT *)ebx)->nsplitt)
+	if(!pMem->nsplitt)
 	{
-		eax = ((EDIT *)ebx)->cpMin;
-		((EDIT *)ebx)->edta.cp = eax;
-		((EDIT *)ebx)->edtb.cp = eax;
+		eax = pMem->cpMin;
+		pMem->edta.cp = eax;
+		pMem->edtb.cp = eax;
 	} // endif
-	eax = ((EDIT *)ebx)->line;
-	if(eax!=((EDIT *)ebx)->lastline)
+	eax = pMem->line;
+	if(eax!=pMem->lastline)
 	{
-		if(((EDIT *)ebx)->fhilite)
+		if(pMem->fhilite)
 		{
-			eax = HiliteLine(ebx, ((EDIT *)ebx)->lastline, 0);
-			eax = HiliteLine(ebx, ((EDIT *)ebx)->line, ((EDIT *)ebx)->fhilite);
+			eax = HiliteLine(pMem, pMem->lastline, 0);
+			eax = HiliteLine(pMem, pMem->line, pMem->fhilite);
 		} // endif
-		eax = ((EDIT *)ebx)->line;
-		((EDIT *)ebx)->lastline = eax;
+		eax = pMem->line;
+		pMem->lastline = eax;
 	} // endif
-	eax = SendMessage(((EDIT *)ebx)->hpar, WM_NOTIFY, ((EDIT *)ebx)->ID, &sc);
+	eax = SendMessage(pMem->hpar, WM_NOTIFY, pMem->ID, &sc);
 	return eax;
 
 } // SelChange
 
-REG_T AutoIndent(DWORD hMem)
+REG_T AutoIndent(EDIT *pMem)
 {
 	REG_T eax = 0, edx, ebx, esi;
 	REG_T temp1, temp2, temp3;
 	DWORD nLine;
 
-	ebx = hMem;
-	eax = GetLineFromCp(ebx, ((EDIT *)ebx)->cpMin);
+	eax = GetLineFromCp(pMem, pMem->cpMin);
 	if(eax)
 	{
 		nLine = eax;
 		edx = 0;
-		temp1 = ((EDIT *)ebx)->fOvr;
-		((EDIT *)ebx)->fOvr = FALSE;
+		temp1 = pMem->fOvr;
+		pMem->fOvr = FALSE;
 anon_16:
 		eax = nLine;
-		esi = ((EDIT *)ebx)->hLine;
+		esi = pMem->hLine;
 		esi = esi+eax*sizeof(LINE)-sizeof(LINE);
 		esi = ((LINE *)esi)->rpChars;
-		esi += ((EDIT *)ebx)->hChars;
+		esi += pMem->hChars;
 		if(edx<((CHARS *)esi)->len)
 		{
 			eax = *(BYTE *)(esi+edx+sizeof(CHARS));
@@ -2650,40 +2613,39 @@ anon_16:
 			{
 				temp2 = edx;
 				temp3 = eax;
-				eax = InsertChar(ebx, ((EDIT *)ebx)->cpMin, eax);
+				eax = InsertChar(pMem, pMem->cpMin, eax);
 				eax = temp3;
-				eax = SaveUndo(ebx, UNDO_INSERT, ((EDIT *)ebx)->cpMin, eax, 1);
-				eax = ((EDIT *)ebx)->cpMin;
+				eax = SaveUndo(pMem, UNDO_INSERT, pMem->cpMin, eax, 1);
+				eax = pMem->cpMin;
 				eax++;
-				((EDIT *)ebx)->cpMin = eax;
-				((EDIT *)ebx)->cpMax = eax;
+				pMem->cpMin = eax;
+				pMem->cpMax = eax;
 				edx = temp2;
 				edx++;
 				goto anon_16;
 			} // endif
 		} // endif
-		((EDIT *)ebx)->fOvr = temp1;
+		pMem->fOvr = temp1;
 	} // endif
 	return eax;
 
 } // AutoIndent
 
-REG_T IsCharPos(DWORD hMem, DWORD cp)
+REG_T IsCharPos(EDIT *pMem, DWORD cp)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	DWORD nMax;
 
-	ebx = hMem;
-	eax = GetCharPtr(ebx, cp, &ecx, &edx);
+	eax = GetCharPtr(pMem, cp, &ecx, &edx);
 	nMax = eax;
-	esi = ((EDIT *)ebx)->rpChars;
-	esi += ((EDIT *)ebx)->hChars;
+	esi = pMem->rpChars;
+	esi += pMem->hChars;
 	if(!(((CHARS *)esi)->state&STATE_COMMENT))
 	{
 		ecx = 0;
 		while(ecx<nMax)
 		{
-			if(((EDIT *)ebx)->ccmntblocks==1 && *(WORD *)(esi+ecx+sizeof(CHARS))=='*/')
+			if(pMem->ccmntblocks==1 && *(WORD *)(esi+ecx+sizeof(CHARS))=='*/')
 			{
 				ecx += 2;
 				while(ecx<nMax)
@@ -2705,7 +2667,7 @@ REG_T IsCharPos(DWORD hMem, DWORD cp)
 					goto Ex;
 				} // endif
 			}
-			else if(((EDIT *)ebx)->ccmntblocks==2 && *(WORD *)(esi+ecx+sizeof(CHARS))=='\'/')
+			else if(pMem->ccmntblocks==2 && *(WORD *)(esi+ecx+sizeof(CHARS))=='\'/')
 			{
 				ecx += 2;
 				while(ecx<nMax)
@@ -2778,18 +2740,17 @@ Ex:
 
 } // IsCharPos
 
-REG_T BracketMatchRight(DWORD hMem, DWORD nChr, DWORD nMatch, DWORD cp)
+REG_T BracketMatchRight(EDIT *pMem, DWORD nChr, DWORD nMatch, DWORD cp)
 {
 	REG_T eax = 0, ecx, edx, ebx, edi;
 	REG_T temp1;
 	DWORD nCount;
 
-	ebx = hMem;
 	nCount = 0;
-	eax = GetCharPtr(ebx, cp, &ecx, &edx);
+	eax = GetCharPtr(pMem, cp, &ecx, &edx);
 	edx = eax;
-	edi = ((EDIT *)ebx)->hChars;
-	edi += ((EDIT *)ebx)->rpChars;
+	edi = pMem->hChars;
+	edi += pMem->rpChars;
 	while(edx<=((CHARS *)edi)->len)
 	{
 		RBYTE_LOW(eax) = (BYTE)nMatch;
@@ -2799,7 +2760,7 @@ REG_T BracketMatchRight(DWORD hMem, DWORD nChr, DWORD nMatch, DWORD cp)
 		if(RBYTE_LOW(eax)==*(BYTE *)(edi+edx+sizeof(CHARS)))
 		{
 			temp1 = edx;
-			eax = IsCharPos(ebx, cp);
+			eax = IsCharPos(pMem, cp);
 			edx = temp1;
 			if(!eax)
 			{
@@ -2807,7 +2768,7 @@ REG_T BracketMatchRight(DWORD hMem, DWORD nChr, DWORD nMatch, DWORD cp)
 				if(nCount==0)
 				{
 					eax = edx;
-					eax += ((EDIT *)ebx)->cpLine;
+					eax += pMem->cpLine;
 					return eax;
 				} // endif
 			} // endif
@@ -2815,7 +2776,7 @@ REG_T BracketMatchRight(DWORD hMem, DWORD nChr, DWORD nMatch, DWORD cp)
 		else if(RBYTE_HIGH(eax)==*(BYTE *)(edi+edx+sizeof(CHARS)))
 		{
 			temp1 = edx;
-			eax = IsCharPos(ebx, cp);
+			eax = IsCharPos(pMem, cp);
 			edx = temp1;
 			if(!eax)
 			{
@@ -2827,7 +2788,7 @@ REG_T BracketMatchRight(DWORD hMem, DWORD nChr, DWORD nMatch, DWORD cp)
 			if(*(BYTE *)(edi+edx+sizeof(CHARS))!=VK_RETURN)
 			{
 				temp1 = edx;
-				eax = IsCharPos(ebx, cp);
+				eax = IsCharPos(pMem, cp);
 				edx = temp1;
 				edx++;
 				cp++;
@@ -2843,10 +2804,10 @@ REG_T BracketMatchRight(DWORD hMem, DWORD nChr, DWORD nMatch, DWORD cp)
 				{
 					cp++;
 					eax = cp;
-					eax = GetCharPtr(ebx, eax, &ecx, &edx);
+					eax = GetCharPtr(pMem, eax, &ecx, &edx);
 					edx = eax;
-					edi = ((EDIT *)ebx)->hChars;
-					edi += ((EDIT *)ebx)->rpChars;
+					edi = pMem->hChars;
+					edi += pMem->rpChars;
 					edx = 0;
 				} // endif
 			}
@@ -2854,10 +2815,10 @@ REG_T BracketMatchRight(DWORD hMem, DWORD nChr, DWORD nMatch, DWORD cp)
 			{
 				cp++;
 				eax = cp;
-				eax = GetCharPtr(ebx, eax, &ecx, &edx);
+				eax = GetCharPtr(pMem, eax, &ecx, &edx);
 				edx = eax;
-				edi = ((EDIT *)ebx)->hChars;
-				edi += ((EDIT *)ebx)->rpChars;
+				edi = pMem->hChars;
+				edi += pMem->rpChars;
 				edx = 0;
 			} // endif
 			edx--;
@@ -2872,19 +2833,18 @@ REG_T BracketMatchRight(DWORD hMem, DWORD nChr, DWORD nMatch, DWORD cp)
 
 } // BracketMatchRight
 
-REG_T BracketMatchLeft(DWORD hMem, DWORD nChr, DWORD nMatch, DWORD cp)
+REG_T BracketMatchLeft(EDIT *pMem, DWORD nChr, DWORD nMatch, DWORD cp)
 {
 	REG_T eax = 0, ecx, edx, ebx, edi;
 	REG_T temp1, temp2;
 	DWORD nCount;
 
-	ebx = hMem;
 	nCount = 0;
 	temp1 = cp;
-	eax = GetCharPtr(ebx, cp, &ecx, &edx);
+	eax = GetCharPtr(pMem, cp, &ecx, &edx);
 	edx = eax;
-	edi = ((EDIT *)ebx)->hChars;
-	edi += ((EDIT *)ebx)->rpChars;
+	edi = pMem->hChars;
+	edi += pMem->rpChars;
 	while(R_SIGNED(edx) >= 0)
 	{
 		RBYTE_LOW(eax) = (BYTE)nMatch;
@@ -2892,7 +2852,7 @@ REG_T BracketMatchLeft(DWORD hMem, DWORD nChr, DWORD nMatch, DWORD cp)
 		if(RBYTE_LOW(eax)==*(BYTE *)(edi+edx+sizeof(CHARS)))
 		{
 			temp2 = edx;
-			eax = IsCharPos(ebx, cp);
+			eax = IsCharPos(pMem, cp);
 			edx = temp2;
 			if(!eax)
 			{
@@ -2900,7 +2860,7 @@ REG_T BracketMatchLeft(DWORD hMem, DWORD nChr, DWORD nMatch, DWORD cp)
 				if(nCount==0)
 				{
 					eax = edx;
-					eax += ((EDIT *)ebx)->cpLine;
+					eax += pMem->cpLine;
 					goto Ex;
 				} // endif
 			} // endif
@@ -2908,27 +2868,27 @@ REG_T BracketMatchLeft(DWORD hMem, DWORD nChr, DWORD nMatch, DWORD cp)
 		else if(RBYTE_HIGH(eax)==*(BYTE *)(edi+edx+sizeof(CHARS)))
 		{
 			temp2 = edx;
-			eax = IsCharPos(ebx, cp);
+			eax = IsCharPos(pMem, cp);
 			edx = temp2;
 			if(!eax)
 			{
 				nCount++;
 			} // endif
 		} // endif
-		if(!edx && ((EDIT *)ebx)->line)
+		if(!edx && pMem->line)
 		{
 			cp--;
-			eax = GetCharPtr(ebx, cp, &ecx, &edx);
+			eax = GetCharPtr(pMem, cp, &ecx, &edx);
 			edx = eax;
-			edi = ((EDIT *)ebx)->hChars;
-			edi += ((EDIT *)ebx)->rpChars;
+			edi = pMem->hChars;
+			edi += pMem->rpChars;
 			while((*(BYTE *)(edi+edx+sizeof(CHARS))==VK_SPACE || *(BYTE *)(edi+edx+sizeof(CHARS))==VK_TAB) && edx!=0)
 			{
 				edx--;
 				cp--;
 			} // endw
 			temp2 = edx;
-			eax = IsCharPos(ebx, cp);
+			eax = IsCharPos(pMem, cp);
 			edx = temp2;
 			if(!eax)
 			{
@@ -2956,24 +2916,23 @@ REG_T BracketMatchLeft(DWORD hMem, DWORD nChr, DWORD nMatch, DWORD cp)
 Ex:
 	cp = temp1;
 	temp1 = eax;
-	eax = GetCharPtr(ebx, cp, &ecx, &edx);
+	eax = GetCharPtr(pMem, cp, &ecx, &edx);
 	eax = temp1;
 	return eax;
 
 } // BracketMatchLeft
 
-REG_T BracketMatch(DWORD hMem, DWORD nChr, DWORD cp)
+REG_T BracketMatch(EDIT *pMem, DWORD nChr, DWORD cp)
 {
 	REG_T eax = 0, ecx, ebx;
 	REG_T temp1;
 
-	ebx = hMem;
-	if(((EDIT *)ebx)->cpbrst!=-1 || ((EDIT *)ebx)->cpbren!=-1)
+	if(pMem->cpbrst!=-1 || pMem->cpbren!=-1)
 	{
-		eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edta.hwnd);
-		eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edtb.hwnd);
-		((EDIT *)ebx)->cpbrst = -1;
-		((EDIT *)ebx)->cpbren = -1;
+		eax = InvalidateEdit(pMem, pMem->edta.hwnd);
+		eax = InvalidateEdit(pMem, pMem->edtb.hwnd);
+		pMem->cpbrst = -1;
+		pMem->cpbren = -1;
 	} // endif
 	RBYTE_LOW(eax) = (BYTE)nChr;
 	ecx = 0;
@@ -2982,20 +2941,20 @@ REG_T BracketMatch(DWORD hMem, DWORD nChr, DWORD cp)
 		if(RBYTE_LOW(eax)==bracketstart[ecx])
 		{
 			temp1 = ecx;
-			eax = IsCharPos(ebx, cp);
+			eax = IsCharPos(pMem, cp);
 			ecx = temp1;
 			if(eax!=0)
 			{
 				goto Ex;
 			} // endif
 			eax = (BYTE)bracketend[ecx];
-			eax = BracketMatchRight(ebx, nChr, eax, cp);
-			((EDIT *)ebx)->cpbren = eax;
+			eax = BracketMatchRight(pMem, nChr, eax, cp);
+			pMem->cpbren = eax;
 			eax = cp;
-			((EDIT *)ebx)->cpbrst = eax;
-			eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edta.hwnd);
-			eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edtb.hwnd);
-			eax = ((EDIT *)ebx)->cpbren;
+			pMem->cpbrst = eax;
+			eax = InvalidateEdit(pMem, pMem->edta.hwnd);
+			eax = InvalidateEdit(pMem, pMem->edtb.hwnd);
+			eax = pMem->cpbren;
 			goto Ex;
 		} // endif
 		ecx++;
@@ -3006,20 +2965,20 @@ REG_T BracketMatch(DWORD hMem, DWORD nChr, DWORD cp)
 		if(RBYTE_LOW(eax)==bracketend[ecx])
 		{
 			temp1 = ecx;
-			eax = IsCharPos(ebx, cp);
+			eax = IsCharPos(pMem, cp);
 			ecx = temp1;
 			if(eax!=0)
 			{
 				goto Ex;
 			} // endif
 			eax = (BYTE)bracketstart[ecx];
-			eax = BracketMatchLeft(ebx, nChr, eax, cp);
-			((EDIT *)ebx)->cpbrst = eax;
+			eax = BracketMatchLeft(pMem, nChr, eax, cp);
+			pMem->cpbrst = eax;
 			eax = cp;
-			((EDIT *)ebx)->cpbren = eax;
-			eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edta.hwnd);
-			eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edtb.hwnd);
-			eax = ((EDIT *)ebx)->cpbrst;
+			pMem->cpbren = eax;
+			eax = InvalidateEdit(pMem, pMem->edta.hwnd);
+			eax = InvalidateEdit(pMem, pMem->edtb.hwnd);
+			eax = pMem->cpbrst;
 			goto Ex;
 		} // endif
 		ecx++;
@@ -3030,11 +2989,10 @@ Ex:
 
 } // BracketMatch
 
-REG_T GetLineBegin(DWORD hMem, DWORD nLine)
+REG_T GetLineBegin(EDIT *pMem, DWORD nLine)
 {
 	REG_T eax = 0, ecx, ebx, esi, edi;
 
-	ebx = hMem;
 	eax = nLine;
 	if(eax)
 	{
@@ -3043,9 +3001,9 @@ REG_T GetLineBegin(DWORD hMem, DWORD nLine)
 			nLine--;
 			eax = nLine;
 			edi = eax*4;
-			edi += ((EDIT *)ebx)->hLine;
+			edi += pMem->hLine;
 			esi = ((LINE *)edi)->rpChars;
-			esi += ((EDIT *)ebx)->hChars;
+			esi += pMem->hChars;
 			ecx = ((CHARS *)esi)->len;
 			if(ecx<2)
 			{

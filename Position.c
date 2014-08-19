@@ -3,27 +3,26 @@
 #include "Block.h"
 #include "Misc.h"
 
-REG_T GetTopFromYp(DWORD hMem, HWND hWin, DWORD yp)
+REG_T GetTopFromYp(EDIT *pMem, HWND hWin, DWORD yp)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3;
 	DWORD cp;
 
-	ebx = hMem;
 	eax = hWin;
-	if(eax==((EDIT *)ebx)->edta.hwnd)
+	if(eax==pMem->edta.hwnd)
 	{
-		edx = &((EDIT *)ebx)->edta;
+		edx = &pMem->edta;
 	}
 	else
 	{
-		edx = &((EDIT *)ebx)->edtb;
+		edx = &pMem->edtb;
 	} // endif
 	temp1 = edx;
-	esi = ((EDIT *)ebx)->hLine;
-	temp2 = ((EDIT *)ebx)->hChars;
+	esi = pMem->hLine;
+	temp2 = pMem->hChars;
 	temp3 = edx;
-	edi = ((EDIT *)ebx)->fntinfo.fntht;
+	edi = pMem->fntinfo.fntht;
 	eax = yp;
 	eax /= edi;
 	eax *= edi;
@@ -43,7 +42,7 @@ Nxt1:
 			edx = ((CHARS *)(edi+edx))->len;
 			cp += edx;
 			edx = ecx*sizeof(LINE);
-			if(edx<((EDIT *)ebx)->rpLineFree)
+			if(edx<pMem->rpLineFree)
 			{
 				ecx++;
 				edx = ((LINE *)(esi+ecx*sizeof(LINE)))->rpChars;
@@ -102,9 +101,9 @@ anon_1:
 	((RAEDT *)esi)->topln = ecx;
 	eax = yp;
 	((RAEDT *)esi)->topyp = eax;
-	if(!((EDIT *)ebx)->edta.rc.bottom)
+	if(!pMem->edta.rc.bottom)
 	{
-		edx = &((EDIT *)ebx)->edta;
+		edx = &pMem->edta;
 		temp1 = ((RAEDT *)esi)->cpy;
 		((RAEDT *)edx)->cpy = temp1;
 		temp1 = ((RAEDT *)esi)->topyp;
@@ -121,33 +120,32 @@ anon_1:
 // eax=Char index in line
 // ecx=Char index
 // edx=Line number
-REG_T GetCharPtr(DWORD hMem, DWORD cp, DWORD *pdwCharIndex, DWORD *pdwLineNumber)
+REG_T GetCharPtr(EDIT *pMem, DWORD cp, DWORD *pdwCharIndex, DWORD *pdwLineNumber)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1;
 	DWORD rpLineMax;
 
-	ebx = hMem;
-	esi = ((EDIT *)ebx)->hLine;
-	eax = ((EDIT *)ebx)->rpLineFree;
+	esi = pMem->hLine;
+	eax = pMem->rpLineFree;
 	eax += esi;
 	rpLineMax = eax;
-	edi = ((EDIT *)ebx)->hChars;
+	edi = pMem->hChars;
 	ecx = 0;
 	eax = cp;
-	edx = ((EDIT *)ebx)->cpLine;
+	edx = pMem->cpLine;
 	if(eax>=edx)
 	{
 		ecx = edx;
-		esi += ((EDIT *)ebx)->rpLine;
+		esi += pMem->rpLine;
 	}
 	else
 	{
 		edx /= 2;
 		if(eax>=edx)
 		{
-			ecx = ((EDIT *)ebx)->cpLine;
-			esi += ((EDIT *)ebx)->rpLine;
+			ecx = pMem->cpLine;
+			esi += pMem->rpLine;
 			while(ecx>eax)
 			{
 				esi -= sizeof(LINE);
@@ -173,15 +171,14 @@ anon_2:
 	} // endif
 	ecx -= ((CHARS *)(edi+edx))->len;
 anon_3:
-	ebx = hMem;
 	esi -= sizeof(LINE);
-	edi = ((EDIT *)ebx)->hChars;
+	edi = pMem->hChars;
 	edi += ((LINE *)esi)->rpChars;
 	edx++;
 	if(edx!=0)
 	{
 		temp1 = ecx;
-		((EDIT *)ebx)->cpLine = ecx;
+		pMem->cpLine = ecx;
 		ecx -= eax;
 		ecx = -ecx;
 		eax = temp1;
@@ -192,16 +189,16 @@ anon_3:
 	{
 		temp1 = ecx;
 		ecx -= ((CHARS *)edi)->len;
-		((EDIT *)ebx)->cpLine = ecx;
+		pMem->cpLine = ecx;
 		ecx = ((CHARS *)edi)->len;
 	} // endif
-	esi -= (ULONG_PTR)((EDIT *)ebx)->hLine;
-	((EDIT *)ebx)->rpLine = esi;
+	esi -= (ULONG_PTR)pMem->hLine;
+	pMem->rpLine = esi;
 	edx = esi;
 	edx /= 4;
-	edi -= (ULONG_PTR)((EDIT *)ebx)->hChars;
-	((EDIT *)ebx)->rpChars = edi;
-	((EDIT *)ebx)->line = edx;
+	edi -= (ULONG_PTR)pMem->hChars;
+	pMem->rpChars = edi;
+	pMem->line = edx;
 	eax = ecx;
 	ecx = temp1;
     *pdwCharIndex = ecx;
@@ -211,26 +208,25 @@ anon_3:
 } // GetCharPtr
 
 // eax=Char index
-REG_T GetCpFromLine(DWORD hMem, DWORD nLine)
+REG_T GetCpFromLine(EDIT *pMem, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 
-	ebx = hMem;
-	esi = ((EDIT *)ebx)->hLine;
-	edi = ((EDIT *)ebx)->hChars;
+	esi = pMem->hLine;
+	edi = pMem->hChars;
 	ecx = nLine;
 	ecx *= 4;
-	if(ecx>=((EDIT *)ebx)->rpLineFree)
+	if(ecx>=pMem->rpLineFree)
 	{
-		ecx = ((EDIT *)ebx)->rpLineFree;
+		ecx = pMem->rpLineFree;
 		ecx -= sizeof(LINE);
 	} // endif
 	ecx /= 4;
 	nLine = ecx;
-	if(ecx>=((EDIT *)ebx)->edtb.topln)
+	if(ecx>=pMem->edtb.topln)
 	{
-		ecx = ((EDIT *)ebx)->edtb.topln;
-		eax = ((EDIT *)ebx)->edtb.topcp;
+		ecx = pMem->edtb.topln;
+		eax = pMem->edtb.topcp;
 		while(ecx<nLine)
 		{
 			edx = ((LINE *)(esi+ecx*sizeof(LINE)))->rpChars;
@@ -240,8 +236,8 @@ REG_T GetCpFromLine(DWORD hMem, DWORD nLine)
 	}
 	else
 	{
-		ecx = ((EDIT *)ebx)->edtb.topln;
-		eax = ((EDIT *)ebx)->edtb.topcp;
+		ecx = pMem->edtb.topln;
+		eax = pMem->edtb.topcp;
 		while(ecx>nLine)
 		{
 			ecx--;
@@ -253,22 +249,21 @@ REG_T GetCpFromLine(DWORD hMem, DWORD nLine)
 
 } // GetCpFromLine
 
-REG_T GetLineFromCp(DWORD hMem, DWORD cp)
+REG_T GetLineFromCp(EDIT *pMem, DWORD cp)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 
-	ebx = hMem;
-	esi = ((EDIT *)ebx)->hLine;
-	edi = ((EDIT *)ebx)->hChars;
+	esi = pMem->hLine;
+	edi = pMem->hChars;
 	eax = cp;
-	if(eax>=((EDIT *)ebx)->edtb.topcp)
+	if(eax>=pMem->edtb.topcp)
 	{
-		eax = ((EDIT *)ebx)->edtb.topcp;
-		ecx = ((EDIT *)ebx)->edtb.topln;
+		eax = pMem->edtb.topcp;
+		ecx = pMem->edtb.topln;
 		while(eax<cp)
 		{
 			edx = ecx*4;
-			if(edx>=((EDIT *)ebx)->rpLineFree)
+			if(edx>=pMem->rpLineFree)
 			{
 				break;
 			}
@@ -282,17 +277,17 @@ REG_T GetLineFromCp(DWORD hMem, DWORD cp)
 		} // endif
 		eax = ecx;
 		eax *= 4;
-		if(eax>=((EDIT *)ebx)->rpLineFree)
+		if(eax>=pMem->rpLineFree)
 		{
-			ecx = ((EDIT *)ebx)->rpLineFree;
+			ecx = pMem->rpLineFree;
 			ecx /= 4;
 			ecx--;
 		} // endif
 	}
 	else
 	{
-		eax = ((EDIT *)ebx)->edtb.topcp;
-		ecx = ((EDIT *)ebx)->edtb.topln;
+		eax = pMem->edtb.topcp;
+		ecx = pMem->edtb.topln;
 		while(eax>cp)
 		{
 			ecx--;
@@ -305,27 +300,26 @@ REG_T GetLineFromCp(DWORD hMem, DWORD cp)
 
 } // GetLineFromCp
 
-REG_T GetYpFromLine(DWORD hMem, DWORD nLine)
+REG_T GetYpFromLine(EDIT *pMem, DWORD nLine)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 
-	ebx = hMem;
-	esi = ((EDIT *)ebx)->hLine;
-	edi = ((EDIT *)ebx)->hChars;
+	esi = pMem->hLine;
+	edi = pMem->hChars;
 	ecx = nLine;
 	ecx *= 4;
-	if(ecx>=((EDIT *)ebx)->rpLineFree)
+	if(ecx>=pMem->rpLineFree)
 	{
-		ecx = ((EDIT *)ebx)->rpLineFree;
+		ecx = pMem->rpLineFree;
 		ecx -= sizeof(LINE);
 	} // endif
 	ecx /= 4;
 	nLine = ecx;
-	if(ecx>=((EDIT *)ebx)->edtb.topln)
+	if(ecx>=pMem->edtb.topln)
 	{
-		ecx = ((EDIT *)ebx)->edtb.topln;
-		eax = ((EDIT *)ebx)->edtb.topyp;
-		edx = ((EDIT *)ebx)->fntinfo.fntht;
+		ecx = pMem->edtb.topln;
+		eax = pMem->edtb.topyp;
+		edx = pMem->fntinfo.fntht;
 		ebx = edx;
 		while(ecx<nLine)
 		{
@@ -341,9 +335,9 @@ anon_4:
 	}
 	else
 	{
-		ecx = ((EDIT *)ebx)->edtb.topln;
-		eax = ((EDIT *)ebx)->edtb.topyp;
-		edx = ((EDIT *)ebx)->fntinfo.fntht;
+		ecx = pMem->edtb.topln;
+		eax = pMem->edtb.topyp;
+		edx = pMem->fntinfo.fntht;
 		ebx = edx;
 		while(ecx>nLine)
 		{
@@ -361,28 +355,27 @@ anon_5: ;
 
 } // GetYpFromLine
 
-REG_T GetLineFromYp(DWORD hMem, DWORD y)
+REG_T GetLineFromYp(EDIT *pMem, DWORD y)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	DWORD maxln;
 
-	ebx = hMem;
-	eax = ((EDIT *)ebx)->rpLineFree;
+	eax = pMem->rpLineFree;
 	eax /= 4;
 	eax--;
 	maxln = eax;
-	esi = ((EDIT *)ebx)->hLine;
-	edi = ((EDIT *)ebx)->hChars;
+	esi = pMem->hLine;
+	edi = pMem->hChars;
 	eax = y;
-	ecx = ((EDIT *)ebx)->fntinfo.fntht;
+	ecx = pMem->fntinfo.fntht;
 	eax /= ecx;
 	eax *= ecx;
 	y = eax;
-	if(eax>=((EDIT *)ebx)->edtb.topyp)
+	if(eax>=pMem->edtb.topyp)
 	{
-		eax = ((EDIT *)ebx)->edtb.topyp;
-		ecx = ((EDIT *)ebx)->edtb.topln;
-		edx = ((EDIT *)ebx)->fntinfo.fntht;
+		eax = pMem->edtb.topyp;
+		ecx = pMem->edtb.topln;
+		edx = pMem->fntinfo.fntht;
 		ebx = edx;
 		while(eax<y)
 		{
@@ -402,9 +395,9 @@ anon_6: ;
 	}
 	else
 	{
-		eax = ((EDIT *)ebx)->edtb.topyp;
-		ecx = ((EDIT *)ebx)->edtb.topln;
-		edx = ((EDIT *)ebx)->fntinfo.fntht;
+		eax = pMem->edtb.topyp;
+		ecx = pMem->edtb.topln;
+		edx = pMem->fntinfo.fntht;
 		ebx = edx;
 		while(eax>y)
 		{
@@ -423,7 +416,7 @@ anon_7: ;
 
 } // GetLineFromYp
 
-REG_T GetCpFromXp(DWORD hMem, DWORD lpChars, DWORD x, DWORD fNoAdjust)
+REG_T GetCpFromXp(EDIT *pMem, DWORD lpChars, DWORD x, DWORD fNoAdjust)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3;
@@ -433,15 +426,14 @@ REG_T GetCpFromXp(DWORD hMem, DWORD lpChars, DWORD x, DWORD fNoAdjust)
 
 	auto void TestIt(void);
 
-	ebx = hMem;
-	eax = GetDC(((EDIT *)ebx)->hwnd);
+	eax = GetDC(pMem->hwnd);
 	hDC = eax;
-	eax = SelectObject(hDC, ((EDIT *)ebx)->fnt.hFont);
+	eax = SelectObject(hDC, pMem->fnt.hFont);
 	temp1 = eax;
-	eax = ((EDIT *)ebx)->cpx;
+	eax = pMem->cpx;
 	eax = -eax;
-	eax += ((EDIT *)ebx)->linenrwt;
-	eax += ((EDIT *)ebx)->selbarwt;
+	eax += pMem->linenrwt;
+	eax += pMem->selbarwt;
 	x -= eax;
 	eax = 0;
 	rect.left = eax;
@@ -516,13 +508,13 @@ anon_8:
 	} // endw
 	eax = temp1;
 	eax = SelectObject(hDC, eax);
-	eax = ReleaseDC(((EDIT *)ebx)->hwnd, hDC);
+	eax = ReleaseDC(pMem->hwnd, hDC);
 	eax = edi;
 	return eax;
 
 	void TestIt(void)
 	{
-		eax = GetTextWidth(ebx, hDC, esi+sizeof(CHARS), edi, &rect);
+		eax = GetTextWidth(pMem, hDC, esi+sizeof(CHARS), edi, &rect);
 		eax = rect.right;
 		return;
 
@@ -530,7 +522,7 @@ anon_8:
 
 } // GetCpFromXp
 
-REG_T GetPosFromChar(DWORD hMem, DWORD cp, DWORD lpPoint)
+REG_T GetPosFromChar(EDIT *pMem, DWORD cp, DWORD lpPoint)
 {
 	REG_T eax = 0, ebx, esi;
 	REG_T temp1;
@@ -539,34 +531,33 @@ REG_T GetPosFromChar(DWORD hMem, DWORD cp, DWORD lpPoint)
 	DWORD ln;
 	DWORD y;
 
-	ebx = hMem;
-	eax = GetLineFromCp(ebx, cp);
+	eax = GetLineFromCp(pMem, cp);
 	ln = eax;
-	eax = GetYpFromLine(ebx, ln);
+	eax = GetYpFromLine(pMem, ln);
 	y = eax;
-	eax = GetCpFromLine(ebx, ln);
+	eax = GetCpFromLine(pMem, ln);
 	cp -= eax;
 	esi = ln;
 	esi *= 4;
-	esi += ((EDIT *)ebx)->hLine;
+	esi += pMem->hLine;
 	esi = ((LINE *)esi)->rpChars;
-	esi += ((EDIT *)ebx)->hChars;
-	eax = GetDC(((EDIT *)ebx)->hwnd);
+	esi += pMem->hChars;
+	eax = GetDC(pMem->hwnd);
 	hDC = eax;
-	eax = SelectObject(hDC, ((EDIT *)ebx)->fnt.hFont);
+	eax = SelectObject(hDC, pMem->fnt.hFont);
 	temp1 = eax;
 	rect.left = 0;
 	rect.right = 0;
 	rect.top = 0;
 	rect.bottom = 0;
-	eax = GetTextWidth(ebx, hDC, esi+sizeof(CHARS), cp, &rect);
+	eax = GetTextWidth(pMem, hDC, esi+sizeof(CHARS), cp, &rect);
 	eax = temp1;
 	eax = SelectObject(hDC, eax);
-	eax = ReleaseDC(((EDIT *)ebx)->hwnd, hDC);
+	eax = ReleaseDC(pMem->hwnd, hDC);
 	esi = lpPoint;
 	eax = rect.right;
-	eax += ((EDIT *)ebx)->linenrwt;
-	eax += ((EDIT *)ebx)->selbarwt;
+	eax += pMem->linenrwt;
+	eax += pMem->selbarwt;
 	eax++;
 	((POINT *)esi)->x = eax;
 	eax = y;
@@ -575,13 +566,12 @@ REG_T GetPosFromChar(DWORD hMem, DWORD cp, DWORD lpPoint)
 
 } // GetPosFromChar
 
-REG_T GetCharFromPos(DWORD hMem, DWORD cpy, DWORD x, DWORD y)
+REG_T GetCharFromPos(EDIT *pMem, DWORD cpy, DWORD x, DWORD y)
 {
 	REG_T eax = 0, edx, ebx;
 	REG_T temp1;
 	DWORD cp;
 
-	ebx = hMem;
 	eax = y;
 	eax += cpy;
 	if(R_SIGNED(eax) < 0)
@@ -590,36 +580,36 @@ REG_T GetCharFromPos(DWORD hMem, DWORD cpy, DWORD x, DWORD y)
 	}
 	else
 	{
-		eax = GetLineFromYp(ebx, eax);
+		eax = GetLineFromYp(pMem, eax);
 	} // endif
 	temp1 = eax;
-	eax = GetCpFromLine(ebx, eax);
+	eax = GetCpFromLine(pMem, eax);
 	cp = eax;
-	((EDIT *)ebx)->cpLine = eax;
+	pMem->cpLine = eax;
 	edx = temp1;
 	edx *= 4;
-	if(edx>=((EDIT *)ebx)->rpLineFree)
+	if(edx>=pMem->rpLineFree)
 	{
-		edx = ((EDIT *)ebx)->rpLineFree;
+		edx = pMem->rpLineFree;
 		edx -= sizeof(LINE);
 	} // endif
 	eax = edx;
 	eax /= 4;
-	((EDIT *)ebx)->line = eax;
-	((EDIT *)ebx)->rpLine = edx;
-	edx += ((EDIT *)ebx)->hLine;
+	pMem->line = eax;
+	pMem->rpLine = edx;
+	edx += pMem->hLine;
 	edx = ((LINE *)edx)->rpChars;
-	((EDIT *)ebx)->rpChars = edx;
-	edx += ((EDIT *)ebx)->hChars;
+	pMem->rpChars = edx;
+	edx += pMem->hChars;
 	eax = x;
-	eax -= ((EDIT *)ebx)->cpx;
+	eax -= pMem->cpx;
 	if(eax==0)
 	{
 		goto Ex;
 	} // endif
-	eax = ((EDIT *)ebx)->nMode;
+	eax = pMem->nMode;
 	eax &= MODE_BLOCK;
-	eax = GetCpFromXp(ebx, edx, x, eax);
+	eax = GetCpFromXp(pMem, edx, x, eax);
 	cp += eax;
 Ex:
 	eax = cp;
@@ -627,27 +617,26 @@ Ex:
 
 } // GetCharFromPos
 
-REG_T GetCaretPoint(DWORD hMem, DWORD cp, DWORD cpy, DWORD lpPoint)
+REG_T GetCaretPoint(EDIT *pMem, DWORD cp, DWORD cpy, DWORD lpPoint)
 {
 	REG_T eax = 0, ecx, ebx, esi;
 	POINT pt;
 
-	ebx = hMem;
-	eax = GetPosFromChar(ebx, cp, &pt);
+	eax = GetPosFromChar(pMem, cp, &pt);
 	esi = lpPoint;
-	if(((EDIT *)ebx)->nMode&MODE_BLOCK)
+	if(pMem->nMode&MODE_BLOCK)
 	{
-		eax = ((EDIT *)ebx)->blrg.clMin;
-		ecx = ((EDIT *)ebx)->fntinfo.fntwt;
+		eax = pMem->blrg.clMin;
+		ecx = pMem->fntinfo.fntwt;
 		eax *= ecx;
-		eax += ((EDIT *)ebx)->linenrwt;
-		eax += ((EDIT *)ebx)->selbarwt;
+		eax += pMem->linenrwt;
+		eax += pMem->selbarwt;
 	}
 	else
 	{
 		eax = pt.x;
 	} // endif
-	eax -= ((EDIT *)ebx)->cpx;
+	eax -= pMem->cpx;
 	((POINT *)esi)->x = eax;
 	eax = pt.y;
 	eax -= cpy;
@@ -656,53 +645,51 @@ REG_T GetCaretPoint(DWORD hMem, DWORD cp, DWORD cpy, DWORD lpPoint)
 
 } // GetCaretPoint
 
-REG_T SetCaret(DWORD hMem, DWORD cpy)
+REG_T SetCaret(EDIT *pMem, DWORD cpy)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	POINT pt;
 
-	ebx = hMem;
 	eax = GetFocus();
-	if(eax==((EDIT *)ebx)->focus)
+	if(eax==pMem->focus)
 	{
-		eax = GetCaretPoint(ebx, ((EDIT *)ebx)->cpMin, cpy, &pt);
+		eax = GetCaretPoint(pMem, pMem->cpMin, cpy, &pt);
 		eax = SetCaretPos(pt.x, pt.y);
-		eax = ((EDIT *)ebx)->selbarwt;
-		eax += ((EDIT *)ebx)->linenrwt;
+		eax = pMem->selbarwt;
+		eax += pMem->linenrwt;
 		ecx = pt.x;
 		ecx++;
-		edx = ((EDIT *)ebx)->cpMax;
-		edx -= ((EDIT *)ebx)->cpMin;
-		if(R_SIGNED(eax) <= (SDWORD)pt.x && R_SIGNED(ecx) < (SDWORD)((EDIT *)ebx)->edtb.rc.right && !edx)
+		edx = pMem->cpMax;
+		edx -= pMem->cpMin;
+		if(R_SIGNED(eax) <= (SDWORD)pt.x && R_SIGNED(ecx) < (SDWORD)pMem->edtb.rc.right && !edx)
 		{
-			eax = ShowCaret(((EDIT *)ebx)->focus);
-			eax = ShowCaret(((EDIT *)ebx)->focus);
-			((EDIT *)ebx)->fCaretHide = FALSE;
+			eax = ShowCaret(pMem->focus);
+			eax = ShowCaret(pMem->focus);
+			pMem->fCaretHide = FALSE;
 		}
-		else if(!((EDIT *)ebx)->fCaretHide)
+		else if(!pMem->fCaretHide)
 		{
-			eax = HideCaret(((EDIT *)ebx)->focus);
-			((EDIT *)ebx)->fCaretHide = TRUE;
+			eax = HideCaret(pMem->focus);
+			pMem->fCaretHide = TRUE;
 		} // endif
 	} // endif
 	return eax;
 
 } // SetCaret
 
-REG_T ScrollEdit(DWORD hMem, HWND hWin, DWORD x, DWORD y)
+REG_T ScrollEdit(EDIT *pMem, HWND hWin, DWORD x, DWORD y)
 {
 	REG_T eax = 0, ebx, esi;
 	REG_T temp1;
 
-	ebx = hMem;
 	eax = hWin;
-	if(eax==((EDIT *)ebx)->edta.hwnd)
+	if(eax==pMem->edta.hwnd)
 	{
-		esi = &((EDIT *)ebx)->edta;
+		esi = &pMem->edta;
 	}
 	else
 	{
-		esi = &((EDIT *)ebx)->edtb;
+		esi = &pMem->edtb;
 	} // endif
 	if(((RAEDT *)esi)->rc.bottom)
 	{
@@ -711,21 +698,21 @@ REG_T ScrollEdit(DWORD hMem, HWND hWin, DWORD x, DWORD y)
 			if(x)
 			{
 				temp1 = ((RAEDT *)esi)->rc.left;
-				eax = ((EDIT *)ebx)->selbarwt;
-				eax += ((EDIT *)ebx)->linenrwt;
+				eax = pMem->selbarwt;
+				eax += pMem->linenrwt;
 				((RAEDT *)esi)->rc.left += eax;
 				eax = ScrollWindow(hWin, x, 0, & ((RAEDT *)esi)->rc, & ((RAEDT *)esi)->rc);
 				((RAEDT *)esi)->rc.left = temp1;
 			} // endif
 			if(y)
 			{
-				eax = GetTopFromYp(ebx, ((RAEDT *)esi)->hwnd, ((RAEDT *)esi)->cpy);
+				eax = GetTopFromYp(pMem, ((RAEDT *)esi)->hwnd, ((RAEDT *)esi)->cpy);
 				eax = y;
 				if(R_SIGNED(eax) < 0)
 				{
 					eax = -eax;
 				} // endif
-				eax += ((EDIT *)ebx)->fntinfo.fntht;
+				eax += pMem->fntinfo.fntht;
 				if(eax<((RAEDT *)esi)->rc.bottom)
 				{
 					eax = ScrollWindow(hWin, 0, y, & ((RAEDT *)esi)->rc, & ((RAEDT *)esi)->rc);
@@ -737,9 +724,9 @@ REG_T ScrollEdit(DWORD hMem, HWND hWin, DWORD x, DWORD y)
 			} // endif
 			eax = UpdateWindow(hWin);
 			eax = hWin;
-			if(eax==((EDIT *)ebx)->focus)
+			if(eax==pMem->focus)
 			{
-				eax = SetCaret(ebx, ((RAEDT *)esi)->cpy);
+				eax = SetCaret(pMem, ((RAEDT *)esi)->cpy);
 			} // endif
 		} // endif
 	} // endif
@@ -747,23 +734,22 @@ REG_T ScrollEdit(DWORD hMem, HWND hWin, DWORD x, DWORD y)
 
 } // ScrollEdit
 
-REG_T InvalidateEdit(DWORD hMem, HWND hWin)
+REG_T InvalidateEdit(EDIT *pMem, HWND hWin)
 {
 	REG_T eax = 0, ebx, esi;
 
-	ebx = hMem;
 	eax = hWin;
-	if(eax==((EDIT *)ebx)->edta.hwnd)
+	if(eax==pMem->edta.hwnd)
 	{
-		esi = &((EDIT *)ebx)->edta;
+		esi = &pMem->edta;
 	}
 	else
 	{
-		esi = &((EDIT *)ebx)->edtb;
+		esi = &pMem->edtb;
 	} // endif
 	if(((RAEDT *)esi)->rc.bottom)
 	{
-		eax = GetTopFromYp(ebx, ((RAEDT *)esi)->hwnd, ((RAEDT *)esi)->cpy);
+		eax = GetTopFromYp(pMem, ((RAEDT *)esi)->hwnd, ((RAEDT *)esi)->cpy);
 		eax = InvalidateRect(((RAEDT *)esi)->hwnd, NULL, FALSE);
 		// invoke UpdateWindow,((RAEDT *)esi)->hwnd
 	} // endif
@@ -771,31 +757,30 @@ REG_T InvalidateEdit(DWORD hMem, HWND hWin)
 
 } // InvalidateEdit
 
-REG_T InvalidateLine(DWORD hMem, HWND hWin, DWORD nLine)
+REG_T InvalidateLine(EDIT *pMem, HWND hWin, DWORD nLine)
 {
 	REG_T eax = 0, ecx, ebx, esi;
 	RECT rect;
 
-	ebx = hMem;
 	eax = hWin;
-	if(eax==((EDIT *)ebx)->edta.hwnd)
+	if(eax==pMem->edta.hwnd)
 	{
-		esi = &((EDIT *)ebx)->edta;
+		esi = &pMem->edta;
 	}
 	else
 	{
-		esi = &((EDIT *)ebx)->edtb;
+		esi = &pMem->edtb;
 	} // endif
 	if(((RAEDT *)esi)->rc.bottom)
 	{
-		eax = GetYpFromLine(ebx, nLine);
+		eax = GetYpFromLine(pMem, nLine);
 		eax -= ((RAEDT *)esi)->cpy;
 		ecx = eax;
-		ecx += ((EDIT *)ebx)->fntinfo.fntht;
+		ecx += pMem->fntinfo.fntht;
 		if(R_SIGNED(ecx) > 0 && R_SIGNED(eax) < (SDWORD)((RAEDT *)esi)->rc.bottom)
 		{
 			rect.top = eax;
-			eax += ((EDIT *)ebx)->fntinfo.fntht;
+			eax += pMem->fntinfo.fntht;
 			rect.bottom = eax;
 			rect.left = 0;
 			eax = ((RAEDT *)esi)->rc.right;
@@ -807,21 +792,20 @@ REG_T InvalidateLine(DWORD hMem, HWND hWin, DWORD nLine)
 
 } // InvalidateLine
 
-REG_T InvalidateSelection(DWORD hMem, HWND hWin, DWORD cpMin, DWORD cpMax)
+REG_T InvalidateSelection(EDIT *pMem, HWND hWin, DWORD cpMin, DWORD cpMax)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	REG_T temp1;
 	DWORD nLine;
 
-	ebx = hMem;
 	eax = hWin;
-	if(eax==((EDIT *)ebx)->edta.hwnd)
+	if(eax==pMem->edta.hwnd)
 	{
-		esi = &((EDIT *)ebx)->edta;
+		esi = &pMem->edta;
 	}
 	else
 	{
-		esi = &((EDIT *)ebx)->edtb;
+		esi = &pMem->edtb;
 	} // endif
 	if(((RAEDT *)esi)->rc.bottom)
 	{
@@ -837,14 +821,14 @@ REG_T InvalidateSelection(DWORD hMem, HWND hWin, DWORD cpMin, DWORD cpMax)
 		eax = -eax;
 		if(eax<10000)
 		{
-			eax = GetCharPtr(ebx, cpMin, &ecx, &edx);
+			eax = GetCharPtr(pMem, cpMin, &ecx, &edx);
 			nLine = edx;
-			eax = ((EDIT *)ebx)->cpLine;
+			eax = pMem->cpLine;
 anon_9:
 			cpMin = eax;
-			eax = InvalidateLine(ebx, hWin, nLine);
+			eax = InvalidateLine(pMem, hWin, nLine);
 			nLine++;
-			eax = GetCpFromLine(ebx, nLine);
+			eax = GetCpFromLine(pMem, nLine);
 			if(eax<cpMax && eax!=cpMin)
 			{
 				goto anon_9;
@@ -867,29 +851,30 @@ REG_T SetCaretVisible(HWND hWin, DWORD cpy)
 	DWORD cpx;
 	DWORD ht;
 	DWORD fExpand;
+	EDIT *pMem;
 
 	eax = GetWindowLong(hWin, 0);
-	ebx = eax;
+	pMem = eax;
 	eax = hWin;
-	if(eax==((EDIT *)ebx)->edta.hwnd)
+	if(eax==pMem->edta.hwnd)
 	{
-		esi = &((EDIT *)ebx)->edta;
+		esi = &pMem->edta;
 	}
 	else
 	{
-		esi = &((EDIT *)ebx)->edtb;
+		esi = &pMem->edtb;
 	} // endif
 	eax = ((RAEDT *)esi)->rc.bottom;
 	if(R_SIGNED(eax) > 0)
 	{
 		fExpand = 0;
-		ecx = ((EDIT *)ebx)->line;
+		ecx = pMem->line;
 		ecx++;
 anon_10:
 		ecx--;
-		eax = ((EDIT *)ebx)->hLine;
+		eax = pMem->hLine;
 		edx = ((LINE *)(eax+ecx*sizeof(LINE)))->rpChars;
-		edx += ((EDIT *)ebx)->hChars;
+		edx += pMem->hChars;
 		eax = ((CHARS *)edx)->state;
 		eax &= STATE_BMMASK;
 		if(eax==STATE_BM2)
@@ -906,15 +891,15 @@ anon_10:
 		while(edi)
 		{
 			ecx = temp1;
-			if(ecx!=((EDIT *)ebx)->line)
+			if(ecx!=pMem->line)
 			{
-				eax = Expand(ebx, ecx);
+				eax = Expand(pMem, ecx);
 				fExpand++;
 			} // endif
 			edi--;
 		} // endw
 		eax = ((RAEDT *)esi)->rc.bottom;
-		ecx = ((EDIT *)ebx)->fntinfo.fntht;
+		ecx = pMem->fntinfo.fntht;
 		eax /= ecx;
 		if(!eax)
 		{
@@ -922,16 +907,16 @@ anon_10:
 		} // endif
 		eax *= ecx;
 		ht = eax;
-		eax = ((EDIT *)ebx)->cpx;
+		eax = pMem->cpx;
 		cpx = eax;
-		eax = GetYpFromLine(ebx, ((EDIT *)ebx)->line);
+		eax = GetYpFromLine(pMem, pMem->line);
 		if(eax<cpy)
 		{
 			((RAEDT *)esi)->cpy = eax;
 		}
 		else
 		{
-			eax += ((EDIT *)ebx)->fntinfo.fntht;
+			eax += pMem->fntinfo.fntht;
 			eax -= cpy;
 			if(eax>ht)
 			{
@@ -939,62 +924,62 @@ anon_10:
 				((RAEDT *)esi)->cpy += eax;
 			} // endif
 		} // endif
-		eax = GetCaretPoint(ebx, ((EDIT *)ebx)->cpMin, cpy, &pt);
+		eax = GetCaretPoint(pMem, pMem->cpMin, cpy, &pt);
 		edx = ((RAEDT *)esi)->rc.right;
 		edx -= 16;
 		eax = pt.x;
-		ecx = ((EDIT *)ebx)->linenrwt;
-		ecx += ((EDIT *)ebx)->selbarwt;
+		ecx = pMem->linenrwt;
+		ecx += pMem->selbarwt;
 		ecx += 16+1;
 		if(R_SIGNED(eax) < R_SIGNED(ecx))
 		{
 			if(R_SIGNED(eax) > 0)
 			{
-				ecx = ((EDIT *)ebx)->fntinfo.fntwt;
+				ecx = pMem->fntinfo.fntwt;
 				ecx <<= 3;
 				eax += ecx;
-				if(((EDIT *)ebx)->cpx>eax)
+				if(pMem->cpx>eax)
 				{
-					((EDIT *)ebx)->cpx -= eax;
+					pMem->cpx -= eax;
 				}
 				else
 				{
-					((EDIT *)ebx)->cpx = 0;
+					pMem->cpx = 0;
 				} // endif
 			}
 			else
 			{
-				ecx = ((EDIT *)ebx)->fntinfo.fntwt;
+				ecx = pMem->fntinfo.fntwt;
 				ecx <<= 3;
 				eax -= ecx;
-				if(((EDIT *)ebx)->cpx<eax)
+				if(pMem->cpx<eax)
 				{
-					((EDIT *)ebx)->cpx += eax;
+					pMem->cpx += eax;
 				}
 				else
 				{
-					((EDIT *)ebx)->cpx = 0;
+					pMem->cpx = 0;
 				} // endif
 			} // endif
 		}
 		else if(eax>edx)
 		{
-			ecx = ((EDIT *)ebx)->fntinfo.fntwt;
+			ecx = pMem->fntinfo.fntwt;
 			ecx <<= 3;
 			eax -= edx;
 			eax += ecx;
-			((EDIT *)ebx)->cpx += eax;
+			pMem->cpx += eax;
 		} // endif
-		eax = GetTopFromYp(ebx, hWin, ((RAEDT *)esi)->cpy);
+		eax = GetTopFromYp(pMem, hWin, ((RAEDT *)esi)->cpy);
 		ecx = cpx;
-		ecx -= ((EDIT *)ebx)->cpx;
+		ecx -= pMem->cpx;
 		edx = cpy;
 		edx -= ((RAEDT *)esi)->cpy;
 		eax = 0;
 		eax--;
 		if(fExpand)
 		{
-			eax = InvalidateEdit(ebx, hWin);
+			eax = InvalidateEdit(pMem, hWin);
 			eax = 0;
 		}
 		else if(ecx || edx)
@@ -1003,14 +988,14 @@ anon_10:
 			{
 				temp1 = ecx;
 				temp2 = edx;
-				eax = ScrollEdit(ebx, ((EDIT *)ebx)->edta.hwnd, ecx, edx);
+				eax = ScrollEdit(pMem, pMem->edta.hwnd, ecx, edx);
 				edx = temp2;
 				ecx = temp1;
-				eax = ScrollEdit(ebx, ((EDIT *)ebx)->edtb.hwnd, ecx, edx);
+				eax = ScrollEdit(pMem, pMem->edtb.hwnd, ecx, edx);
 			}
 			else
 			{
-				eax = ScrollEdit(ebx, hWin, ecx, edx);
+				eax = ScrollEdit(pMem, hWin, ecx, edx);
 			} // endif
 			eax = 0;
 		} // endif
@@ -1024,88 +1009,85 @@ anon_10:
 
 } // SetCaretVisible
 
-REG_T GetBlockCp(DWORD hMem, DWORD nLine, DWORD nPos)
+REG_T GetBlockCp(EDIT *pMem, DWORD nLine, DWORD nPos)
 {
 	REG_T eax = 0, ecx, edx, ebx, edi;
 
-	ebx = hMem;
-	eax = GetCpFromLine(ebx, nLine);
+	eax = GetCpFromLine(pMem, nLine);
 	edi = eax;
 	eax = nPos;
-	ecx = ((EDIT *)ebx)->fntinfo.fntwt;
+	ecx = pMem->fntinfo.fntwt;
 	eax *= ecx;
-	eax += ((EDIT *)ebx)->linenrwt;
-	eax += ((EDIT *)ebx)->selbarwt;
-	eax -= ((EDIT *)ebx)->cpx;
+	eax += pMem->linenrwt;
+	eax += pMem->selbarwt;
+	eax -= pMem->cpx;
 	edx = nLine;
 	edx *= 4;
-	if(edx>=((EDIT *)ebx)->rpLineFree)
+	if(edx>=pMem->rpLineFree)
 	{
-		edx = ((EDIT *)ebx)->rpLineFree;
+		edx = pMem->rpLineFree;
 		edx -= sizeof(LINE);
 	} // endif
-	edx += ((EDIT *)ebx)->hLine;
+	edx += pMem->hLine;
 	edx = ((LINE *)edx)->rpChars;
-	edx += ((EDIT *)ebx)->hChars;
-	eax = GetCpFromXp(ebx, edx, eax, TRUE);
+	edx += pMem->hChars;
+	eax = GetCpFromXp(pMem, edx, eax, TRUE);
 	eax += edi;
 	return eax;
 
 } // GetBlockCp
 
-REG_T SetCpxMax(DWORD hMem, HWND hWin)
+REG_T SetCpxMax(EDIT *pMem, HWND hWin)
 {
 	REG_T eax = 0, ebx, esi;
 	POINT pt;
 
-	ebx = hMem;
 	eax = hWin;
-	if(eax==((EDIT *)ebx)->edta.hwnd)
+	if(eax==pMem->edta.hwnd)
 	{
-		esi = &((EDIT *)ebx)->edta;
+		esi = &pMem->edta;
 	}
 	else
 	{
-		esi = &((EDIT *)ebx)->edtb;
+		esi = &pMem->edtb;
 	} // endif
 	eax = GetCaretPos(&pt);
 	eax = pt.x;
-	eax -= ((EDIT *)ebx)->selbarwt;
-	eax -= ((EDIT *)ebx)->linenrwt;
-	eax += ((EDIT *)ebx)->cpx;
+	eax -= pMem->selbarwt;
+	eax -= pMem->linenrwt;
+	eax += pMem->cpx;
 	((RAEDT *)esi)->cpxmax = eax;
 	return eax;
 
 } // SetCpxMax
 
-REG_T SetBlockFromCp(DWORD hMem, DWORD cp, DWORD fShift)
+REG_T SetBlockFromCp(EDIT *pMem, DWORD cp, DWORD fShift)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 	POINT pt;
 
-	ebx = hMem;
 	eax = cp;
-	((EDIT *)ebx)->cpMin = eax;
-	((EDIT *)ebx)->cpMax = eax;
-	eax = GetCharPtr(ebx, cp, &ecx, &edx);
-	eax = GetPosFromChar(ebx, cp, &pt);
+	pMem->cpMin = eax;
+	pMem->cpMax = eax;
+	eax = GetCharPtr(pMem, cp, &ecx, &edx);
+	eax = GetPosFromChar(pMem, cp, &pt);
 	eax = pt.x;
-	eax -= ((EDIT *)ebx)->linenrwt;
-	eax -= ((EDIT *)ebx)->selbarwt;
-	ecx = ((EDIT *)ebx)->fntinfo.fntwt;
+	eax -= pMem->linenrwt;
+	eax -= pMem->selbarwt;
+	ecx = pMem->fntinfo.fntwt;
 	// cdq
 	R_SIGNED(eax) /= TO_R_SIGNED(ecx);
 	if(R_SIGNED(eax) < 0)
 	{
 		eax = 0;
 	} // endif
-	edx = ((EDIT *)ebx)->line;
-	((EDIT *)ebx)->blrg.lnMin = edx;
-	((EDIT *)ebx)->blrg.clMin = eax;
+	edx = pMem->line;
+	pMem->blrg.lnMin = edx;
+	pMem->blrg.clMin = eax;
 	if(!fShift)
 	{
-		((EDIT *)ebx)->blrg.lnMax = edx;
-		((EDIT *)ebx)->blrg.clMax = eax;
+		pMem->blrg.lnMax = edx;
+		pMem->blrg.clMax = eax;
 	} // endif
 	return eax;
 

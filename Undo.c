@@ -5,105 +5,104 @@
 #include "Memory.h"
 #include "Position.h"
 
-REG_T DoUndo(DWORD hMem)
+REG_T DoUndo(EDIT *pMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, edi;
 	REG_T temp1, temp2, temp3;
 	DWORD undoid;
 
-	ebx = hMem;
-	edi = ((EDIT *)ebx)->hUndo;
+	edi = pMem->hUndo;
 Nxt:
-	edx = ((EDIT *)ebx)->rpUndo;
+	edx = pMem->rpUndo;
 	if(edx)
 	{
 		edx = ((RAUNDO *)(edi+edx))->rpPrev;
-		((EDIT *)ebx)->rpUndo = edx;
+		pMem->rpUndo = edx;
 		eax = ((RAUNDO *)(edi+edx))->undoid;
 		undoid = eax;
 		eax = ((RAUNDO *)(edi+edx))->cp;
-		((EDIT *)ebx)->cpMin = eax;
-		((EDIT *)ebx)->cpMax = eax;
+		pMem->cpMin = eax;
+		pMem->cpMax = eax;
 		temp1 = edx;
-		eax = SelChange(ebx, SEL_TEXT);
+		eax = SelChange(pMem, SEL_TEXT);
 		edx = temp1;
 		RBYTE_LOW(eax) = ((RAUNDO *)(edi+edx))->fun;
 		if(RBYTE_LOW(eax)==UNDO_INSERT)
 		{
 			eax = ((RAUNDO *)(edi+edx))->cp;
-			((EDIT *)ebx)->cpMin = eax;
-			((EDIT *)ebx)->cpMax = eax;
-			eax = DeleteChar(ebx, eax);
+			pMem->cpMin = eax;
+			pMem->cpMax = eax;
+			eax = DeleteChar(pMem, eax);
 		}
 		else if(RBYTE_LOW(eax)==UNDO_OVERWRITE)
 		{
 			eax = *(BYTE *)(edi+edx+sizeof(RAUNDO));
 			if(RBYTE_LOW(eax)!=0x0D)
 			{
-				temp1 = ((EDIT *)ebx)->fOvr;
-				((EDIT *)ebx)->fOvr = TRUE;
+				temp1 = pMem->fOvr;
+				pMem->fOvr = TRUE;
 				ecx = ((RAUNDO *)(edi+edx))->cp;
-				((EDIT *)ebx)->cpMin = ecx;
-				((EDIT *)ebx)->cpMax = ecx;
+				pMem->cpMin = ecx;
+				pMem->cpMax = ecx;
 				temp2 = edx;
-				eax = InsertChar(ebx, ecx, eax);
+				eax = InsertChar(pMem, ecx, eax);
 				edx = temp2;
 				*(BYTE *)(edi+edx+sizeof(RAUNDO)) = RBYTE_LOW(eax);
-				((EDIT *)ebx)->fOvr = temp1;
+				pMem->fOvr = temp1;
 			}
 			else
 			{
 				eax = ((RAUNDO *)(edi+edx))->cp;
-				((EDIT *)ebx)->cpMin = eax;
-				((EDIT *)ebx)->cpMax = eax;
-				eax = DeleteChar(ebx, eax);
+				pMem->cpMin = eax;
+				pMem->cpMax = eax;
+				eax = DeleteChar(pMem, eax);
 			} // endif
 		}
 		else if(RBYTE_LOW(eax)==UNDO_DELETE)
 		{
-			temp1 = ((EDIT *)ebx)->fOvr;
-			((EDIT *)ebx)->fOvr = FALSE;
+			temp1 = pMem->fOvr;
+			pMem->fOvr = FALSE;
 			eax = *(BYTE *)(edi+edx+sizeof(RAUNDO));
 			ecx = ((RAUNDO *)(edi+edx))->cp;
-			((EDIT *)ebx)->cpMin = ecx;
-			((EDIT *)ebx)->cpMax = ecx;
-			eax = InsertChar(ebx, ecx, eax);
-			((EDIT *)ebx)->fOvr = temp1;
+			pMem->cpMin = ecx;
+			pMem->cpMax = ecx;
+			eax = InsertChar(pMem, ecx, eax);
+			pMem->fOvr = temp1;
 		}
 		else if(RBYTE_LOW(eax)==UNDO_BACKDELETE)
 		{
-			temp1 = ((EDIT *)ebx)->fOvr;
-			((EDIT *)ebx)->fOvr = FALSE;
+			temp1 = pMem->fOvr;
+			pMem->fOvr = FALSE;
 			eax = *(BYTE *)(edi+edx+sizeof(RAUNDO));
 			ecx = ((RAUNDO *)(edi+edx))->cp;
-			((EDIT *)ebx)->cpMin = ecx;
-			((EDIT *)ebx)->cpMax = ecx;
-			eax = InsertChar(ebx, ecx, eax);
-			((EDIT *)ebx)->cpMin++;
-			((EDIT *)ebx)->cpMax++;
-			((EDIT *)ebx)->fOvr = temp1;
+			pMem->cpMin = ecx;
+			pMem->cpMax = ecx;
+			eax = InsertChar(pMem, ecx, eax);
+			pMem->cpMin++;
+			pMem->cpMax++;
+			pMem->fOvr = temp1;
 		}
 		else if(RBYTE_LOW(eax)==UNDO_INSERTBLOCK)
 		{
 			eax = ((RAUNDO *)(edi+edx))->cp;
-			((EDIT *)ebx)->cpMin = eax;
-			((EDIT *)ebx)->cpMax = eax;
+			pMem->cpMin = eax;
+			pMem->cpMax = eax;
 			ecx = ((RAUNDO *)(edi+edx))->cb;
 			while(ecx)
 			{
 				temp1 = ecx;
-				eax = DeleteChar(ebx, ((EDIT *)ebx)->cpMin);
+				eax = DeleteChar(pMem, pMem->cpMin);
 				ecx = temp1;
 				ecx--;
 			} // endw
 		}
 		else if(RBYTE_LOW(eax)==UNDO_DELETEBLOCK)
 		{
-			temp1 = ((EDIT *)ebx)->fOvr;
-			((EDIT *)ebx)->fOvr = FALSE;
+			temp1 = pMem->fOvr;
+			pMem->fOvr = FALSE;
 			ecx = ((RAUNDO *)(edi+edx))->cp;
-			((EDIT *)ebx)->cpMin = ecx;
-			((EDIT *)ebx)->cpMax = ecx;
+			pMem->cpMin = ecx;
+			pMem->cpMax = ecx;
 			ecx = ((RAUNDO *)(edi+edx))->cb;
 			edx += sizeof(RAUNDO);
 			while(ecx)
@@ -111,16 +110,16 @@ Nxt:
 				temp2 = ecx;
 				temp3 = edx;
 				eax = *(BYTE *)(edi+edx);
-				eax = InsertChar(ebx, ((EDIT *)ebx)->cpMin, eax);
-				((EDIT *)ebx)->cpMin++;
+				eax = InsertChar(pMem, pMem->cpMin, eax);
+				pMem->cpMin++;
 				edx = temp3;
 				ecx = temp2;
 				edx++;
 				ecx--;
 			} // endw
-			((EDIT *)ebx)->fOvr = temp1;
+			pMem->fOvr = temp1;
 		} // endif
-		edx = ((EDIT *)ebx)->rpUndo;
+		edx = pMem->rpUndo;
 		if(edx)
 		{
 			edx = ((RAUNDO *)(edi+edx))->rpPrev;
@@ -135,100 +134,99 @@ Nxt:
 
 } // DoUndo
 
-REG_T DoRedo(DWORD hMem)
+REG_T DoRedo(EDIT *pMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, edi;
 	REG_T temp1, temp2, temp3;
 	DWORD undoid;
 
-	ebx = hMem;
-	edi = ((EDIT *)ebx)->hUndo;
+	edi = pMem->hUndo;
 Nxt:
-	edx = ((EDIT *)ebx)->rpUndo;
+	edx = pMem->rpUndo;
 	eax = ((RAUNDO *)(edi+edx))->cb;
 	if(eax)
 	{
 		eax = ((RAUNDO *)(edi+edx))->undoid;
 		undoid = eax;
 		eax = ((RAUNDO *)(edi+edx))->cp;
-		((EDIT *)ebx)->cpMin = eax;
-		((EDIT *)ebx)->cpMax = eax;
+		pMem->cpMin = eax;
+		pMem->cpMax = eax;
 		temp1 = edx;
-		eax = SelChange(ebx, SEL_TEXT);
+		eax = SelChange(pMem, SEL_TEXT);
 		edx = temp1;
 		RBYTE_LOW(eax) = ((RAUNDO *)(edi+edx))->fun;
 		if(RBYTE_LOW(eax)==UNDO_INSERT)
 		{
-			temp1 = ((EDIT *)ebx)->fOvr;
-			((EDIT *)ebx)->fOvr = FALSE;
+			temp1 = pMem->fOvr;
+			pMem->fOvr = FALSE;
 			ecx = ((RAUNDO *)(edi+edx))->cp;
-			((EDIT *)ebx)->cpMin = ecx;
-			((EDIT *)ebx)->cpMax = ecx;
+			pMem->cpMin = ecx;
+			pMem->cpMax = ecx;
 			eax = *(BYTE *)(edi+edx+sizeof(RAUNDO));
 			edx += sizeof(RAUNDO)+1;
-			((EDIT *)ebx)->rpUndo = edx;
-			eax = InsertChar(ebx, ecx, eax);
-			((EDIT *)ebx)->cpMin++;
-			((EDIT *)ebx)->cpMax++;
-			((EDIT *)ebx)->fOvr = temp1;
+			pMem->rpUndo = edx;
+			eax = InsertChar(pMem, ecx, eax);
+			pMem->cpMin++;
+			pMem->cpMax++;
+			pMem->fOvr = temp1;
 		}
 		else if(RBYTE_LOW(eax)==UNDO_OVERWRITE)
 		{
 			eax = *(BYTE *)(edi+edx+sizeof(RAUNDO));
 			if(RBYTE_LOW(eax)!=0x0D)
 			{
-				temp1 = ((EDIT *)ebx)->fOvr;
-				((EDIT *)ebx)->fOvr = TRUE;
+				temp1 = pMem->fOvr;
+				pMem->fOvr = TRUE;
 				ecx = ((RAUNDO *)(edi+edx))->cp;
-				((EDIT *)ebx)->cpMin = ecx;
-				((EDIT *)ebx)->cpMax = ecx;
+				pMem->cpMin = ecx;
+				pMem->cpMax = ecx;
 				temp2 = edx;
-				eax = InsertChar(ebx, ecx, eax);
+				eax = InsertChar(pMem, ecx, eax);
 				edx = temp2;
 				*(BYTE *)(edi+edx+sizeof(RAUNDO)) = RBYTE_LOW(eax);
-				((EDIT *)ebx)->fOvr = temp1;
+				pMem->fOvr = temp1;
 				edx += sizeof(RAUNDO)+1;
-				((EDIT *)ebx)->rpUndo = edx;
-				((EDIT *)ebx)->cpMin++;
-				((EDIT *)ebx)->cpMax++;
+				pMem->rpUndo = edx;
+				pMem->cpMin++;
+				pMem->cpMax++;
 			}
 			else
 			{
 				ecx = ((RAUNDO *)(edi+edx))->cp;
 				edx += sizeof(RAUNDO)+1;
-				((EDIT *)ebx)->rpUndo = edx;
-				((EDIT *)ebx)->cpMin = ecx;
-				((EDIT *)ebx)->cpMax = ecx;
-				eax = InsertChar(ebx, ecx, eax);
-				((EDIT *)ebx)->cpMin++;
-				((EDIT *)ebx)->cpMax++;
+				pMem->rpUndo = edx;
+				pMem->cpMin = ecx;
+				pMem->cpMax = ecx;
+				eax = InsertChar(pMem, ecx, eax);
+				pMem->cpMin++;
+				pMem->cpMax++;
 			} // endif
 		}
 		else if(RBYTE_LOW(eax)==UNDO_DELETE)
 		{
 			ecx = ((RAUNDO *)(edi+edx))->cp;
-			((EDIT *)ebx)->cpMin = ecx;
-			((EDIT *)ebx)->cpMax = ecx;
+			pMem->cpMin = ecx;
+			pMem->cpMax = ecx;
 			edx += sizeof(RAUNDO)+1;
-			((EDIT *)ebx)->rpUndo = edx;
-			eax = DeleteChar(ebx, ecx);
+			pMem->rpUndo = edx;
+			eax = DeleteChar(pMem, ecx);
 		}
 		else if(RBYTE_LOW(eax)==UNDO_BACKDELETE)
 		{
 			ecx = ((RAUNDO *)(edi+edx))->cp;
-			((EDIT *)ebx)->cpMin = ecx;
-			((EDIT *)ebx)->cpMax = ecx;
+			pMem->cpMin = ecx;
+			pMem->cpMax = ecx;
 			edx += sizeof(RAUNDO)+1;
-			((EDIT *)ebx)->rpUndo = edx;
-			eax = DeleteChar(ebx, ecx);
+			pMem->rpUndo = edx;
+			eax = DeleteChar(pMem, ecx);
 		}
 		else if(RBYTE_LOW(eax)==UNDO_INSERTBLOCK)
 		{
-			temp1 = ((EDIT *)ebx)->fOvr;
-			((EDIT *)ebx)->fOvr = FALSE;
+			temp1 = pMem->fOvr;
+			pMem->fOvr = FALSE;
 			ecx = ((RAUNDO *)(edi+edx))->cp;
-			((EDIT *)ebx)->cpMin = ecx;
-			((EDIT *)ebx)->cpMax = ecx;
+			pMem->cpMin = ecx;
+			pMem->cpMax = ecx;
 			ecx = ((RAUNDO *)(edi+edx))->cb;
 			edx += sizeof(RAUNDO);
 			while(ecx)
@@ -236,35 +234,35 @@ Nxt:
 				temp2 = ecx;
 				temp3 = edx;
 				eax = *(BYTE *)(edi+edx);
-				eax = InsertChar(ebx, ((EDIT *)ebx)->cpMin, eax);
-				((EDIT *)ebx)->cpMin++;
-				((EDIT *)ebx)->cpMax++;
+				eax = InsertChar(pMem, pMem->cpMin, eax);
+				pMem->cpMin++;
+				pMem->cpMax++;
 				edx = temp3;
 				ecx = temp2;
 				edx++;
 				ecx--;
 			} // endw
-			((EDIT *)ebx)->rpUndo = edx;
-			((EDIT *)ebx)->fOvr = temp1;
+			pMem->rpUndo = edx;
+			pMem->fOvr = temp1;
 		}
 		else if(RBYTE_LOW(eax)==UNDO_DELETEBLOCK)
 		{
 			eax = ((RAUNDO *)(edi+edx))->cp;
-			((EDIT *)ebx)->cpMin = eax;
-			((EDIT *)ebx)->cpMax = eax;
+			pMem->cpMin = eax;
+			pMem->cpMax = eax;
 			ecx = ((RAUNDO *)(edi+edx))->cb;
 			edx += ecx;
 			edx += sizeof(RAUNDO);
-			((EDIT *)ebx)->rpUndo = edx;
+			pMem->rpUndo = edx;
 			while(ecx)
 			{
 				temp1 = ecx;
-				eax = DeleteChar(ebx, ((EDIT *)ebx)->cpMin);
+				eax = DeleteChar(pMem, pMem->cpMin);
 				ecx = temp1;
 				ecx--;
 			} // endw
 		} // endif
-		edx = ((EDIT *)ebx)->rpUndo;
+		edx = pMem->rpUndo;
 		if(edx)
 		{
 			eax = undoid;
@@ -278,22 +276,21 @@ Nxt:
 
 } // DoRedo
 
-REG_T SaveUndo(DWORD hMem, DWORD nFun, DWORD cp, DWORD lp, DWORD cb)
+REG_T SaveUndo(EDIT *pMem, DWORD nFun, DWORD cp, DWORD lp, DWORD cb)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1;
 
 	if(!fNoSaveUndo)
 	{
-		ebx = hMem;
-		eax = ExpandUndoMem(ebx, cb);
-		edi = ((EDIT *)ebx)->hUndo;
-		edx = ((EDIT *)ebx)->rpUndo;
+		eax = ExpandUndoMem(pMem, cb);
+		edi = pMem->hUndo;
+		edx = pMem->rpUndo;
 		eax = nFun;
 		if(eax==UNDO_INSERT || eax==UNDO_OVERWRITE || eax==UNDO_DELETE || eax==UNDO_BACKDELETE)
 		{
 			((RAUNDO *)(edi+edx))->fun = RBYTE_LOW(eax);
-			eax = ((EDIT *)ebx)->lockundoid;
+			eax = pMem->lockundoid;
 			if(!eax)
 			{
 				eax = nUndoid;
@@ -311,12 +308,12 @@ REG_T SaveUndo(DWORD hMem, DWORD nFun, DWORD cp, DWORD lp, DWORD cb)
 			((RAUNDO *)(edi+edx))->cp = eax;
 			((RAUNDO *)(edi+edx))->cb = eax;
 			((RAUNDO *)(edi+edx))->fun = RBYTE_LOW(eax);
-			((EDIT *)ebx)->rpUndo = edx;
+			pMem->rpUndo = edx;
 		}
 		else if(eax==UNDO_INSERTBLOCK || eax==UNDO_DELETEBLOCK)
 		{
 			((RAUNDO *)(edi+edx))->fun = RBYTE_LOW(eax);
-			eax = ((EDIT *)ebx)->lockundoid;
+			eax = pMem->lockundoid;
 			if(!eax)
 			{
 				eax = nUndoid;
@@ -346,66 +343,64 @@ REG_T SaveUndo(DWORD hMem, DWORD nFun, DWORD cp, DWORD lp, DWORD cb)
 			((RAUNDO *)(edi+edx))->cp = eax;
 			((RAUNDO *)(edi+edx))->cb = eax;
 			((RAUNDO *)(edi+edx))->fun = RBYTE_LOW(eax);
-			((EDIT *)ebx)->rpUndo = edx;
+			pMem->rpUndo = edx;
 		} // endif
 	} // endif
 	return eax;
 
 } // SaveUndo
 
-REG_T Undo(RAEDT *raedt, DWORD hMem, HWND hWin)
+REG_T Undo(RAEDT *raedt, EDIT *pMem, HWND hWin)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 
     esi = raedt;
-	ebx = hMem;
-	if(!(((EDIT *)ebx)->nMode&MODE_BLOCK))
+	if(!(pMem->nMode&MODE_BLOCK))
 	{
-		eax = DoUndo(ebx);
+		eax = DoUndo(pMem);
 	}
 	else
 	{
-		eax = DoUndo(ebx);
-		eax = SetBlockFromCp(ebx, ((EDIT *)ebx)->cpMin, FALSE);
+		eax = DoUndo(pMem);
+		eax = SetBlockFromCp(pMem, pMem->cpMin, FALSE);
 	} // endif
-	eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin, &ecx, &edx);
+	eax = GetCharPtr(pMem, pMem->cpMin, &ecx, &edx);
 	eax = SetCaretVisible(hWin, ((RAEDT *)esi)->cpy);
-	eax = SetCaret(ebx, ((RAEDT *)esi)->cpy);
-	eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edta.hwnd);
-	eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edtb.hwnd);
-	eax = SetCpxMax(ebx, hWin);
-	eax = SelChange(ebx, SEL_TEXT);
+	eax = SetCaret(pMem, ((RAEDT *)esi)->cpy);
+	eax = InvalidateEdit(pMem, pMem->edta.hwnd);
+	eax = InvalidateEdit(pMem, pMem->edtb.hwnd);
+	eax = SetCpxMax(pMem, hWin);
+	eax = SelChange(pMem, SEL_TEXT);
 	return eax;
 
 } // Undo
 
-REG_T Redo(RAEDT *raedt, DWORD hMem, HWND hWin)
+REG_T Redo(RAEDT *raedt, EDIT *pMem, HWND hWin)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 
     esi = raedt;
-	ebx = hMem;
-	if(!(((EDIT *)ebx)->nMode&MODE_BLOCK))
+	if(!(pMem->nMode&MODE_BLOCK))
 	{
-		eax = DoRedo(ebx);
+		eax = DoRedo(pMem);
 	}
 	else
 	{
-		eax = DoRedo(ebx);
-		eax = SetBlockFromCp(ebx, ((EDIT *)ebx)->cpMin, FALSE);
+		eax = DoRedo(pMem);
+		eax = SetBlockFromCp(pMem, pMem->cpMin, FALSE);
 	} // endif
-	eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin, &ecx, &edx);
+	eax = GetCharPtr(pMem, pMem->cpMin, &ecx, &edx);
 	eax = SetCaretVisible(hWin, ((RAEDT *)esi)->cpy);
-	eax = SetCaret(ebx, ((RAEDT *)esi)->cpy);
-	eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edta.hwnd);
-	eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edtb.hwnd);
-	eax = SetCpxMax(ebx, hWin);
-	eax = SelChange(ebx, SEL_TEXT);
+	eax = SetCaret(pMem, ((RAEDT *)esi)->cpy);
+	eax = InvalidateEdit(pMem, pMem->edta.hwnd);
+	eax = InvalidateEdit(pMem, pMem->edtb.hwnd);
+	eax = SetCpxMax(pMem, hWin);
+	eax = SelChange(pMem, SEL_TEXT);
 	return eax;
 
 } // Redo
 
-REG_T GetUndo(DWORD hMem, DWORD nCount, DWORD lpMem)
+REG_T GetUndo(EDIT *pMem, DWORD nCount, DWORD lpMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	DWORD rpstart;
@@ -414,9 +409,8 @@ REG_T GetUndo(DWORD hMem, DWORD nCount, DWORD lpMem)
 	auto void GetHeader(void);
 	auto void GetData(void);
 
-	ebx = hMem;
-	esi = ((EDIT *)ebx)->hUndo;
-	edx = ((EDIT *)ebx)->rpUndo;
+	esi = pMem->hUndo;
+	edx = pMem->rpUndo;
 	// Include redo
 	while(((RAUNDO *)(esi+edx))->cb)
 	{
@@ -440,7 +434,7 @@ REG_T GetUndo(DWORD hMem, DWORD nCount, DWORD lpMem)
 	edi = lpMem;
 	if(edi)
 	{
-		eax = ((EDIT *)ebx)->rpUndo;
+		eax = pMem->rpUndo;
 		eax -= rpstart;
 		*(DWORD *)edi = eax;
 		edi = edi+4;
@@ -496,16 +490,15 @@ REG_T GetUndo(DWORD hMem, DWORD nCount, DWORD lpMem)
 
 } // GetUndo
 
-REG_T SetUndo(DWORD hMem, DWORD nSize, DWORD lpMem)
+REG_T SetUndo(EDIT *pMem, DWORD nSize, DWORD lpMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 
-	ebx = hMem;
-	eax = ExpandUndoMem(ebx, nSize);
+	eax = ExpandUndoMem(pMem, nSize);
 	esi = lpMem;
-	edi = ((EDIT *)ebx)->hUndo;
+	edi = pMem->hUndo;
 	eax = *(DWORD *)esi;
-	((EDIT *)ebx)->rpUndo = eax;
+	pMem->rpUndo = eax;
 	esi = esi+4;
 	nSize -= 4;
 	eax = RtlMoveMemory(edi, esi, nSize);

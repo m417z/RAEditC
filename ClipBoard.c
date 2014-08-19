@@ -53,16 +53,15 @@ exit3:
 
 } // SetClipData
 
-REG_T EditCopy(DWORD hMem, DWORD lpCMem)
+REG_T EditCopy(EDIT *pMem, DWORD lpCMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1;
 	DWORD cpMin;
 	DWORD cpMax;
 
-	ebx = hMem;
-	eax = ((EDIT *)ebx)->cpMin;
-	edx = ((EDIT *)ebx)->cpMax;
+	eax = pMem->cpMin;
+	edx = pMem->cpMax;
 	if(eax>edx)
 	{
 		temp1 = eax;
@@ -71,15 +70,15 @@ REG_T EditCopy(DWORD hMem, DWORD lpCMem)
 	} // endif
 	cpMin = eax;
 	cpMax = edx;
-	eax = GetCharPtr(ebx, cpMin, &ecx, &edx);
+	eax = GetCharPtr(pMem, cpMin, &ecx, &edx);
 	ecx = eax;
 	edi = lpCMem;
 	edx = cpMin;
-	esi = ((EDIT *)ebx)->hLine;
-	esi += ((EDIT *)ebx)->rpLine;
+	esi = pMem->hLine;
+	esi += pMem->rpLine;
 	while(edx<cpMax)
 	{
-		eax = ((EDIT *)ebx)->hChars;
+		eax = pMem->hChars;
 		eax += ((LINE *)esi)->rpChars;
 		temp1 = eax;
 		RBYTE_LOW(eax) = *(BYTE *)(eax+ecx+sizeof(CHARS));
@@ -105,7 +104,7 @@ REG_T EditCopy(DWORD hMem, DWORD lpCMem)
 
 } // EditCopy
 
-REG_T EditCopyBlock(DWORD hMem, DWORD lpCMem)
+REG_T EditCopyBlock(EDIT *pMem, DWORD lpCMem)
 {
 	REG_T eax = 0, edx, ebx, esi;
 	BLOCKRANGE blrg;
@@ -113,8 +112,7 @@ REG_T EditCopyBlock(DWORD hMem, DWORD lpCMem)
 	auto void CopyBlockChar(void);
 	auto void CopyBlockLine(void);
 
-	ebx = hMem;
-	eax = GetBlockRange(& ((EDIT *)ebx)->blrg, &blrg);
+	eax = GetBlockRange(& pMem->blrg, &blrg);
 	esi = lpCMem;
 	edx = blrg.lnMin;
 	while(edx<=blrg.lnMax)
@@ -128,8 +126,8 @@ REG_T EditCopyBlock(DWORD hMem, DWORD lpCMem)
 
 	void CopyBlockChar(void)
 	{
-		eax = GetBlockCp(ebx, edx, eax);
-		eax = GetChar(ebx, eax);
+		eax = GetBlockCp(pMem, edx, eax);
+		eax = GetChar(pMem, eax);
 		if(eax==VK_RETURN || eax==VK_TAB)
 		{
 			eax = VK_SPACE;
@@ -162,16 +160,15 @@ REG_T EditCopyBlock(DWORD hMem, DWORD lpCMem)
 
 } // EditCopyBlock
 
-REG_T EditCopyNoLF(DWORD hMem, DWORD lpCMem)
+REG_T EditCopyNoLF(EDIT *pMem, DWORD lpCMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1;
 	DWORD cpMin;
 	DWORD cpMax;
 
-	ebx = hMem;
-	eax = ((EDIT *)ebx)->cpMin;
-	edx = ((EDIT *)ebx)->cpMax;
+	eax = pMem->cpMin;
+	edx = pMem->cpMax;
 	if(eax>edx)
 	{
 		temp1 = eax;
@@ -180,15 +177,15 @@ REG_T EditCopyNoLF(DWORD hMem, DWORD lpCMem)
 	} // endif
 	cpMin = eax;
 	cpMax = edx;
-	eax = GetCharPtr(ebx, cpMin, &ecx, &edx);
+	eax = GetCharPtr(pMem, cpMin, &ecx, &edx);
 	ecx = eax;
 	edi = lpCMem;
 	edx = cpMin;
-	esi = ((EDIT *)ebx)->hLine;
-	esi += ((EDIT *)ebx)->rpLine;
+	esi = pMem->hLine;
+	esi += pMem->rpLine;
 	while(edx<cpMax)
 	{
-		eax = ((EDIT *)ebx)->hChars;
+		eax = pMem->hChars;
 		eax += ((LINE *)esi)->rpChars;
 		temp1 = eax;
 		RBYTE_LOW(eax) = *(BYTE *)(eax+ecx+sizeof(CHARS));
@@ -209,17 +206,16 @@ REG_T EditCopyNoLF(DWORD hMem, DWORD lpCMem)
 
 } // EditCopyNoLF
 
-REG_T Copy(DWORD hMem)
+REG_T Copy(EDIT *pMem)
 {
 	REG_T eax = 0, edx, ebx;
 	REG_T temp1;
 	DWORD hCMem;
 
-	ebx = hMem;
-	if(!(((EDIT *)ebx)->nMode&MODE_BLOCK))
+	if(!(pMem->nMode&MODE_BLOCK))
 	{
-		eax = ((EDIT *)ebx)->cpMin;
-		eax -= ((EDIT *)ebx)->cpMax;
+		eax = pMem->cpMin;
+		eax -= pMem->cpMax;
 		if(eax)
 		{
 			if(R_SIGNED(eax) < 0)
@@ -233,7 +229,7 @@ REG_T Copy(DWORD hMem)
 			hCMem = eax;
 			eax = GlobalLock(hCMem);
 			temp1 = eax;
-			eax = EditCopy(ebx, eax);
+			eax = EditCopy(pMem, eax);
 			edx = temp1;
 			eax = SetClipData(edx, eax);
 			eax = GlobalUnlock(hCMem);
@@ -242,14 +238,14 @@ REG_T Copy(DWORD hMem)
 	}
 	else
 	{
-		eax = ((EDIT *)ebx)->blrg.clMin;
-		if(eax!=((EDIT *)ebx)->blrg.clMax)
+		eax = pMem->blrg.clMin;
+		if(eax!=pMem->blrg.clMax)
 		{
 			eax = xGlobalAlloc(GMEM_ZEROINIT, 256*1024);
 			hCMem = eax;
 			eax = GlobalLock(hCMem);
 			temp1 = eax;
-			eax = EditCopyBlock(ebx, eax);
+			eax = EditCopyBlock(pMem, eax);
 			edx = temp1;
 			eax = SetClipData(edx, eax);
 			eax = GlobalUnlock(hCMem);
@@ -260,13 +256,12 @@ REG_T Copy(DWORD hMem)
 
 } // Copy
 
-REG_T EditPaste(DWORD hMem, DWORD hData)
+REG_T EditPaste(EDIT *pMem, DWORD hData)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 
 	auto void InsertMem(void);
 
-	ebx = hMem;
 	eax = hData;
 	if(eax)
 	{
@@ -274,7 +269,7 @@ REG_T EditPaste(DWORD hMem, DWORD hData)
 	}
 	else
 	{
-		eax = OpenClipboard(((EDIT *)ebx)->hwnd);
+		eax = OpenClipboard(pMem->hwnd);
 		if(eax)
 		{
 			eax = GetClipboardData(CF_TEXT);
@@ -292,17 +287,17 @@ REG_T EditPaste(DWORD hMem, DWORD hData)
 		REG_T temp1, temp2, temp3, temp4;
 		temp1 = eax;
 		eax = GlobalLock(eax);
-		temp2 = ((EDIT *)ebx)->fOvr;
-		((EDIT *)ebx)->fOvr = FALSE;
-		temp3 = ((EDIT *)ebx)->cpMin;
+		temp2 = pMem->fOvr;
+		pMem->fOvr = FALSE;
+		temp3 = pMem->cpMin;
 		temp4 = eax;
-		eax = EditInsert(ebx, ((EDIT *)ebx)->cpMin, eax);
-		((EDIT *)ebx)->cpMin += eax;
-		((EDIT *)ebx)->cpMax += eax;
+		eax = EditInsert(pMem, pMem->cpMin, eax);
+		pMem->cpMin += eax;
+		pMem->cpMax += eax;
 		edx = temp4;
 		ecx = temp3;
-		eax = SaveUndo(ebx, UNDO_INSERTBLOCK, ecx, edx, eax);
-		((EDIT *)ebx)->fOvr = temp2;
+		eax = SaveUndo(pMem, UNDO_INSERTBLOCK, ecx, edx, eax);
+		pMem->fOvr = temp2;
 		eax = temp1;
 		eax = GlobalUnlock(eax);
 		return;
@@ -311,7 +306,7 @@ REG_T EditPaste(DWORD hMem, DWORD hData)
 
 } // EditPaste
 
-REG_T EditPasteBlock(DWORD hMem, DWORD hData)
+REG_T EditPasteBlock(EDIT *pMem, DWORD hData)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	DWORD nSpc;
@@ -319,8 +314,7 @@ REG_T EditPasteBlock(DWORD hMem, DWORD hData)
 
 	auto void InsertMem(void);
 
-	ebx = hMem;
-	eax = GetBlockRange(& ((EDIT *)ebx)->blrg, &blrg);
+	eax = GetBlockRange(& pMem->blrg, &blrg);
 	eax = hData;
 	if(eax)
 	{
@@ -328,7 +322,7 @@ REG_T EditPasteBlock(DWORD hMem, DWORD hData)
 	}
 	else
 	{
-		eax = OpenClipboard(((EDIT *)ebx)->hwnd);
+		eax = OpenClipboard(pMem->hwnd);
 		if(eax)
 		{
 			eax = GetClipboardData(CF_TEXT);
@@ -338,11 +332,11 @@ REG_T EditPasteBlock(DWORD hMem, DWORD hData)
 			} // endif
 			eax = CloseClipboard();
 			eax = blrg.lnMin;
-			((EDIT *)ebx)->blrg.lnMin = eax;
-			((EDIT *)ebx)->blrg.lnMax = eax;
+			pMem->blrg.lnMin = eax;
+			pMem->blrg.lnMax = eax;
 			eax = blrg.clMin;
-			((EDIT *)ebx)->blrg.clMin = eax;
-			((EDIT *)ebx)->blrg.clMax = eax;
+			pMem->blrg.clMin = eax;
+			pMem->blrg.clMax = eax;
 		} // endif
 	} // endif
 	return eax;
@@ -353,47 +347,47 @@ REG_T EditPasteBlock(DWORD hMem, DWORD hData)
 		temp1 = eax;
 		eax = GlobalLock(eax);
 		esi = eax;
-		temp2 = ((EDIT *)ebx)->fOvr;
-		((EDIT *)ebx)->fOvr = FALSE;
+		temp2 = pMem->fOvr;
+		pMem->fOvr = FALSE;
 		nSpc = 0;
 anon_1:
-		eax = GetBlockCp(ebx, blrg.lnMin, blrg.clMin);
+		eax = GetBlockCp(pMem, blrg.lnMin, blrg.clMin);
 		edi = eax;
-		eax = GetChar(ebx, edi);
+		eax = GetChar(pMem, edi);
 		if(!eax)
 		{
-			eax = InsertChar(ebx, edi, VK_RETURN);
+			eax = InsertChar(pMem, edi, VK_RETURN);
 		} // endif
 		if(blrg.clMin)
 		{
-			eax = GetBlockCp(ebx, blrg.lnMin, blrg.clMin);
+			eax = GetBlockCp(pMem, blrg.lnMin, blrg.clMin);
 			temp3 = eax;
 			eax = blrg.clMin;
 			eax--;
-			eax = GetBlockCp(ebx, blrg.lnMin, eax);
+			eax = GetBlockCp(pMem, blrg.lnMin, eax);
 			edx = temp3;
 			if(eax==edx)
 			{
 				temp3 = edx;
-				eax = GetCharPtr(ebx, edx, &ecx, &edx);
+				eax = GetCharPtr(pMem, edx, &ecx, &edx);
 				edx = temp3;
-				eax = InsertChar(ebx, edx, VK_SPACE);
+				eax = InsertChar(pMem, edx, VK_SPACE);
 				nSpc++;
 				goto anon_1;
 			} // endif
 		} // endif
-		eax = GetBlockCp(ebx, blrg.lnMin, blrg.clMin);
+		eax = GetBlockCp(pMem, blrg.lnMin, blrg.clMin);
 		edi = eax;
 		temp3 = edi;
 		while(*(BYTE *)esi!=VK_RETURN && *(BYTE *)esi)
 		{
 			eax = *(BYTE *)esi;
-			eax = InsertChar(ebx, edi, eax);
+			eax = InsertChar(pMem, edi, eax);
 			edi++;
 			esi++;
 		} // endw
-		((EDIT *)ebx)->cpMin = edi;
-		((EDIT *)ebx)->cpMax = edi;
+		pMem->cpMin = edi;
+		pMem->cpMax = edi;
 		if(*(BYTE *)esi==VK_RETURN)
 		{
 			esi++;
@@ -404,18 +398,18 @@ anon_1:
 		} // endif
 		eax = temp3;
 		temp3 = eax;
-		eax = GetCharPtr(ebx, eax, &ecx, &edx);
+		eax = GetCharPtr(pMem, eax, &ecx, &edx);
 		ecx = temp3;
 		edi -= ecx;
-		edx = ((EDIT *)ebx)->rpChars;
-		edx += ((EDIT *)ebx)->hChars;
+		edx = pMem->rpChars;
+		edx += pMem->hChars;
 		edx += sizeof(CHARS);
 		edx += eax;
 		edx -= nSpc;
 		ecx -= nSpc;
 		eax = edi;
 		eax += nSpc;
-		eax = SaveUndo(ebx, UNDO_INSERTBLOCK, ecx, edx, eax);
+		eax = SaveUndo(pMem, UNDO_INSERTBLOCK, ecx, edx, eax);
 		if(*(BYTE *)esi)
 		{
 			blrg.lnMin++;
@@ -427,7 +421,7 @@ anon_1:
 		blrg.clMax = eax;
 		eax = blrg.lnMin;
 		blrg.lnMax = eax;
-		((EDIT *)ebx)->fOvr = temp2;
+		pMem->fOvr = temp2;
 		eax = temp1;
 		eax = GlobalUnlock(eax);
 		return;
@@ -436,102 +430,99 @@ anon_1:
 
 } // EditPasteBlock
 
-REG_T Paste(DWORD hMem, HWND hWin, DWORD hData)
+REG_T Paste(EDIT *pMem, HWND hWin, DWORD hData)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	BLOCKRANGE blrg;
 
-	ebx = hMem;
 	eax = hWin;
-	if(eax==((EDIT *)ebx)->edta.hwnd)
+	if(eax==pMem->edta.hwnd)
 	{
-		esi = &((EDIT *)ebx)->edta;
+		esi = &pMem->edta;
 	}
 	else
 	{
-		esi = &((EDIT *)ebx)->edtb;
+		esi = &pMem->edtb;
 	} // endif
-	if(!(((EDIT *)ebx)->nMode&MODE_BLOCK))
+	if(!(pMem->nMode&MODE_BLOCK))
 	{
-		eax = DeleteSelection(ebx, ((EDIT *)ebx)->cpMin, ((EDIT *)ebx)->cpMax);
-		((EDIT *)ebx)->cpMin = eax;
-		((EDIT *)ebx)->cpMax = eax;
-		eax = EditPaste(ebx, hData);
+		eax = DeleteSelection(pMem, pMem->cpMin, pMem->cpMax);
+		pMem->cpMin = eax;
+		pMem->cpMax = eax;
+		eax = EditPaste(pMem, hData);
 	}
 	else
 	{
-		eax = GetBlockRange(& ((EDIT *)ebx)->blrg, &blrg);
-		eax = DeleteSelectionBlock(ebx, blrg.lnMin, blrg.clMin, blrg.lnMax, blrg.clMax);
-		eax = GetBlockCp(ebx, blrg.lnMin, blrg.clMin);
-		((EDIT *)ebx)->cpMin = eax;
-		((EDIT *)ebx)->cpMax = eax;
-		eax = EditPasteBlock(ebx, hData);
+		eax = GetBlockRange(& pMem->blrg, &blrg);
+		eax = DeleteSelectionBlock(pMem, blrg.lnMin, blrg.clMin, blrg.lnMax, blrg.clMax);
+		eax = GetBlockCp(pMem, blrg.lnMin, blrg.clMin);
+		pMem->cpMin = eax;
+		pMem->cpMax = eax;
+		eax = EditPasteBlock(pMem, hData);
 	} // endif
-	eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin, &ecx, &edx);
+	eax = GetCharPtr(pMem, pMem->cpMin, &ecx, &edx);
 	eax = SetCaretVisible(hWin, ((RAEDT *)esi)->cpy);
-	eax = SetCaret(ebx, ((RAEDT *)esi)->cpy);
-	eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edta.hwnd);
-	eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edtb.hwnd);
-	eax = SetCpxMax(ebx, hWin);
-	eax = SelChange(ebx, SEL_TEXT);
+	eax = SetCaret(pMem, ((RAEDT *)esi)->cpy);
+	eax = InvalidateEdit(pMem, pMem->edta.hwnd);
+	eax = InvalidateEdit(pMem, pMem->edtb.hwnd);
+	eax = SetCpxMax(pMem, hWin);
+	eax = SelChange(pMem, SEL_TEXT);
 	return eax;
 
 } // Paste
 
-REG_T Cut(DWORD hMem, HWND hWin)
+REG_T Cut(EDIT *pMem, HWND hWin)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 
-	ebx = hMem;
 	eax = hWin;
-	if(eax==((EDIT *)ebx)->edta.hwnd)
+	if(eax==pMem->edta.hwnd)
 	{
-		esi = &((EDIT *)ebx)->edta;
+		esi = &pMem->edta;
 	}
 	else
 	{
-		esi = &((EDIT *)ebx)->edtb;
+		esi = &pMem->edtb;
 	} // endif
-	if(!(((EDIT *)ebx)->nMode&MODE_BLOCK))
+	if(!(pMem->nMode&MODE_BLOCK))
 	{
-		eax = Copy(ebx);
-		eax = DeleteSelection(ebx, ((EDIT *)ebx)->cpMin, ((EDIT *)ebx)->cpMax);
-		((EDIT *)ebx)->cpMin = eax;
-		((EDIT *)ebx)->cpMax = eax;
+		eax = Copy(pMem);
+		eax = DeleteSelection(pMem, pMem->cpMin, pMem->cpMax);
+		pMem->cpMin = eax;
+		pMem->cpMax = eax;
 	}
 	else
 	{
-		eax = GetBlockRange(& ((EDIT *)ebx)->blrg, & ((EDIT *)ebx)->blrg);
-		eax = Copy(ebx);
-		eax = DeleteSelectionBlock(ebx, ((EDIT *)ebx)->blrg.lnMin, ((EDIT *)ebx)->blrg.clMin, ((EDIT *)ebx)->blrg.lnMax, ((EDIT *)ebx)->blrg.clMax);
-		eax = ((EDIT *)ebx)->blrg.clMin;
-		edx = ((EDIT *)ebx)->blrg.lnMin;
-		((EDIT *)ebx)->blrg.clMax = eax;
-		((EDIT *)ebx)->blrg.lnMax = edx;
-		eax = GetBlockCp(ebx, edx, eax);
-		((EDIT *)ebx)->cpMin = eax;
-		((EDIT *)ebx)->cpMax = eax;
+		eax = GetBlockRange(& pMem->blrg, & pMem->blrg);
+		eax = Copy(pMem);
+		eax = DeleteSelectionBlock(pMem, pMem->blrg.lnMin, pMem->blrg.clMin, pMem->blrg.lnMax, pMem->blrg.clMax);
+		eax = pMem->blrg.clMin;
+		edx = pMem->blrg.lnMin;
+		pMem->blrg.clMax = eax;
+		pMem->blrg.lnMax = edx;
+		eax = GetBlockCp(pMem, edx, eax);
+		pMem->cpMin = eax;
+		pMem->cpMax = eax;
 	} // endif
-	eax = GetCharPtr(ebx, ((EDIT *)ebx)->cpMin, &ecx, &edx);
+	eax = GetCharPtr(pMem, pMem->cpMin, &ecx, &edx);
 	eax = SetCaretVisible(hWin, ((RAEDT *)esi)->cpy);
-	eax = SetCaret(ebx, ((RAEDT *)esi)->cpy);
-	eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edta.hwnd);
-	eax = InvalidateEdit(ebx, ((EDIT *)ebx)->edtb.hwnd);
-	eax = SetCpxMax(ebx, hWin);
-	eax = SelChange(ebx, SEL_TEXT);
+	eax = SetCaret(pMem, ((RAEDT *)esi)->cpy);
+	eax = InvalidateEdit(pMem, pMem->edta.hwnd);
+	eax = InvalidateEdit(pMem, pMem->edtb.hwnd);
+	eax = SetCpxMax(pMem, hWin);
+	eax = SelChange(pMem, SEL_TEXT);
 	return eax;
 
 } // Cut
 
-REG_T ConvertCase(DWORD hMem, DWORD nFunction)
+REG_T ConvertCase(EDIT *pMem, DWORD nFunction)
 {
 	REG_T eax = 0, edx, ebx, edi;
 	REG_T temp1;
 
-	ebx = hMem;
 	nUndoid++;
-	eax = ((EDIT *)ebx)->cpMin;
-	edx = ((EDIT *)ebx)->cpMax;
+	eax = pMem->cpMin;
+	edx = pMem->cpMax;
 	if(eax<edx)
 	{
 		temp1 = eax;
@@ -542,7 +533,7 @@ REG_T ConvertCase(DWORD hMem, DWORD nFunction)
 	eax++;
 	eax = xGlobalAlloc(GMEM_FIXED | GMEM_ZEROINIT, eax);
 	edi = eax;
-	eax = EditCopyNoLF(ebx, edi);
+	eax = EditCopyNoLF(pMem, edi);
 	if(nFunction==CONVERT_UPPERCASE)
 	{
 		eax = CharUpper(edi);
@@ -551,14 +542,14 @@ REG_T ConvertCase(DWORD hMem, DWORD nFunction)
 	{
 		eax = CharLower(edi);
 	} // endif
-	eax = Paste(ebx, ((EDIT *)ebx)->focus, edi);
+	eax = Paste(pMem, pMem->focus, edi);
 	eax = GlobalFree(edi);
 	nUndoid++;
 	return eax;
 
 } // ConvertCase
 
-REG_T ConvertIndent(DWORD hMem, DWORD nFunction)
+REG_T ConvertIndent(EDIT *pMem, DWORD nFunction)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1;
@@ -575,10 +566,9 @@ REG_T ConvertIndent(DWORD hMem, DWORD nFunction)
 	auto void NextLine(void);
 	auto void GetIndent(void);
 
-	ebx = hMem;
 	nUndoid++;
-	edx = ((EDIT *)ebx)->cpMin;
-	eax = ((EDIT *)ebx)->cpMax;
+	edx = pMem->cpMin;
+	eax = pMem->cpMax;
 	if(eax<edx)
 	{
 		temp1 = eax;
@@ -586,16 +576,16 @@ REG_T ConvertIndent(DWORD hMem, DWORD nFunction)
 		edx = temp1;
 	} // endif
 	temp1 = eax;
-	eax = GetLineFromCp(ebx, edx);
-	eax = GetCpFromLine(ebx, eax);
+	eax = GetLineFromCp(pMem, edx);
+	eax = GetCpFromLine(pMem, eax);
 	edx = eax;
 	eax = temp1;
 	cpst = edx;
 	cpMin = edx;
-	((EDIT *)ebx)->cpMin = edx;
+	pMem->cpMin = edx;
 	cpen = eax;
 	cpMax = eax;
-	((EDIT *)ebx)->cpMax = eax;
+	pMem->cpMax = eax;
 	eax -= edx;
 	eax++;
 	eax = xGlobalAlloc(GMEM_FIXED | GMEM_ZEROINIT, eax);
@@ -603,7 +593,7 @@ REG_T ConvertIndent(DWORD hMem, DWORD nFunction)
 	hCMem = eax;
 	eax = xGlobalAlloc(GMEM_FIXED | GMEM_ZEROINIT, 1024*32);
 	hLMem = eax;
-	eax = EditCopyNoLF(ebx, edi);
+	eax = EditCopyNoLF(pMem, edi);
 	while(*(BYTE *)edi)
 	{
 		GetIndent();
@@ -615,7 +605,7 @@ REG_T ConvertIndent(DWORD hMem, DWORD nFunction)
 			edx = 0;
 			if(nFunction==CONVERT_TABTOSPACE)
 			{
-				eax = ((EDIT *)ebx)->nTab;
+				eax = pMem->nTab;
 				nxt = eax;
 				while(edx<len)
 				{
@@ -635,7 +625,7 @@ REG_T ConvertIndent(DWORD hMem, DWORD nFunction)
 					} // endif
 					if(ecx==nxt)
 					{
-						eax = ((EDIT *)ebx)->nTab;
+						eax = pMem->nTab;
 						nxt += eax;
 					} // endif
 					edx++;
@@ -643,7 +633,7 @@ REG_T ConvertIndent(DWORD hMem, DWORD nFunction)
 			}
 			else if(nFunction==CONVERT_SPACETOTAB)
 			{
-				eax = ((EDIT *)ebx)->nTab;
+				eax = pMem->nTab;
 				nxt = eax;
 				spcount = edx;
 				while(edx<len)
@@ -663,7 +653,7 @@ REG_T ConvertIndent(DWORD hMem, DWORD nFunction)
 						spcount = 0;
 						*(BYTE *)(esi+ecx) = VK_TAB;
 						ecx++;
-						eax = ((EDIT *)ebx)->nTab;
+						eax = pMem->nTab;
 						nxt += eax;
 					} // endif
 				} // endw
@@ -680,19 +670,19 @@ REG_T ConvertIndent(DWORD hMem, DWORD nFunction)
 			cpMin += eax;
 			cpMax += eax;
 			cpen += eax;
-			eax = DeleteSelection(ebx, ((EDIT *)ebx)->cpMin, ((EDIT *)ebx)->cpMax);
-			((EDIT *)ebx)->cpMin = eax;
-			((EDIT *)ebx)->cpMax = eax;
-			eax = EditPaste(ebx, esi);
+			eax = DeleteSelection(pMem, pMem->cpMin, pMem->cpMax);
+			pMem->cpMin = eax;
+			pMem->cpMax = eax;
+			eax = EditPaste(pMem, esi);
 		} // endif
 		NextLine();
 	} // endw
 	eax = GlobalFree(hLMem);
 	eax = GlobalFree(hCMem);
 	eax = cpst;
-	((EDIT *)ebx)->cpMin = eax;
+	pMem->cpMin = eax;
 	eax = cpen;
-	((EDIT *)ebx)->cpMax = eax;
+	pMem->cpMax = eax;
 	nUndoid++;
 	return eax;
 
@@ -720,9 +710,9 @@ REG_T ConvertIndent(DWORD hMem, DWORD nFunction)
 		eax = edi;
 		eax -= hCMem;
 		eax += cpMin;
-		((EDIT *)ebx)->cpMin = eax;
+		pMem->cpMin = eax;
 		eax += edx;
-		((EDIT *)ebx)->cpMax = eax;
+		pMem->cpMax = eax;
 		return;
 
 	}

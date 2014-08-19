@@ -1,0 +1,137 @@
+<?php
+
+$files = array(
+	'Block.c', 
+	'Block.h', 
+	'ClipBoard.c', 
+	'ClipBoard.h', 
+	'Data.c', 
+	'Data.h', 
+	'DragDrop.c', 
+	'DragDrop.h', 
+	'Edit.c', 
+	'Edit.h', 
+	'Function.c', 
+	'Function.h', 
+	'Memory.c', 
+	'Memory.h', 
+	'Misc.c', 
+	'Misc.h', 
+	'Paint.c', 
+	'Paint.h', 
+	'Position.c', 
+	'Position.h', 
+	'RAEdit.c', 
+	'RAEdit.h', 
+	'RAEditDll.c', 
+	'RAEditDll.h', 
+	'RegisterTypes.h', 
+	'Undo.c', 
+	'Undo.h', 
+);
+
+foreach($files as $file)
+{
+	if(substr($file, -2) == '.c')
+	{
+		cleanup($file);
+	}
+}
+
+////////////////////////////////////////////////////////////
+
+function cleanup($file)
+{
+	$contents = file_get_contents($file);
+	$contents = str_replace("\r\n", "\n", $contents);
+	
+	$ex = explode("\nREG_T ", $contents);
+	
+	foreach($ex as $id => &$func)
+	{
+		if($id == 0)
+			continue;
+		
+		$func = cleanup_registers($func);
+		$func = cleanup_with_nested_functions($func);
+	}
+	unset($func);
+	
+	$contents = implode("\nREG_T ", $ex);
+	
+	$contents = str_replace("\n", "\r\n", $contents);
+	file_put_contents($file, $contents);
+}
+
+function cleanup_registers($func)
+{
+	$p = '#REG_T eax = 0(.*?);#';
+	preg_match($p, $func, $m);
+	
+	$regs = explode(', ', 'eax'.$m[1]);
+	foreach($regs as $i => $reg)
+	{
+		preg_match_all("#\\b$reg\\b#", $func, $m);
+		
+		if(count($m[0]) <= 1)
+		{
+			assert(count($m[0]) == 1);
+			unset($regs[$i]);
+		}
+	}
+	
+	assert(count($regs) > 0);
+	
+	$regs = implode(', ', $regs);
+	$regs = str_replace('eax', 'eax = 0', $regs);
+	
+	$p = '#REG_T eax = 0, .*?;#';
+	$func = preg_replace($p, "REG_T $regs;", $func);
+	
+	return $func;
+}
+
+function cleanup_with_nested_functions($func)
+{
+	$ex = explode("\n\tvoid ", $func);
+	
+	foreach($ex as $id => &$subfunc)
+	{
+		$subfunc = cleanup_temp_vars($subfunc);
+	}
+	unset($subfunc);
+	
+	$func = implode("\n\tvoid ", $ex);
+	
+	return $func;
+}
+
+function cleanup_temp_vars($func)
+{
+	$regs = array('temp1', 'temp2', 'temp3', 'temp4', 'temp5', 'temp6', 'temp7', 'temp8');
+	foreach($regs as $i => $reg)
+	{
+		preg_match_all("#\\b$reg\\b#", $func, $m);
+		
+		if(count($m[0]) <= 1)
+		{
+			assert(count($m[0]) == 1);
+			unset($regs[$i]);
+		}
+	}
+	
+	if(count($regs) > 0)
+	{
+		$regs = implode(', ', $regs);
+		
+		$search = 'REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;';
+		$func = str_replace($search, "REG_T $regs;", $func);
+	}
+	else
+	{
+		$p = '#\n\t*REG_T temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;#';
+		$func = preg_replace($p, '', $func);
+	}
+	
+	return $func;
+}
