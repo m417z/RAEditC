@@ -5,7 +5,7 @@
 
 REG_T SetFont(EDIT *pMem, REG_T lpRafont)
 {
-	REG_T eax = 0, edx, ebx;
+	REG_T eax = 0, edx;
 	REG_T temp1, temp2;
 	HDC hDC;
 	DRAWTEXTPARAMS dtp;
@@ -91,7 +91,7 @@ REG_T SetFont(EDIT *pMem, REG_T lpRafont)
 
 REG_T SetColor(EDIT *pMem, REG_T lpRAColor)
 {
-	REG_T eax = 0, edx, ebx;
+	REG_T eax = 0, edx;
 
 	edx = lpRAColor;
 	eax = ((RACOLOR *)edx)->bckcol;
@@ -118,7 +118,7 @@ REG_T SetColor(EDIT *pMem, REG_T lpRAColor)
 
 REG_T DestroyBrushes(EDIT *pMem)
 {
-	REG_T eax = 0, ebx;
+	REG_T eax = 0;
 
 	eax = pMem->br.hBrBck;
 	if(eax)
@@ -161,7 +161,7 @@ REG_T DestroyBrushes(EDIT *pMem)
 
 REG_T CreateBrushes(EDIT *pMem)
 {
-	REG_T eax = 0, ebx;
+	REG_T eax = 0;
 
 	eax = DestroyBrushes(pMem);
 	eax = CreateSolidBrush(pMem->clr.bckcol);
@@ -278,7 +278,7 @@ lb1:
 */
 REG_T GetChar(EDIT *pMem, DWORD cp)
 {
-	REG_T eax = 0, ecx, edx, ebx;
+	REG_T eax = 0, ecx, edx;
 
 	eax = GetCharPtr(pMem, cp, &ecx, &edx);
 	edx *= sizeof(LINE);
@@ -309,7 +309,7 @@ REG_T IsChar(BYTE ch)
 
 REG_T IsCharLeadByte(EDIT *pMem, DWORD cp)
 {
-	REG_T eax = 0, ecx, edx, ebx;
+	REG_T eax = 0, ecx, edx;
 
 	if(pMem->fntinfo.fDBCS)
 	{
@@ -348,7 +348,7 @@ REG_T IsCharLeadByte(EDIT *pMem, DWORD cp)
 
 REG_T GetTextWidth(EDIT *pMem, HDC hDC, REG_T lpText, DWORD nChars, REG_T lpRect)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi;
+	REG_T eax = 0, ecx, edx, esi;
 	DRAWTEXTPARAMS dtp;
 
 	if(pMem->fntinfo.monospace)
@@ -431,7 +431,7 @@ REG_T GetBlockRange(REG_T lpSrc, REG_T lpDst)
 
 REG_T GetBlockRects(EDIT *pMem, REG_T lpRects)
 {
-	REG_T eax = 0, ecx, ebx, esi, edi;
+	REG_T eax = 0, ecx, esi, edi;
 	BLOCKRANGE blrg;
 
 	auto void GetRect(void);

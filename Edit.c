@@ -8,7 +8,7 @@
 
 REG_T InsertNewLine(EDIT *pMem, DWORD nLine, REG_T nSize)
 {
-	REG_T eax = 0, ecx, ebx, esi, edi;
+	REG_T eax = 0, ecx, esi, edi;
 	REG_T temp1;
 
 	eax = nSize;
@@ -62,7 +62,7 @@ REG_T InsertNewLine(EDIT *pMem, DWORD nLine, REG_T nSize)
 
 REG_T AddNewLine(EDIT *pMem, REG_T lpLine, REG_T nSize)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
+	REG_T eax = 0, ecx, edx, esi, edi;
 
 	eax = ExpandLineMem(pMem);
 	eax = ExpandCharMem(pMem, nSize);
@@ -100,7 +100,7 @@ REG_T AddNewLine(EDIT *pMem, REG_T lpLine, REG_T nSize)
 
 REG_T ExpandCharLine(EDIT *pMem)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
+	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T temp1, temp2;
 
 	esi = pMem->rpChars;
@@ -155,7 +155,7 @@ REG_T ExpandCharLine(EDIT *pMem)
 
 REG_T DeleteLine(EDIT *pMem, DWORD nLine)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
+	REG_T eax = 0, ecx, edx, esi, edi;
 
 	esi = pMem->hLine;
 	edi = 0;
@@ -187,7 +187,7 @@ REG_T DeleteLine(EDIT *pMem, DWORD nLine)
 
 REG_T InsertChar(EDIT *pMem, DWORD cp, DWORD nChr)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
+	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T temp1, temp2;
 
 	eax = ExpandLineMem(pMem);
@@ -345,7 +345,7 @@ Ex:
 
 REG_T DeleteChar(EDIT *pMem, DWORD cp)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
+	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T temp1, temp2, temp3;
 
 	edx = cp;
@@ -483,7 +483,7 @@ REG_T DeleteChar(EDIT *pMem, DWORD cp)
 
 REG_T DeleteSelection(EDIT *pMem, DWORD cpMin, DWORD cpMax)
 {
-	REG_T eax = 0, ebx, edi;
+	REG_T eax = 0, edi;
 	REG_T temp1, temp2;
 
 	eax = cpMin;
@@ -537,7 +537,7 @@ REG_T DeleteSelection(EDIT *pMem, DWORD cpMin, DWORD cpMax)
 
 REG_T DeleteSelectionBlock(EDIT *pMem, DWORD lnMin, DWORD clMin, DWORD lnMax, DWORD clMax)
 {
-	REG_T eax = 0, edx, ebx, esi, edi;
+	REG_T eax = 0, edx, esi, edi;
 
 	eax = clMin;
 	edx = clMax;
@@ -588,7 +588,7 @@ anon_1:
 
 REG_T EditInsert(EDIT *pMem, DWORD cp, REG_T lpBuff)
 {
-	REG_T eax = 0, ebx, esi, edi;
+	REG_T eax = 0, esi, edi;
 
 	esi = lpBuff;
 	edi = cp;

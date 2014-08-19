@@ -55,7 +55,7 @@ exit3:
 
 REG_T EditCopy(EDIT *pMem, REG_T lpCMem)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
+	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T temp1;
 	DWORD cpMin;
 	DWORD cpMax;
@@ -106,7 +106,7 @@ REG_T EditCopy(EDIT *pMem, REG_T lpCMem)
 
 REG_T EditCopyBlock(EDIT *pMem, REG_T lpCMem)
 {
-	REG_T eax = 0, edx, ebx, esi;
+	REG_T eax = 0, edx, esi;
 	BLOCKRANGE blrg;
 
 	auto void CopyBlockChar(void);
@@ -162,7 +162,7 @@ REG_T EditCopyBlock(EDIT *pMem, REG_T lpCMem)
 
 REG_T EditCopyNoLF(EDIT *pMem, REG_T lpCMem)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
+	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T temp1;
 	DWORD cpMin;
 	DWORD cpMax;
@@ -208,7 +208,7 @@ REG_T EditCopyNoLF(EDIT *pMem, REG_T lpCMem)
 
 REG_T Copy(EDIT *pMem)
 {
-	REG_T eax = 0, edx, ebx;
+	REG_T eax = 0, edx;
 	REG_T temp1;
 	REG_T hCMem;
 
@@ -258,7 +258,7 @@ REG_T Copy(EDIT *pMem)
 
 REG_T EditPaste(EDIT *pMem, REG_T hData)
 {
-	REG_T eax = 0, ecx, edx, ebx;
+	REG_T eax = 0, ecx, edx;
 
 	auto void InsertMem(void);
 
@@ -308,7 +308,7 @@ REG_T EditPaste(EDIT *pMem, REG_T hData)
 
 REG_T EditPasteBlock(EDIT *pMem, REG_T hData)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
+	REG_T eax = 0, ecx, edx, esi, edi;
 	DWORD nSpc;
 	BLOCKRANGE blrg;
 
@@ -432,7 +432,7 @@ anon_1:
 
 REG_T Paste(EDIT *pMem, HWND hWin, REG_T hData)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi;
+	REG_T eax = 0, ecx, edx, esi;
 	BLOCKRANGE blrg;
 
 	eax = hWin;
@@ -473,7 +473,7 @@ REG_T Paste(EDIT *pMem, HWND hWin, REG_T hData)
 
 REG_T Cut(EDIT *pMem, HWND hWin)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi;
+	REG_T eax = 0, ecx, edx, esi;
 
 	eax = hWin;
 	if(eax==pMem->edta.hwnd)
@@ -517,7 +517,7 @@ REG_T Cut(EDIT *pMem, HWND hWin)
 
 REG_T ConvertCase(EDIT *pMem, DWORD nFunction)
 {
-	REG_T eax = 0, edx, ebx, edi;
+	REG_T eax = 0, edx, edi;
 	REG_T temp1;
 
 	nUndoid++;
@@ -551,7 +551,7 @@ REG_T ConvertCase(EDIT *pMem, DWORD nFunction)
 
 REG_T ConvertIndent(EDIT *pMem, DWORD nFunction)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
+	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T temp1;
 	REG_T hCMem;
 	REG_T hLMem;

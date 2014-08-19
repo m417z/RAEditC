@@ -1243,7 +1243,7 @@ anon_6:
 
 REG_T SetBlockMarkers(EDIT *pMem, DWORD nLine, DWORD nMax)
 {
-	REG_T eax = 0, edx, ebx, esi, edi;
+	REG_T eax = 0, edx, esi, edi;
 	DWORD nLines;
 	DWORD nLnMax;
 	DWORD nLnSt;
@@ -1403,7 +1403,7 @@ BlockRootStart:
 
 REG_T DrawChangedState(EDIT *pMem, HDC hDC, REG_T lpLine, DWORD x, DWORD y)
 {
-	REG_T eax = 0, ebx, edi;
+	REG_T eax = 0, edi;
 	HBRUSH hBr;
 	RECT rect;
 
@@ -1457,7 +1457,7 @@ REG_T DrawChangedState(EDIT *pMem, HDC hDC, REG_T lpLine, DWORD x, DWORD y)
 // This proc does all the painting and drawing
 REG_T RAEditPaint(HWND hWin)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
+	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T temp1, temp2, temp3, temp4;
 	PAINTSTRUCT ps;
 	HDC mDC;
@@ -1861,7 +1861,7 @@ anon_9:
 // This proc does all the painting and drawing
 REG_T RAEditPaintNoBuff(HWND hWin)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
+	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T temp1, temp2, temp3;
 	PAINTSTRUCT ps;
 	RECT rect;

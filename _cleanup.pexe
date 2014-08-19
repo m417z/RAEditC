@@ -97,7 +97,7 @@ function cleanup_with_nested_functions($func)
 	
 	foreach($ex as $id => &$subfunc)
 	{
-		$subfunc = cleanup_temp_vars($subfunc);
+		//$subfunc = cleanup_temp_vars($subfunc);
 	}
 	unset($subfunc);
 	

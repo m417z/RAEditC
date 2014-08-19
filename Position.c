@@ -5,7 +5,7 @@
 
 REG_T GetTopFromYp(EDIT *pMem, HWND hWin, DWORD yp)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
+	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T temp1, temp2, temp3;
 	DWORD cp;
 
@@ -210,7 +210,7 @@ anon_3:
 // eax=Char index
 REG_T GetCpFromLine(EDIT *pMem, DWORD nLine)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
+	REG_T eax = 0, ecx, edx, esi, edi;
 
 	esi = pMem->hLine;
 	edi = pMem->hChars;
@@ -251,7 +251,7 @@ REG_T GetCpFromLine(EDIT *pMem, DWORD nLine)
 
 REG_T GetLineFromCp(EDIT *pMem, DWORD cp)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
+	REG_T eax = 0, ecx, edx, esi, edi;
 
 	esi = pMem->hLine;
 	edi = pMem->hChars;
@@ -418,7 +418,7 @@ anon_7: ;
 
 REG_T GetCpFromXp(EDIT *pMem, REG_T lpChars, DWORD x, DWORD fNoAdjust)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
+	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T temp1, temp2, temp3;
 	REG_T hDC;
 	RECT rect;
@@ -524,7 +524,7 @@ anon_8:
 
 REG_T GetPosFromChar(EDIT *pMem, DWORD cp, REG_T lpPoint)
 {
-	REG_T eax = 0, ebx, esi;
+	REG_T eax = 0, esi;
 	REG_T temp1;
 	HDC hDC;
 	RECT rect;
@@ -568,7 +568,7 @@ REG_T GetPosFromChar(EDIT *pMem, DWORD cp, REG_T lpPoint)
 
 REG_T GetCharFromPos(EDIT *pMem, DWORD cpy, DWORD x, DWORD y)
 {
-	REG_T eax = 0, edx, ebx;
+	REG_T eax = 0, edx;
 	REG_T temp1;
 	DWORD cp;
 
@@ -619,7 +619,7 @@ Ex:
 
 REG_T GetCaretPoint(EDIT *pMem, DWORD cp, DWORD cpy, REG_T lpPoint)
 {
-	REG_T eax = 0, ecx, ebx, esi;
+	REG_T eax = 0, ecx, esi;
 	POINT pt;
 
 	eax = GetPosFromChar(pMem, cp, &pt);
@@ -647,7 +647,7 @@ REG_T GetCaretPoint(EDIT *pMem, DWORD cp, DWORD cpy, REG_T lpPoint)
 
 REG_T SetCaret(EDIT *pMem, DWORD cpy)
 {
-	REG_T eax = 0, ecx, edx, ebx;
+	REG_T eax = 0, ecx, edx;
 	POINT pt;
 
 	eax = GetFocus();
@@ -679,7 +679,7 @@ REG_T SetCaret(EDIT *pMem, DWORD cpy)
 
 REG_T ScrollEdit(EDIT *pMem, HWND hWin, DWORD x, DWORD y)
 {
-	REG_T eax = 0, ebx, esi;
+	REG_T eax = 0, esi;
 	REG_T temp1;
 
 	eax = hWin;
@@ -736,7 +736,7 @@ REG_T ScrollEdit(EDIT *pMem, HWND hWin, DWORD x, DWORD y)
 
 REG_T InvalidateEdit(EDIT *pMem, HWND hWin)
 {
-	REG_T eax = 0, ebx, esi;
+	REG_T eax = 0, esi;
 
 	eax = hWin;
 	if(eax==pMem->edta.hwnd)
@@ -759,7 +759,7 @@ REG_T InvalidateEdit(EDIT *pMem, HWND hWin)
 
 REG_T InvalidateLine(EDIT *pMem, HWND hWin, DWORD nLine)
 {
-	REG_T eax = 0, ecx, ebx, esi;
+	REG_T eax = 0, ecx, esi;
 	RECT rect;
 
 	eax = hWin;
@@ -794,7 +794,7 @@ REG_T InvalidateLine(EDIT *pMem, HWND hWin, DWORD nLine)
 
 REG_T InvalidateSelection(EDIT *pMem, HWND hWin, DWORD cpMin, DWORD cpMax)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi;
+	REG_T eax = 0, ecx, edx, esi;
 	REG_T temp1;
 	DWORD nLine;
 
@@ -845,7 +845,7 @@ anon_9:
 
 REG_T SetCaretVisible(HWND hWin, DWORD cpy)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
+	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T temp1, temp2;
 	POINT pt;
 	DWORD cpx;
@@ -1011,7 +1011,7 @@ anon_10:
 
 REG_T GetBlockCp(EDIT *pMem, DWORD nLine, DWORD nPos)
 {
-	REG_T eax = 0, ecx, edx, ebx, edi;
+	REG_T eax = 0, ecx, edx, edi;
 
 	eax = GetCpFromLine(pMem, nLine);
 	edi = eax;
@@ -1039,7 +1039,7 @@ REG_T GetBlockCp(EDIT *pMem, DWORD nLine, DWORD nPos)
 
 REG_T SetCpxMax(EDIT *pMem, HWND hWin)
 {
-	REG_T eax = 0, ebx, esi;
+	REG_T eax = 0, esi;
 	POINT pt;
 
 	eax = hWin;
@@ -1063,7 +1063,7 @@ REG_T SetCpxMax(EDIT *pMem, HWND hWin)
 
 REG_T SetBlockFromCp(EDIT *pMem, DWORD cp, DWORD fShift)
 {
-	REG_T eax = 0, ecx, edx, ebx;
+	REG_T eax = 0, ecx, edx;
 	POINT pt;
 
 	eax = cp;

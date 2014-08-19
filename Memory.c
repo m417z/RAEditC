@@ -36,7 +36,7 @@ REG_T xHeapAlloc(REG_T h, DWORD t, REG_T s)
 
 REG_T ExpandLineMem(EDIT *pMem)
 {
-	REG_T eax = 0, ecx, ebx, esi, edi;
+	REG_T eax = 0, ecx, esi, edi;
 	REG_T temp1;
 
 	eax = pMem->rpLineFree;
@@ -80,7 +80,7 @@ REG_T ExpandLineMem(EDIT *pMem)
 
 REG_T GarbageCollection(REG_T lpEdit, REG_T lpLine, REG_T lpSrc, REG_T lpDst)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
+	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T temp1;
 	EDIT *pMem;
 
@@ -132,7 +132,7 @@ anon_1:
 
 REG_T ExpandCharMem(EDIT *pMem, REG_T nLen)
 {
-	REG_T eax = 0, ebx, esi, edi;
+	REG_T eax = 0, esi, edi;
 
 	eax = nLen;
 	eax >>= 12;
@@ -170,7 +170,7 @@ REG_T ExpandCharMem(EDIT *pMem, REG_T nLen)
 
 REG_T ExpandUndoMem(EDIT *pMem, REG_T cb)
 {
-	REG_T eax = 0, ecx, ebx, esi, edi;
+	REG_T eax = 0, ecx, esi, edi;
 	REG_T temp1;
 
 	eax = pMem->rpUndo;

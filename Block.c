@@ -5,7 +5,7 @@
 
 REG_T GetBlock(EDIT *pMem, DWORD nLine, REG_T lpBlockDef)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
+	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T temp1;
 	DWORD nLines;
 	BYTE buffer[256];
@@ -374,7 +374,7 @@ anon_11:
 
 REG_T SetBlocks(EDIT *pMem, REG_T lpLnrg, REG_T lpBlockDef)
 {
-	REG_T eax = 0, edx, ebx, esi, edi;
+	REG_T eax = 0, edx, esi, edi;
 	DWORD nLine;
 
 	nLine = 0;
@@ -610,7 +610,7 @@ NotEq:
 
 REG_T IsInBlock(EDIT *pMem, DWORD nLine, REG_T lpBlockDef)
 {
-	REG_T eax = 0, ebx, esi, edi;
+	REG_T eax = 0, esi, edi;
 
 	edi = nLine;
 	esi = lpBlockDef;
@@ -646,7 +646,7 @@ anon_13:
 
 REG_T TestBlockStart(EDIT *pMem, DWORD nLine)
 {
-	REG_T eax = 0, ebx, esi, edi;
+	REG_T eax = 0, esi, edi;
 
 	esi = nLine;
 	esi *= sizeof(LINE);
@@ -686,7 +686,7 @@ Ex:
 
 REG_T TestBlockEnd(EDIT *pMem, DWORD nLine)
 {
-	REG_T eax = 0, edx, ebx, esi, edi;
+	REG_T eax = 0, edx, esi, edi;
 	REG_T lpSecond;
 
 	esi = blockdefs;
@@ -759,7 +759,7 @@ Ex:
 
 REG_T CollapseGetEnd(EDIT *pMem, DWORD nLine)
 {
-	REG_T eax = 0, edx, ebx, esi, edi;
+	REG_T eax = 0, edx, esi, edi;
 	DWORD nLines;
 	DWORD nNest;
 	DWORD nMax;
@@ -875,7 +875,7 @@ Ex:
 
 REG_T Collapse(EDIT *pMem, DWORD nLine)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
+	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T temp1;
 	DWORD nLines;
 	DWORD nNest;
@@ -1150,7 +1150,7 @@ Ex:
 
 REG_T CollapseAll(EDIT *pMem)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
+	REG_T eax = 0, ecx, edx, esi, edi;
 
 	eax = GetCharPtr(pMem, pMem->cpMin, &ecx, &edx);
 	esi = 0;
@@ -1175,7 +1175,7 @@ anon_14:
 
 REG_T Expand(EDIT *pMem, DWORD nLine)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
+	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T temp1, temp2;
 
 	temp1 = pMem->nHidden;
@@ -1277,7 +1277,7 @@ Ex:
 
 REG_T ExpandAll(EDIT *pMem)
 {
-	REG_T eax = 0, ebx, esi, edi;
+	REG_T eax = 0, esi, edi;
 
 	esi = 0;
 	edi = 0;
@@ -1302,7 +1302,7 @@ anon_15:
 
 REG_T TestExpand(EDIT *pMem, DWORD nLine)
 {
-	REG_T eax = 0, ebx;
+	REG_T eax = 0;
 	REG_T temp1, temp2;
 
 	temp1 = pMem->nHidden;
@@ -1332,7 +1332,7 @@ anon_16:
 
 REG_T SetCommentBlocks(EDIT *pMem, REG_T lpStart, REG_T lpEnd)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
+	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T temp1;
 	DWORD nLine;
 	DWORD nCmnt;
@@ -1683,7 +1683,7 @@ anon_20:
 
 REG_T SetChangedState(EDIT *pMem, DWORD fUpdate)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
+	REG_T eax = 0, ecx, edx, esi, edi;
 	DWORD nLine;
 	DWORD fChanged;
 

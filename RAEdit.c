@@ -36,7 +36,7 @@ REG_T TimerProc(HWND hWin, UINT uMsg, UINT_PTR idEvent, DWORD dwTime)
 // Create a windowclass for the user control
 void WINAPI InstallRAEdit(HINSTANCE hInst, BOOL fGlobal)
 {
-	REG_T eax = 0, ebx;
+	REG_T eax = 0;
 	REG_T temp1;
 	WNDCLASSEX wc;
 	REG_T hBmp;
@@ -543,7 +543,7 @@ Ex:
 
 REG_T SplittBtnProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	REG_T eax = 0, edx, ebx;
+	REG_T eax = 0, edx;
 	REG_T temp1;
 	EDIT *pMem;
 
@@ -587,7 +587,7 @@ REG_T SplittBtnProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 REG_T StateProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	REG_T eax = 0, ebx;
+	REG_T eax = 0;
 	PAINTSTRUCT ps;
 	REG_T hBr;
 	EDIT *pMem;
@@ -628,7 +628,7 @@ REG_T StateProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 REG_T EditFunc(HWND hWin, UINT uMsg, DWORD fAlt, DWORD fShift, DWORD fControl)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi;
+	REG_T eax = 0, ecx, edx, esi;
 	REG_T temp1, temp2;
 	POINT pt;
 	DWORD cpOldMin;
@@ -1876,7 +1876,7 @@ ErrBeep:
 
 REG_T RAEditProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
+	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T temp1, temp2, temp3;
 	SCROLLINFO sinf;
 	POINT pt;
@@ -3568,7 +3568,7 @@ ErrBeep:
 
 REG_T GetText(EDIT *pMem, DWORD cpMin, DWORD cpMax, REG_T lpText, DWORD fLf)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
+	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T temp1;
 	DWORD nLf;
 
@@ -3686,7 +3686,7 @@ REG_T ConvTwipsToPixels(HDC hDC, DWORD fHorz, DWORD lSize)
 // The edit controls callback (WndProc).
 REG_T RAWndProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
+	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T temp1, temp2, temp3;
 	RECT rect;
 	POINT pt;

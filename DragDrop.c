@@ -305,7 +305,7 @@ REG_T WINAPI IDropTarget_DragOver(REG_T pthis, DWORD grfKeyState, POINT pt, REG_
 
 REG_T WINAPI IDropTarget_DragLeave(REG_T pthis)
 {
-	REG_T eax = 0, ebx, edi;
+	REG_T eax = 0, edi;
 	EDIT *pMem;
 
 	// PrintText 'IDropTarget_DragLeave'
@@ -557,7 +557,7 @@ REG_T WINAPI IDO_Release(REG_T pthis)
 
 REG_T WINAPI IDO_GetData(REG_T pthis, REG_T pFormatetc, REG_T pmedium)
 {
-	REG_T eax = 0, edx, ebx, esi;
+	REG_T eax = 0, edx, esi;
 	REG_T hCMem;
 	EDIT *pMem;
 

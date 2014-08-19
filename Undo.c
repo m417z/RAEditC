@@ -7,7 +7,7 @@
 
 REG_T DoUndo(EDIT *pMem)
 {
-	REG_T eax = 0, ecx, edx, ebx, edi;
+	REG_T eax = 0, ecx, edx, edi;
 	REG_T temp1, temp2, temp3;
 	DWORD undoid;
 
@@ -136,7 +136,7 @@ Nxt:
 
 REG_T DoRedo(EDIT *pMem)
 {
-	REG_T eax = 0, ecx, edx, ebx, edi;
+	REG_T eax = 0, ecx, edx, edi;
 	REG_T temp1, temp2, temp3;
 	DWORD undoid;
 
@@ -278,7 +278,7 @@ Nxt:
 
 REG_T SaveUndo(EDIT *pMem, DWORD nFun, DWORD cp, REG_T lp, REG_T cb)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
+	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T temp1;
 
 	if(!fNoSaveUndo)
@@ -352,7 +352,7 @@ REG_T SaveUndo(EDIT *pMem, DWORD nFun, DWORD cp, REG_T lp, REG_T cb)
 
 REG_T Undo(RAEDT *raedt, EDIT *pMem, HWND hWin)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi;
+	REG_T eax = 0, ecx, edx, esi;
 
     esi = raedt;
 	if(!(pMem->nMode&MODE_BLOCK))
@@ -377,7 +377,7 @@ REG_T Undo(RAEDT *raedt, EDIT *pMem, HWND hWin)
 
 REG_T Redo(RAEDT *raedt, EDIT *pMem, HWND hWin)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi;
+	REG_T eax = 0, ecx, edx, esi;
 
     esi = raedt;
 	if(!(pMem->nMode&MODE_BLOCK))
@@ -402,7 +402,7 @@ REG_T Redo(RAEDT *raedt, EDIT *pMem, HWND hWin)
 
 REG_T GetUndo(EDIT *pMem, DWORD nCount, REG_T lpMem)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
+	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T rpstart;
 	REG_T rpend;
 
@@ -492,7 +492,7 @@ REG_T GetUndo(EDIT *pMem, DWORD nCount, REG_T lpMem)
 
 REG_T SetUndo(EDIT *pMem, REG_T nSize, REG_T lpMem)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
+	REG_T eax = 0, ecx, edx, esi, edi;
 
 	eax = ExpandUndoMem(pMem, nSize);
 	esi = lpMem;

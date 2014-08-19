@@ -8,7 +8,7 @@
 
 REG_T FindTheText(EDIT *pMem, REG_T pFind, DWORD fMC, DWORD fWW, DWORD fWhiteSpace, DWORD cpMin, DWORD cpMax, DWORD fDir, DWORD *pnIgnore)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
+	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T temp1;
 	DWORD nLine;
 	DWORD lnlen;
@@ -398,7 +398,7 @@ FoundUp:
 
 REG_T FindTextEx(EDIT *pMem, DWORD fFlag, REG_T lpFindTextEx)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi;
+	REG_T eax = 0, ecx, edx, esi;
 	REG_T lpText;
 	DWORD len;
 	DWORD fMC;
@@ -468,7 +468,7 @@ REG_T FindTextEx(EDIT *pMem, DWORD fFlag, REG_T lpFindTextEx)
 
 REG_T IsLine(EDIT *pMem, DWORD nLine, REG_T lpszTest)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
+	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T tmpesi;
 	DWORD fCmnt;
 	BOOL notfound;
@@ -1302,7 +1302,7 @@ TestWordNf:
 
 REG_T SetBookMark(EDIT *pMem, DWORD nLine, DWORD nType)
 {
-	REG_T eax = 0, edx, ebx;
+	REG_T eax = 0, edx;
 
 	edx = nLine;
 	edx *= sizeof(LINE);
@@ -1330,7 +1330,7 @@ REG_T SetBookMark(EDIT *pMem, DWORD nLine, DWORD nType)
 
 REG_T GetBookMark(EDIT *pMem, DWORD nLine)
 {
-	REG_T eax = 0, edx, ebx;
+	REG_T eax = 0, edx;
 
 	eax = 0;
 	eax--;
@@ -1351,7 +1351,7 @@ REG_T GetBookMark(EDIT *pMem, DWORD nLine)
 
 REG_T ClearBookMarks(EDIT *pMem, DWORD nType)
 {
-	REG_T eax = 0, ecx, edx, ebx, edi;
+	REG_T eax = 0, ecx, edx, edi;
 
 	nType &= 15;
 	eax = nType;
@@ -1381,7 +1381,7 @@ REG_T ClearBookMarks(EDIT *pMem, DWORD nType)
 
 REG_T NextBookMark(EDIT *pMem, DWORD nLine, DWORD nType)
 {
-	REG_T eax = 0, ecx, edx, ebx, edi;
+	REG_T eax = 0, ecx, edx, edi;
 	DWORD fExpand;
 
 	eax = nType;
@@ -1416,7 +1416,7 @@ REG_T NextBookMark(EDIT *pMem, DWORD nLine, DWORD nType)
 
 REG_T NextBreakpoint(EDIT *pMem, DWORD nLine)
 {
-	REG_T eax = 0, edx, ebx, edi;
+	REG_T eax = 0, edx, edi;
 
 	edi = nLine;
 	edi++;
@@ -1443,7 +1443,7 @@ REG_T NextBreakpoint(EDIT *pMem, DWORD nLine)
 
 REG_T NextError(EDIT *pMem, DWORD nLine)
 {
-	REG_T eax = 0, edx, ebx, edi;
+	REG_T eax = 0, edx, edi;
 
 	edi = nLine;
 	edi++;
@@ -1470,7 +1470,7 @@ REG_T NextError(EDIT *pMem, DWORD nLine)
 
 REG_T PreviousBookMark(EDIT *pMem, DWORD nLine, DWORD nType)
 {
-	REG_T eax = 0, ecx, edx, ebx, edi;
+	REG_T eax = 0, ecx, edx, edi;
 	DWORD fExpand;
 
 	eax = nType;
@@ -1506,7 +1506,7 @@ anon_3:
 
 REG_T LockLine(EDIT *pMem, DWORD nLine, DWORD fLock)
 {
-	REG_T eax = 0, ebx;
+	REG_T eax = 0;
 
 	eax = nLine;
 	eax *= sizeof(LINE);
@@ -1530,7 +1530,7 @@ REG_T LockLine(EDIT *pMem, DWORD nLine, DWORD fLock)
 
 REG_T IsLineLocked(EDIT *pMem, DWORD nLine)
 {
-	REG_T eax = 0, edx, ebx;
+	REG_T eax = 0, edx;
 
 	eax = 0;
 	if(!(pMem->fstyle&STYLE_READONLY))
@@ -1556,7 +1556,7 @@ REG_T IsLineLocked(EDIT *pMem, DWORD nLine)
 
 REG_T HideLine(EDIT *pMem, DWORD nLine, DWORD fHide)
 {
-	REG_T eax = 0, ecx, edx, ebx;
+	REG_T eax = 0, ecx, edx;
 
 	auto void SetYP(void);
 
@@ -1624,7 +1624,7 @@ Ex:
 
 REG_T IsLineHidden(EDIT *pMem, DWORD nLine)
 {
-	REG_T eax = 0, ebx;
+	REG_T eax = 0;
 
 	eax = nLine;
 	eax *= sizeof(LINE);
@@ -1646,7 +1646,7 @@ REG_T IsLineHidden(EDIT *pMem, DWORD nLine)
 
 REG_T NoBlockLine(EDIT *pMem, DWORD nLine, DWORD fNoBlock)
 {
-	REG_T eax = 0, ebx;
+	REG_T eax = 0;
 
 	eax = nLine;
 	eax *= sizeof(LINE);
@@ -1670,7 +1670,7 @@ REG_T NoBlockLine(EDIT *pMem, DWORD nLine, DWORD fNoBlock)
 
 REG_T IsLineNoBlock(EDIT *pMem, DWORD nLine)
 {
-	REG_T eax = 0, ebx;
+	REG_T eax = 0;
 
 	eax = nLine;
 	eax *= sizeof(LINE);
@@ -1692,7 +1692,7 @@ REG_T IsLineNoBlock(EDIT *pMem, DWORD nLine)
 
 REG_T AltHiliteLine(EDIT *pMem, DWORD nLine, DWORD fAltHilite)
 {
-	REG_T eax = 0, ebx;
+	REG_T eax = 0;
 
 	eax = nLine;
 	eax *= sizeof(LINE);
@@ -1716,7 +1716,7 @@ REG_T AltHiliteLine(EDIT *pMem, DWORD nLine, DWORD fAltHilite)
 
 REG_T IsLineAltHilite(EDIT *pMem, DWORD nLine)
 {
-	REG_T eax = 0, ebx;
+	REG_T eax = 0;
 
 	eax = nLine;
 	eax *= sizeof(LINE);
@@ -1738,7 +1738,7 @@ REG_T IsLineAltHilite(EDIT *pMem, DWORD nLine)
 
 REG_T SetBreakpoint(EDIT *pMem, DWORD nLine, DWORD fBreakpoint)
 {
-	REG_T eax = 0, ebx;
+	REG_T eax = 0;
 
 	eax = nLine;
 	eax *= sizeof(LINE);
@@ -1762,7 +1762,7 @@ REG_T SetBreakpoint(EDIT *pMem, DWORD nLine, DWORD fBreakpoint)
 
 REG_T SetError(EDIT *pMem, DWORD nLine, DWORD nErrID)
 {
-	REG_T eax = 0, edx, ebx;
+	REG_T eax = 0, edx;
 
 	eax = nLine;
 	eax *= sizeof(LINE);
@@ -1780,7 +1780,7 @@ REG_T SetError(EDIT *pMem, DWORD nLine, DWORD nErrID)
 
 REG_T GetError(EDIT *pMem, DWORD nLine)
 {
-	REG_T eax = 0, edx, ebx;
+	REG_T eax = 0, edx;
 
 	edx = nLine;
 	edx *= sizeof(LINE);
@@ -1798,7 +1798,7 @@ REG_T GetError(EDIT *pMem, DWORD nLine)
 
 REG_T SetRedText(EDIT *pMem, DWORD nLine, DWORD fRed)
 {
-	REG_T eax = 0, ebx;
+	REG_T eax = 0;
 
 	eax = nLine;
 	eax *= sizeof(LINE);
@@ -1822,7 +1822,7 @@ REG_T SetRedText(EDIT *pMem, DWORD nLine, DWORD fRed)
 
 REG_T GetLineState(EDIT *pMem, DWORD nLine)
 {
-	REG_T eax = 0, edx, ebx;
+	REG_T eax = 0, edx;
 
 	edx = nLine;
 	edx *= sizeof(LINE);
@@ -1840,7 +1840,7 @@ REG_T GetLineState(EDIT *pMem, DWORD nLine)
 
 REG_T IsSelectionLocked(EDIT *pMem, DWORD cpMin, DWORD cpMax)
 {
-	REG_T eax = 0, ecx, edx, ebx;
+	REG_T eax = 0, ecx, edx;
 	REG_T temp1;
 	DWORD nLineMax;
 
@@ -1874,7 +1874,7 @@ Ex:
 
 REG_T TrimSpace(EDIT *pMem, DWORD nLine, DWORD fLeft)
 {
-	REG_T eax = 0, ecx, edx, ebx, edi;
+	REG_T eax = 0, ecx, edx, edi;
 	REG_T temp1, temp2, temp3;
 	DWORD cp;
 
@@ -1976,7 +1976,7 @@ Ex:
 
 REG_T SkipSpace(EDIT *pMem, DWORD cp, DWORD fLeft)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi;
+	REG_T eax = 0, ecx, edx, esi;
 
 	eax = GetCharPtr(pMem, cp, &ecx, &edx);
 	esi = pMem->rpChars;
@@ -2016,7 +2016,7 @@ anon_6:
 
 REG_T SkipWhiteSpace(EDIT *pMem, DWORD cp, DWORD fLeft)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi;
+	REG_T eax = 0, ecx, edx, esi;
 
 	eax = GetCharPtr(pMem, cp, &ecx, &edx);
 	esi = pMem->rpChars;
@@ -2058,7 +2058,7 @@ anon_8:
 
 REG_T GetWordStart(EDIT *pMem, DWORD cp, DWORD nType)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi;
+	REG_T eax = 0, ecx, edx, esi;
 
 	eax = GetCharPtr(pMem, cp, &ecx, &edx);
 	esi = pMem->rpChars;
@@ -2123,7 +2123,7 @@ anon_9:
 
 REG_T GetLineStart(EDIT *pMem, DWORD cp)
 {
-	REG_T eax = 0, ecx, edx, ebx;
+	REG_T eax = 0, ecx, edx;
 
 	eax = GetCharPtr(pMem, cp, &ecx, &edx);
 	eax = pMem->cpLine;
@@ -2133,7 +2133,7 @@ REG_T GetLineStart(EDIT *pMem, DWORD cp)
 
 REG_T GetTabPos(EDIT *pMem, DWORD cp)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi;
+	REG_T eax = 0, ecx, edx, esi;
 
 	eax = GetCharPtr(pMem, cp, &ecx, &edx);
 	esi = pMem->rpChars;
@@ -2156,7 +2156,7 @@ REG_T GetTabPos(EDIT *pMem, DWORD cp)
 
 REG_T GetWordEnd(EDIT *pMem, DWORD cp, DWORD nType)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi;
+	REG_T eax = 0, ecx, edx, esi;
 
 	eax = GetCharPtr(pMem, cp, &ecx, &edx);
 	esi = pMem->rpChars;
@@ -2219,7 +2219,7 @@ anon_10:
 
 REG_T GetLineEnd(EDIT *pMem, DWORD cp)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi;
+	REG_T eax = 0, ecx, edx, esi;
 
 	eax = GetCharPtr(pMem, cp, &ecx, &edx);
 	esi = pMem->rpChars;
@@ -2249,7 +2249,7 @@ anon_11:
 
 REG_T StreamIn(EDIT *pMem, REG_T lParam)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
+	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T temp1;
 	REG_T hCMem;
 	DWORD dwRead;
@@ -2334,7 +2334,7 @@ anon_13:
 
 REG_T StreamOut(EDIT *pMem, REG_T lParam)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi, edi;
+	REG_T eax = 0, ecx, edx, esi, edi;
 	DWORD dwWrite;
 	REG_T hCMem;
 	DWORD nChars;
@@ -2479,7 +2479,7 @@ Ex:
 
 REG_T HiliteLine(EDIT *pMem, DWORD nLine, DWORD nColor)
 {
-	REG_T eax = 0, edx, ebx;
+	REG_T eax = 0, edx;
 
 	edx = nLine;
 	edx *= sizeof(LINE);
@@ -2502,7 +2502,7 @@ REG_T HiliteLine(EDIT *pMem, DWORD nLine, DWORD nColor)
 
 REG_T SelChange(EDIT *pMem, DWORD nType)
 {
-	REG_T eax = 0, ecx, edx, ebx;
+	REG_T eax = 0, ecx, edx;
 	RASELCHANGE sc;
 
 	if(pMem->cpbrst!=-1)
@@ -2589,7 +2589,7 @@ REG_T SelChange(EDIT *pMem, DWORD nType)
 
 REG_T AutoIndent(EDIT *pMem)
 {
-	REG_T eax = 0, edx, ebx, esi;
+	REG_T eax = 0, edx, esi;
 	REG_T temp1, temp2, temp3;
 	DWORD nLine;
 
@@ -2633,7 +2633,7 @@ anon_16:
 
 REG_T IsCharPos(EDIT *pMem, DWORD cp)
 {
-	REG_T eax = 0, ecx, edx, ebx, esi;
+	REG_T eax = 0, ecx, edx, esi;
 	DWORD nMax;
 
 	eax = GetCharPtr(pMem, cp, &ecx, &edx);
@@ -2742,7 +2742,7 @@ Ex:
 
 REG_T BracketMatchRight(EDIT *pMem, DWORD nChr, DWORD nMatch, DWORD cp)
 {
-	REG_T eax = 0, ecx, edx, ebx, edi;
+	REG_T eax = 0, ecx, edx, edi;
 	REG_T temp1;
 	DWORD nCount;
 
@@ -2835,7 +2835,7 @@ REG_T BracketMatchRight(EDIT *pMem, DWORD nChr, DWORD nMatch, DWORD cp)
 
 REG_T BracketMatchLeft(EDIT *pMem, DWORD nChr, DWORD nMatch, DWORD cp)
 {
-	REG_T eax = 0, ecx, edx, ebx, edi;
+	REG_T eax = 0, ecx, edx, edi;
 	REG_T temp1, temp2;
 	DWORD nCount;
 
@@ -2924,7 +2924,7 @@ Ex:
 
 REG_T BracketMatch(EDIT *pMem, DWORD nChr, DWORD cp)
 {
-	REG_T eax = 0, ecx, ebx;
+	REG_T eax = 0, ecx;
 	REG_T temp1;
 
 	if(pMem->cpbrst!=-1 || pMem->cpbren!=-1)
@@ -2991,7 +2991,7 @@ Ex:
 
 REG_T GetLineBegin(EDIT *pMem, DWORD nLine)
 {
-	REG_T eax = 0, ecx, ebx, esi, edi;
+	REG_T eax = 0, ecx, esi, edi;
 
 	eax = nLine;
 	if(eax)
