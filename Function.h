@@ -3,9 +3,9 @@
 #include <windows.h>
 #include "Data.h"
 
-REG_T FindTheText(EDIT *pMem, DWORD pFind, DWORD fMC, DWORD fWW, DWORD fWhiteSpace, DWORD cpMin, DWORD cpMax, DWORD fDir, DWORD *pnIgnore);
-REG_T FindTextEx(EDIT *pMem, DWORD fFlag, DWORD lpFindTextEx);
-REG_T IsLine(EDIT *pMem, DWORD nLine, DWORD lpszTest);
+REG_T FindTheText(EDIT *pMem, REG_T pFind, DWORD fMC, DWORD fWW, DWORD fWhiteSpace, DWORD cpMin, DWORD cpMax, DWORD fDir, DWORD *pnIgnore);
+REG_T FindTextEx(EDIT *pMem, DWORD fFlag, REG_T lpFindTextEx);
+REG_T IsLine(EDIT *pMem, DWORD nLine, REG_T lpszTest);
 REG_T SetBookMark(EDIT *pMem, DWORD nLine, DWORD nType);
 REG_T GetBookMark(EDIT *pMem, DWORD nLine);
 REG_T ClearBookMarks(EDIT *pMem, DWORD nType);
@@ -35,8 +35,8 @@ REG_T GetLineStart(EDIT *pMem, DWORD cp);
 REG_T GetTabPos(EDIT *pMem, DWORD cp);
 REG_T GetWordEnd(EDIT *pMem, DWORD cp, DWORD nType);
 REG_T GetLineEnd(EDIT *pMem, DWORD cp);
-REG_T StreamIn(EDIT *pMem, DWORD lParam);
-REG_T StreamOut(EDIT *pMem, DWORD lParam);
+REG_T StreamIn(EDIT *pMem, REG_T lParam);
+REG_T StreamOut(EDIT *pMem, REG_T lParam);
 REG_T HiliteLine(EDIT *pMem, DWORD nLine, DWORD nColor);
 REG_T SelChange(EDIT *pMem, DWORD nType);
 REG_T AutoIndent(EDIT *pMem);

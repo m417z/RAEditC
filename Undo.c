@@ -276,7 +276,7 @@ Nxt:
 
 } // DoRedo
 
-REG_T SaveUndo(EDIT *pMem, DWORD nFun, DWORD cp, DWORD lp, DWORD cb)
+REG_T SaveUndo(EDIT *pMem, DWORD nFun, DWORD cp, REG_T lp, REG_T cb)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1;
@@ -400,11 +400,11 @@ REG_T Redo(RAEDT *raedt, EDIT *pMem, HWND hWin)
 
 } // Redo
 
-REG_T GetUndo(EDIT *pMem, DWORD nCount, DWORD lpMem)
+REG_T GetUndo(EDIT *pMem, DWORD nCount, REG_T lpMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	DWORD rpstart;
-	DWORD rpend;
+	REG_T rpstart;
+	REG_T rpend;
 
 	auto void GetHeader(void);
 	auto void GetData(void);
@@ -436,8 +436,8 @@ REG_T GetUndo(EDIT *pMem, DWORD nCount, DWORD lpMem)
 	{
 		eax = pMem->rpUndo;
 		eax -= rpstart;
-		*(DWORD *)edi = eax;
-		edi = edi+4;
+		*(REG_T *)edi = eax;
+		edi += sizeof(REG_T);
 		while(edx<rpend)
 		{
 			GetHeader();
@@ -490,17 +490,17 @@ REG_T GetUndo(EDIT *pMem, DWORD nCount, DWORD lpMem)
 
 } // GetUndo
 
-REG_T SetUndo(EDIT *pMem, DWORD nSize, DWORD lpMem)
+REG_T SetUndo(EDIT *pMem, REG_T nSize, REG_T lpMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 
 	eax = ExpandUndoMem(pMem, nSize);
 	esi = lpMem;
 	edi = pMem->hUndo;
-	eax = *(DWORD *)esi;
+	eax = *(REG_T *)esi;
 	pMem->rpUndo = eax;
-	esi = esi+4;
-	nSize -= 4;
+	esi += sizeof(REG_T);
+	nSize -= sizeof(REG_T);
 	eax = RtlMoveMemory(edi, esi, nSize);
 	ecx = ((RAUNDO *)edi)->undoid;
 	edx = nUndoid;

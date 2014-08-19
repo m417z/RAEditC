@@ -39,7 +39,7 @@ void WINAPI InstallRAEdit(HINSTANCE hInst, BOOL fGlobal)
 	REG_T eax = 0, ebx;
 	REG_T temp1;
 	WNDCLASSEX wc;
-	DWORD hBmp;
+	REG_T hBmp;
 
 	temp1 = hInst;
 	hInstance = temp1;
@@ -164,7 +164,7 @@ void WINAPI UnInstallRAEdit(void)
 //
 // nColor			gggg0sff cccccccc cccccccc cccccccc
 // g=Word group, s=Case sensitive, f=Font style, c=color
-REG_T SetHiliteWords(DWORD nColor, DWORD lpWords)
+REG_T SetHiliteWords(DWORD nColor, REG_T lpWords)
 {
 	REG_T eax = 0, ecx, edx, esi, edi;
 	REG_T temp1;
@@ -430,7 +430,7 @@ REG_T SetCharTabVal(DWORD nChar, DWORD nValue)
 
 } // SetCharTabVal
 
-REG_T SetBlockDef(DWORD lpRABLOCKDEF)
+REG_T SetBlockDef(REG_T lpRABLOCKDEF)
 {
 	REG_T eax = 0, ecx, ebx, esi, edi;
 	REG_T temp1, temp2;
@@ -439,30 +439,22 @@ REG_T SetBlockDef(DWORD lpRABLOCKDEF)
 
 	if(!lpRABLOCKDEF)
 	{
-		ecx = sizeof(blockdefs)/4;
-		edi = blockdefs;
-		eax = 0;
-		while(ecx > 0)
-		{
-			*(DWORD *)edi = eax;
-			edi += 4;
-			ecx--;
-		}
+	    memset(blockdefs, 0, sizeof(blockdefs));
 	}
 	else
 	{
 		ebx = lpRABLOCKDEF;
 		esi = blockdefs;
-		edi = esi+32*4;
-		while(*(DWORD *)esi)
+		edi = esi+32*sizeof(REG_T);
+		while(*(REG_T *)esi)
 		{
 			eax = IsBlockDefEqual(ebx, edi);
 			if(eax)
 			{
 				goto Ex;
 			} // endif
-			edi = *(DWORD *)esi;
-			esi += 4;
+			edi = *(REG_T *)esi;
+			esi += sizeof(REG_T);
 		} // endw
 		ecx = edi+sizeof(RABLOCKDEF);
 		eax = ((RABLOCKDEF *)ebx)->flag;
@@ -523,7 +515,7 @@ REG_T SetBlockDef(DWORD lpRABLOCKDEF)
 			ecx = temp1;
 			ecx = ecx+eax+1;
 		} // endif
-		*(DWORD *)esi = ecx;
+		*(REG_T *)esi = ecx;
 	} // endif
 Ex:
 	return eax;
@@ -559,14 +551,14 @@ REG_T SplittBtnProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	if(eax==WM_MOUSEMOVE)
 	{
 		eax = GetParent(hWin);
-		eax = GetWindowLong(eax, 0);
+		eax = GetWindowLongPtr(eax, 0);
 		pMem = eax;
 		eax = SetCursor(hHSCur);
 	}
 	else if(eax==WM_LBUTTONDOWN)
 	{
 		eax = GetParent(hWin);
-		eax = GetWindowLong(eax, 0);
+		eax = GetWindowLongPtr(eax, 0);
 		pMem = eax;
 		pMem->fresize = 1;
 		eax = SetCapture(pMem->hwnd);
@@ -576,7 +568,7 @@ REG_T SplittBtnProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		eax = GetParent(hWin);
 		temp1 = eax;
-		eax = GetWindowLong(eax, 0);
+		eax = GetWindowLongPtr(eax, 0);
 		pMem = eax;
 		eax = 511;
 		if(pMem->fsplitt)
@@ -597,7 +589,7 @@ REG_T StateProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	REG_T eax = 0, ebx;
 	PAINTSTRUCT ps;
-	DWORD hBr;
+	REG_T hBr;
 	EDIT *pMem;
 
 	if(uMsg==WM_PAINT)
@@ -646,7 +638,7 @@ REG_T EditFunc(HWND hWin, UINT uMsg, DWORD fAlt, DWORD fShift, DWORD fControl)
 	DWORD fSel;
 	EDIT *pMem;
 
-	eax = GetWindowLong(hWin, 0);
+	eax = GetWindowLongPtr(hWin, 0);
 	pMem = eax;
 	eax = hWin;
 	if(eax==pMem->edta.hwnd)
@@ -1074,7 +1066,7 @@ anon_4:
 				} // endif
 				eax = edx;
 				eax++;
-				eax *= 4;
+				eax *= sizeof(LINE);
 				if(eax<pMem->rpLineFree)
 				{
 					eax = IsLineHidden(pMem, edx);
@@ -1302,7 +1294,7 @@ anon_4:
 					eax *= ecx;
 					temp2 = eax;
 					eax = pMem->rpLineFree;
-					eax /= 4;
+					eax /= sizeof(LINE);
 					eax -= pMem->nHidden;
 					ecx = pMem->fntinfo.fntht;
 					eax *= ecx;
@@ -1380,7 +1372,7 @@ anon_4:
 					edx = pMem->blrg.lnMin;
 					edx += eax;
 					eax = pMem->rpLineFree;
-					eax /= 4;
+					eax /= sizeof(LINE);
 					if(edx>eax)
 					{
 						edx = eax;
@@ -1896,7 +1888,7 @@ REG_T RAEditProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	DWORD cpOldMin;
 	DWORD cpOldMax;
 	DWORD nOldLine;
-	DWORD hCur;
+	REG_T hCur;
 	RECT rect;
 	RECT oldrects[2];
 	EDIT *pMem;
@@ -1905,7 +1897,7 @@ REG_T RAEditProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	auto void SetScroll(void);
 
 	// Get memory pointers
-	eax = GetWindowLong(hWin, 0);
+	eax = GetWindowLongPtr(hWin, 0);
 	pMem = eax;
 	if(eax)
 	{
@@ -3408,7 +3400,7 @@ anon_6: ;
 	else if(eax==WM_CREATE)
 	{
 		eax = GetParent(hWin);
-		eax = GetWindowLong(eax, 0);
+		eax = GetWindowLongPtr(eax, 0);
 		eax = SetWindowLongPtr(hWin, 0, eax);
 	}
 	else if(eax==WM_WINDOWPOSCHANGED)
@@ -3542,7 +3534,7 @@ ErrBeep:
 		sinf.fMask = SIF_ALL;
 		sinf.nMin = 0;
 		eax = pMem->rpLineFree;
-		eax /= 4;
+		eax /= sizeof(LINE);
 		eax -= pMem->nHidden;
 		ecx = pMem->fntinfo.fntht;
 		eax *= ecx;
@@ -3574,7 +3566,7 @@ ErrBeep:
 
 } // RAEditProc
 
-REG_T GetText(EDIT *pMem, DWORD cpMin, DWORD cpMax, DWORD lpText, DWORD fLf)
+REG_T GetText(EDIT *pMem, DWORD cpMin, DWORD cpMax, REG_T lpText, DWORD fLf)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1;
@@ -3646,7 +3638,7 @@ REG_T FakeToolTipProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	REG_T temp1;
 	PAINTSTRUCT ps;
 	BYTE buffer[16];
-	DWORD hFnt;
+	REG_T hFnt;
 
 	eax = uMsg;
 	if(eax==WM_PAINT)
@@ -3717,7 +3709,7 @@ REG_T RAWndProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	auto void RelMem(void);
 
 	// Get memory pointer
-	eax = GetWindowLong(hWin, 0);
+	eax = GetWindowLongPtr(hWin, 0);
 	if(eax)
 	{
 		pMem = eax;
@@ -3935,7 +3927,7 @@ REG_T RAWndProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			eax = 0;
 			eax--;
 			edx = wParam;
-			edx *= 4;
+			edx *= sizeof(LINE);
 			if(edx<pMem->rpLineFree)
 			{
 				edx += pMem->hLine;
@@ -3999,7 +3991,7 @@ REG_T RAWndProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				if(ecx==((CHARS *)edx)->bmid)
 				{
 					eax = edi;
-					eax /= 4;
+					eax /= sizeof(LINE);
 					break;
 				} // endif
 				edi += sizeof(LINE);
@@ -4011,8 +4003,8 @@ REG_T RAWndProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			// lParam=0
 			temp1 = nBmid;
 			esi = blockdefs;
-			edi = esi+32*4;
-			while(*(DWORD *)esi)
+			edi = esi+32*sizeof(REG_T);
+			while(*(REG_T *)esi)
 			{
 				eax = ((RABLOCKDEF *)edi)->flag;
 				eax >>= 16;
@@ -4020,8 +4012,8 @@ REG_T RAWndProc(HWND hWin, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				{
 					eax = SetBlocks(pMem, wParam, edi);
 				} // endif
-				edi = *(DWORD *)esi;
-				esi += 4;
+				edi = *(REG_T *)esi;
+				esi += sizeof(REG_T);
 			} // endw
 			eax = temp1;
 			if(eax!=nBmid)
@@ -4399,7 +4391,7 @@ anon_7:
 			// wParam=nLine
 			// lParam=nBmID
 			edx = wParam;
-			edx *= 4;
+			edx *= sizeof(LINE);
 			if(edx<pMem->rpLineFree)
 			{
 				edx += pMem->hLine;
@@ -4415,7 +4407,7 @@ anon_7:
 			// lParam=0
 			eax = 0;
 			edx = wParam;
-			edx *= 4;
+			edx *= sizeof(LINE);
 			if(edx<pMem->rpLineFree)
 			{
 				edx += pMem->hLine;
@@ -4454,7 +4446,7 @@ anon_7:
 						{
 							edx = temp3;
 							temp3 = edx;
-							edx *= 4;
+							edx *= sizeof(LINE);
 							if(edx<pMem->rpLineFree)
 							{
 								edx += pMem->hLine;
@@ -4484,7 +4476,7 @@ anon_7:
 						pMem->cpMin = eax;
 						pMem->cpMax = eax;
 						eax = pMem->rpLineFree;
-						eax /= 4;
+						eax /= sizeof(LINE);
 						eax -= pMem->nHidden;
 						ecx = pMem->fntinfo.fntht;
 						eax *= ecx;
@@ -4519,7 +4511,7 @@ anon_7:
 			// wParam=nLine
 			// lParam=TRUE/FALSE
 			edx = wParam;
-			edx *= 4;
+			edx *= sizeof(LINE);
 			if(edx<pMem->rpLineFree)
 			{
 				edx += pMem->hLine;
@@ -4676,7 +4668,7 @@ anon_7:
 			// wParam=nLine
 			// lParam=TRUE/FALSE
 			edx = wParam;
-			edx *= 4;
+			edx *= sizeof(LINE);
 			if(edx<pMem->rpLineFree)
 			{
 				edx += pMem->hLine;
@@ -5604,7 +5596,7 @@ anon_8:
 			// wParam=line
 			// lParam=lpBuff
 			edx = wParam;
-			edx *= 4;
+			edx *= sizeof(LINE);
 			if(edx<pMem->rpLineFree)
 			{
 				edx += pMem->hLine;
@@ -5642,7 +5634,7 @@ anon_8:
 			// lParam=0
 			eax = GetLineFromCp(pMem, wParam);
 			edx = eax;
-			edx *= 4;
+			edx *= sizeof(LINE);
 			edx += pMem->hLine;
 			edx = ((LINE *)edx)->rpChars;
 			edx += pMem->hChars;
@@ -5828,7 +5820,7 @@ anon_8:
 			// wParam=0
 			// lParam=0
 			eax = pMem->rpLineFree;
-			eax /= 4;
+			eax /= sizeof(LINE);
 			eax--;
 			return eax;
 
@@ -6083,7 +6075,7 @@ anon_8:
 		edi = edx;
 		edi += pMem->rpLineFree;
 		eax = ((RAEDT *)esi)->topln;
-		eax *= 4;
+		eax *= sizeof(LINE);
 		edx += eax;
 		eax = ((RAEDT *)esi)->topcp;
 		while(edx<edi)

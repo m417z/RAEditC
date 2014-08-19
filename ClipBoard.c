@@ -11,7 +11,7 @@ REG_T SetClipData(LPSTR lpData, DWORD dwSize)
 {
 	REG_T eax = 0;
 	HANDLE hMem;
-	DWORD pMem;
+	REG_T pMem;
 
 	eax = dwSize;
 	eax >>= 3;
@@ -53,7 +53,7 @@ exit3:
 
 } // SetClipData
 
-REG_T EditCopy(EDIT *pMem, DWORD lpCMem)
+REG_T EditCopy(EDIT *pMem, REG_T lpCMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1;
@@ -104,7 +104,7 @@ REG_T EditCopy(EDIT *pMem, DWORD lpCMem)
 
 } // EditCopy
 
-REG_T EditCopyBlock(EDIT *pMem, DWORD lpCMem)
+REG_T EditCopyBlock(EDIT *pMem, REG_T lpCMem)
 {
 	REG_T eax = 0, edx, ebx, esi;
 	BLOCKRANGE blrg;
@@ -152,7 +152,7 @@ REG_T EditCopyBlock(EDIT *pMem, DWORD lpCMem)
 			eax++;
 		} // endw
 		eax = 0x0A0D;
-		*(DWORD *)esi = eax;
+		*(WORD *)esi = eax;
 		esi += 2;
 		return;
 
@@ -160,7 +160,7 @@ REG_T EditCopyBlock(EDIT *pMem, DWORD lpCMem)
 
 } // EditCopyBlock
 
-REG_T EditCopyNoLF(EDIT *pMem, DWORD lpCMem)
+REG_T EditCopyNoLF(EDIT *pMem, REG_T lpCMem)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1;
@@ -210,7 +210,7 @@ REG_T Copy(EDIT *pMem)
 {
 	REG_T eax = 0, edx, ebx;
 	REG_T temp1;
-	DWORD hCMem;
+	REG_T hCMem;
 
 	if(!(pMem->nMode&MODE_BLOCK))
 	{
@@ -256,7 +256,7 @@ REG_T Copy(EDIT *pMem)
 
 } // Copy
 
-REG_T EditPaste(EDIT *pMem, DWORD hData)
+REG_T EditPaste(EDIT *pMem, REG_T hData)
 {
 	REG_T eax = 0, ecx, edx, ebx;
 
@@ -306,7 +306,7 @@ REG_T EditPaste(EDIT *pMem, DWORD hData)
 
 } // EditPaste
 
-REG_T EditPasteBlock(EDIT *pMem, DWORD hData)
+REG_T EditPasteBlock(EDIT *pMem, REG_T hData)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	DWORD nSpc;
@@ -430,7 +430,7 @@ anon_1:
 
 } // EditPasteBlock
 
-REG_T Paste(EDIT *pMem, HWND hWin, DWORD hData)
+REG_T Paste(EDIT *pMem, HWND hWin, REG_T hData)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	BLOCKRANGE blrg;
@@ -553,8 +553,8 @@ REG_T ConvertIndent(EDIT *pMem, DWORD nFunction)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1;
-	DWORD hCMem;
-	DWORD hLMem;
+	REG_T hCMem;
+	REG_T hLMem;
 	DWORD cpst;
 	DWORD cpen;
 	DWORD cpMin;

@@ -100,14 +100,14 @@ REG_T WINAPI IDropTarget_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObject)
 	if(eax)
 	{
 		eax = pthis;
-		*(DWORD *)edx = eax;
+		*(REG_T *)edx = eax;
 		edx = eax;
 		eax = ((IDropTargetImpl *)edx)->lpVtbl->AddRef(eax);
 		eax = S_OK;
 	}
 	else
 	{
-		*(DWORD *)edx = 0;
+		*(REG_T *)edx = 0;
 		eax = E_NOINTERFACE;
 	} // endif
 	return eax;
@@ -143,7 +143,7 @@ REG_T WINAPI IDropTarget_Release(REG_T pthis)
 
 } // IDropTarget_Release
 
-REG_T WINAPI IDropTarget_DragEnter(REG_T pthis, REG_T lpDataObject, REG_T grfKeyState, POINT pt, REG_T lpdwEffect)
+REG_T WINAPI IDropTarget_DragEnter(REG_T pthis, REG_T lpDataObject, DWORD grfKeyState, POINT pt, REG_T lpdwEffect)
 {
 	REG_T eax = 0, edx, ebx, esi, edi;
 	REG_T temp1;
@@ -168,7 +168,7 @@ REG_T WINAPI IDropTarget_DragEnter(REG_T pthis, REG_T lpDataObject, REG_T grfKey
 		eax = temp1;
 		eax = ChildWindowFromPoint(eax, pt);
 		ebx = eax;
-		eax = GetWindowLong(ebx, 0);
+		eax = GetWindowLongPtr(ebx, 0);
 		if(eax)
 		{
 			((IDropTargetImpl *)edi)->hwnd = ebx;
@@ -213,7 +213,7 @@ REG_T WINAPI IDropTarget_DragEnter(REG_T pthis, REG_T lpDataObject, REG_T grfKey
 
 } // IDropTarget_DragEnter
 
-REG_T WINAPI IDropTarget_DragOver(REG_T pthis, REG_T grfKeyState, POINT pt, REG_T lpdwEffect)
+REG_T WINAPI IDropTarget_DragOver(REG_T pthis, DWORD grfKeyState, POINT pt, REG_T lpdwEffect)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1;
@@ -233,7 +233,7 @@ REG_T WINAPI IDropTarget_DragOver(REG_T pthis, REG_T grfKeyState, POINT pt, REG_
 		eax = temp1;
 		eax = ChildWindowFromPoint(eax, pt);
 		ebx = eax;
-		eax = GetWindowLong(ebx, 0);
+		eax = GetWindowLongPtr(ebx, 0);
 		if(eax)
 		{
 			((IDropTargetImpl *)edi)->hwnd = ebx;
@@ -312,7 +312,7 @@ REG_T WINAPI IDropTarget_DragLeave(REG_T pthis)
 	edi = pthis;
 	if(((IDropTargetImpl *)edi)->hwnd)
 	{
-		eax = GetWindowLong(((IDropTargetImpl *)edi)->hwnd, 0);
+		eax = GetWindowLongPtr(((IDropTargetImpl *)edi)->hwnd, 0);
 		if(eax)
 		{
 			pMem = eax;
@@ -329,7 +329,7 @@ REG_T WINAPI IDropTarget_DragLeave(REG_T pthis)
 
 } // IDropTarget_DragLeave
 
-REG_T WINAPI IDropTarget_Drop(REG_T pthis, REG_T lpDataObject, REG_T grfKeyState, POINT pt, REG_T lpdwEffect)
+REG_T WINAPI IDropTarget_Drop(REG_T pthis, REG_T lpDataObject, DWORD grfKeyState, POINT pt, REG_T lpdwEffect)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	STGMEDIUM medium;
@@ -345,7 +345,7 @@ REG_T WINAPI IDropTarget_Drop(REG_T pthis, REG_T lpDataObject, REG_T grfKeyState
 	((IDropTargetImpl *)edi)->valid = FALSE;
 	if(esi && ((IDropTargetImpl *)edi)->hwnd)
 	{
-		eax = GetWindowLong(((IDropTargetImpl *)edi)->hwnd, 0);
+		eax = GetWindowLongPtr(((IDropTargetImpl *)edi)->hwnd, 0);
 		if(eax)
 		{
 			pMem = eax;
@@ -423,14 +423,14 @@ REG_T WINAPI IDropSource_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObject)
 	if(eax)
 	{
 		eax = pthis;
-		*(DWORD *)edx = eax;
+		*(REG_T *)edx = eax;
 		edx = eax;
 		eax = ((IDropSourceImpl *)edx)->lpVtbl->AddRef(eax);
 		eax = S_OK;
 	}
 	else
 	{
-		*(DWORD *)edx = 0;
+		*(REG_T *)edx = 0;
 		eax = E_NOINTERFACE;
 	} // endif
 	return eax;
@@ -466,7 +466,7 @@ REG_T WINAPI IDropSource_Release(REG_T pthis)
 
 } // IDropSource_Release
 
-REG_T WINAPI IDropSource_QueryContinueDrag(REG_T pthis, REG_T fEscapePressed, REG_T grfKeyState)
+REG_T WINAPI IDropSource_QueryContinueDrag(REG_T pthis, DWORD fEscapePressed, DWORD grfKeyState)
 {
 	REG_T eax = 0;
 
@@ -487,7 +487,7 @@ REG_T WINAPI IDropSource_QueryContinueDrag(REG_T pthis, REG_T fEscapePressed, RE
 
 } // IDropSource_QueryContinueDrag
 
-REG_T WINAPI IDropSource_GiveFeedback(REG_T pthis, REG_T dwEffect)
+REG_T WINAPI IDropSource_GiveFeedback(REG_T pthis, DWORD dwEffect)
 {
 	REG_T eax = 0;
 
@@ -512,14 +512,14 @@ REG_T WINAPI IDO_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObject)
 	if(eax)
 	{
 		eax = pthis;
-		*(DWORD *)edx = eax;
+		*(REG_T *)edx = eax;
 		edx = eax;
 		eax = ((IDataObjectImpl *)edx)->lpVtbl->AddRef(eax);
 		eax = S_OK;
 	}
 	else
 	{
-		*(DWORD *)edx = 0;
+		*(REG_T *)edx = 0;
 		eax = E_NOINTERFACE;
 	} // endif
 	return eax;
@@ -558,7 +558,7 @@ REG_T WINAPI IDO_Release(REG_T pthis)
 REG_T WINAPI IDO_GetData(REG_T pthis, REG_T pFormatetc, REG_T pmedium)
 {
 	REG_T eax = 0, edx, ebx, esi;
-	DWORD hCMem;
+	REG_T hCMem;
 	EDIT *pMem;
 
 	// PrintText 'IDataObject_GetData'
@@ -685,7 +685,7 @@ REG_T WINAPI IDO_GetCanonicalFormatEtc(REG_T pthis, REG_T pFormatetcIn, REG_T pF
 
 } // IDO_GetCanonicalFormatEtc
 
-REG_T WINAPI IDO_SetData(REG_T pthis, REG_T pFormatetc, REG_T pmedium, REG_T fRelease)
+REG_T WINAPI IDO_SetData(REG_T pthis, REG_T pFormatetc, REG_T pmedium, DWORD fRelease)
 {
 	REG_T eax = 0;
 
@@ -695,7 +695,7 @@ REG_T WINAPI IDO_SetData(REG_T pthis, REG_T pFormatetc, REG_T pmedium, REG_T fRe
 
 } // IDO_SetData
 
-REG_T WINAPI IDO_EnumFormatEtc(REG_T pthis, REG_T dwDirection, REG_T ppenumFormatetc)
+REG_T WINAPI IDO_EnumFormatEtc(REG_T pthis, DWORD dwDirection, REG_T ppenumFormatetc)
 {
 	REG_T eax = 0, edx;
 
@@ -704,7 +704,7 @@ REG_T WINAPI IDO_EnumFormatEtc(REG_T pthis, REG_T dwDirection, REG_T ppenumForma
 	{
 		eax = &EnumFORMATETC;
 		edx = ppenumFormatetc;
-		*(DWORD *)edx = eax;
+		*(REG_T *)edx = eax;
 		eax = S_OK;
 	}
 	else
@@ -715,7 +715,7 @@ REG_T WINAPI IDO_EnumFormatEtc(REG_T pthis, REG_T dwDirection, REG_T ppenumForma
 
 } // IDO_EnumFormatEtc
 
-REG_T WINAPI IDO_DAdvise(REG_T pthis, REG_T pFormatetc, REG_T advf, REG_T pAdvSink, REG_T pdwConnection)
+REG_T WINAPI IDO_DAdvise(REG_T pthis, REG_T pFormatetc, DWORD advf, REG_T pAdvSink, REG_T pdwConnection)
 {
 	REG_T eax = 0;
 
@@ -725,7 +725,7 @@ REG_T WINAPI IDO_DAdvise(REG_T pthis, REG_T pFormatetc, REG_T advf, REG_T pAdvSi
 
 } // IDO_DAdvise
 
-REG_T WINAPI IDO_DUnadvise(REG_T pthis, REG_T dwConnection)
+REG_T WINAPI IDO_DUnadvise(REG_T pthis, DWORD dwConnection)
 {
 	REG_T eax = 0;
 
@@ -760,14 +760,14 @@ REG_T WINAPI IEnumFORMATETC_QueryInterface(REG_T pthis, REG_T iid, REG_T ppvObje
 	if(eax)
 	{
 		eax = pthis;
-		*(DWORD *)edx = eax;
+		*(REG_T *)edx = eax;
 		edx = eax;
 		eax = ((IEnumFORMATETCImpl *)edx)->lpVtbl->AddRef(eax);
 		eax = S_OK;
 	}
 	else
 	{
-		*(DWORD *)edx = 0;
+		*(REG_T *)edx = 0;
 		eax = E_NOINTERFACE;
 	} // endif
 	return eax;
@@ -807,7 +807,7 @@ REG_T WINAPI IEnumFORMATETC_Release(REG_T pthis)
 
 } // IEnumFORMATETC_Release
 
-REG_T WINAPI IEnumFORMATETC_Next(REG_T pthis, REG_T celt, REG_T rgelt, REG_T pceltFetched)
+REG_T WINAPI IEnumFORMATETC_Next(REG_T pthis, DWORD celt, REG_T rgelt, REG_T pceltFetched)
 {
 	REG_T eax = 0, ecx, edx;
 
@@ -844,7 +844,7 @@ REG_T WINAPI IEnumFORMATETC_Next(REG_T pthis, REG_T celt, REG_T rgelt, REG_T pce
 
 } // IEnumFORMATETC_Next
 
-REG_T WINAPI IEnumFORMATETC_Skip(REG_T pthis, REG_T celt)
+REG_T WINAPI IEnumFORMATETC_Skip(REG_T pthis, DWORD celt)
 {
 	REG_T eax = 0;
 

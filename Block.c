@@ -3,7 +3,7 @@
 #include "Function.h"
 #include "Position.h"
 
-REG_T GetBlock(EDIT *pMem, DWORD nLine, DWORD lpBlockDef)
+REG_T GetBlock(EDIT *pMem, DWORD nLine, REG_T lpBlockDef)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1;
@@ -25,7 +25,7 @@ REG_T GetBlock(EDIT *pMem, DWORD nLine, DWORD lpBlockDef)
 	if(esi)
 	{
 		edi = nLine;
-		edi *= 4;
+		edi *= sizeof(LINE);
 		edi += pMem->hLine;
 		edi = ((LINE *)edi)->rpChars;
 		edi += pMem->hChars;
@@ -126,12 +126,12 @@ anon_4:
 		if(flag & BD_SEGMENTBLOCK)
 		{
 			esi = pMem->rpLineFree;
-			esi -= 4;
+			esi -= sizeof(LINE);
 			nLine++;
 			while(TRUE)
 			{
 				edi = nLine;
-				edi *= 4;
+				edi *= sizeof(LINE);
 				if(edi>=esi)
 				{
 					break;
@@ -150,12 +150,12 @@ anon_4:
 		else if(flag & BD_COMMENTBLOCK)
 		{
 			esi = pMem->rpLineFree;
-			esi -= 4;
+			esi -= sizeof(LINE);
 			nLine++;
 			while(TRUE)
 			{
 				edi = nLine;
-				edi *= 4;
+				edi *= sizeof(LINE);
 				if(edi>=esi)
 				{
 					break;
@@ -185,7 +185,7 @@ anon_4:
 			eax = 0;
 			eax--;
 			ecx = edi;
-			ecx *= 4;
+			ecx *= sizeof(LINE);
 			if(ecx>pMem->rpLineFree)
 			{
 				break;
@@ -235,7 +235,7 @@ anon_4:
 			} // endif
 			ecx = edi;
 			ecx++;
-			ecx *= 4;
+			ecx *= sizeof(LINE);
 			if(ecx==pMem->rpLineFree)
 			{
 				goto anon_5;
@@ -252,7 +252,7 @@ anon_5:
 				{
 					edi++;
 					eax = edi;
-					eax *= 4;
+					eax *= sizeof(LINE);
 					if(eax>pMem->rpLineFree)
 					{
 						break;
@@ -372,7 +372,7 @@ anon_11:
 
 } // GetBlock
 
-REG_T SetBlocks(EDIT *pMem, DWORD lpLnrg, DWORD lpBlockDef)
+REG_T SetBlocks(EDIT *pMem, REG_T lpLnrg, REG_T lpBlockDef)
 {
 	REG_T eax = 0, edx, ebx, esi, edi;
 	DWORD nLine;
@@ -387,7 +387,7 @@ REG_T SetBlocks(EDIT *pMem, DWORD lpLnrg, DWORD lpBlockDef)
 		eax++;
 	} // endif
 	eax--;
-	eax *= 4;
+	eax *= sizeof(LINE);
 	esi = eax;
 	if(esi>pMem->rpLineFree)
 	{
@@ -397,7 +397,7 @@ REG_T SetBlocks(EDIT *pMem, DWORD lpLnrg, DWORD lpBlockDef)
 anon_12:
 	nLine++;
 	edi = nLine;
-	edi *= 4;
+	edi *= sizeof(LINE);
 	if(edi<esi)
 	{
 		eax = IsLine(pMem, nLine, szInclude);
@@ -481,7 +481,7 @@ anon_12:
 				{
 					edx++;
 					edi = edx;
-					edi *= 4;
+					edi *= sizeof(LINE);
 					if(edi<esi)
 					{
 						edi += pMem->hLine;
@@ -511,7 +511,7 @@ anon_12:
 					{
 						edx++;
 						edi = edx;
-						edi *= 4;
+						edi *= sizeof(LINE);
 						if(edi<esi)
 						{
 							edi += pMem->hLine;
@@ -529,7 +529,7 @@ anon_12:
 
 } // SetBlocks
 
-REG_T IsBlockDefEqual(DWORD lpRABLOCKDEF1, DWORD lpRABLOCKDEF2)
+REG_T IsBlockDefEqual(REG_T lpRABLOCKDEF1, REG_T lpRABLOCKDEF2)
 {
 	REG_T eax = 0, edx, esi, edi;
 
@@ -608,7 +608,7 @@ NotEq:
 
 } // IsBlockDefEqual
 
-REG_T IsInBlock(EDIT *pMem, DWORD nLine, DWORD lpBlockDef)
+REG_T IsInBlock(EDIT *pMem, DWORD nLine, REG_T lpBlockDef)
 {
 	REG_T eax = 0, ebx, esi, edi;
 
@@ -649,17 +649,17 @@ REG_T TestBlockStart(EDIT *pMem, DWORD nLine)
 	REG_T eax = 0, ebx, esi, edi;
 
 	esi = nLine;
-	esi *= 4;
+	esi *= sizeof(LINE);
 	if(esi<pMem->rpLineFree)
 	{
 		esi += pMem->hLine;
-		esi = *(DWORD *)esi;
+		esi = *(REG_T *)esi;
 		esi += pMem->hChars;
 		if(!(((CHARS *)esi)->state&STATE_NOBLOCK))
 		{
 			esi = blockdefs;
-			edi = esi+32*4;
-			while(*(DWORD *)esi)
+			edi = esi+32*sizeof(REG_T);
+			while(*(REG_T *)esi)
 			{
 				eax = ((RABLOCKDEF *)edi)->flag;
 				eax >>= 16;
@@ -672,8 +672,8 @@ REG_T TestBlockStart(EDIT *pMem, DWORD nLine)
 						goto Ex;
 					} // endif
 				} // endif
-				edi = *(DWORD *)esi;
-				esi += 4;
+				edi = *(REG_T *)esi;
+				esi += sizeof(REG_T);
 			} // endw
 		} // endif
 	} // endif
@@ -687,11 +687,11 @@ Ex:
 REG_T TestBlockEnd(EDIT *pMem, DWORD nLine)
 {
 	REG_T eax = 0, edx, ebx, esi, edi;
-	DWORD lpSecond;
+	REG_T lpSecond;
 
 	esi = blockdefs;
-	edi = esi+32*4;
-	while(*(DWORD *)esi)
+	edi = esi+32*sizeof(REG_T);
+	while(*(REG_T *)esi)
 	{
 		lpSecond = 0;
 		if(((RABLOCKDEF *)edi)->lpszEnd)
@@ -709,7 +709,7 @@ REG_T TestBlockEnd(EDIT *pMem, DWORD nLine)
 		if(((RABLOCKDEF *)edi)->lpszEnd && eax==pMem->nWordGroup)
 		{
 			eax = nLine;
-			eax *= 4;
+			eax *= sizeof(LINE);
 			eax += pMem->hLine;
 			eax = ((LINE *)eax)->rpChars;
 			eax += pMem->hChars;
@@ -747,8 +747,8 @@ REG_T TestBlockEnd(EDIT *pMem, DWORD nLine)
 				} // endif
 			} // endif
 		} // endif
-		edi = *(DWORD *)esi;
-		esi += 4;
+		edi = *(REG_T *)esi;
+		esi += sizeof(REG_T);
 	} // endw
 	eax = 0;
 	eax--;
@@ -763,12 +763,12 @@ REG_T CollapseGetEnd(EDIT *pMem, DWORD nLine)
 	DWORD nLines;
 	DWORD nNest;
 	DWORD nMax;
-	DWORD Nest[256];
+	REG_T Nest[256];
 
 	nLines = 0;
 	nNest = 0;
 	eax = pMem->rpLineFree;
-	eax /= 4;
+	eax /= sizeof(LINE);
 	nMax = eax;
 	edi = nLine;
 	eax = TestBlockStart(pMem, edi);
@@ -782,9 +782,9 @@ REG_T CollapseGetEnd(EDIT *pMem, DWORD nLine)
 			while(edi<nMax)
 			{
 				esi = edi;
-				esi *= 4;
+				esi *= sizeof(LINE);
 				esi += pMem->hLine;
-				esi = *(DWORD *)esi;
+				esi = *(REG_T *)esi;
 				esi += pMem->hChars;
 				if(((CHARS *)esi)->state&STATE_SEGMENTBLOCK)
 				{
@@ -892,7 +892,7 @@ REG_T Collapse(EDIT *pMem, DWORD nLine)
 	{
 		esi = eax;
 		eax = pMem->rpLineFree;
-		eax /= 4;
+		eax /= sizeof(LINE);
 		nMax = eax;
 		if(((RABLOCKDEF *)esi)->flag&BD_SEGMENTBLOCK)
 		{
@@ -902,9 +902,9 @@ REG_T Collapse(EDIT *pMem, DWORD nLine)
 			while(edi<nMax)
 			{
 				esi = edi;
-				esi *= 4;
+				esi *= sizeof(LINE);
 				esi += pMem->hLine;
-				esi = *(DWORD *)esi;
+				esi = *(REG_T *)esi;
 				esi += pMem->hChars;
 				if(((CHARS *)esi)->state&STATE_SEGMENTBLOCK)
 				{
@@ -973,9 +973,9 @@ REG_T Collapse(EDIT *pMem, DWORD nLine)
 					if(eax==-1)
 					{
 						temp1 = edi;
-						edi *= 4;
+						edi *= sizeof(LINE);
 						edi += pMem->hLine;
-						edi = *(DWORD *)edi;
+						edi = *(REG_T *)edi;
 						edi += pMem->hChars;
 						if(!(((CHARS *)edi)->state&STATE_HIDDEN))
 						{
@@ -1017,7 +1017,7 @@ REG_T Collapse(EDIT *pMem, DWORD nLine)
 						{
 							edx = edi;
 							edx++;
-							edx *= 4;
+							edx *= sizeof(LINE);
 							edx += pMem->hLine;
 							edx = ((LINE *)edx)->rpChars;
 							edx += pMem->hChars;
@@ -1086,9 +1086,9 @@ REG_T Collapse(EDIT *pMem, DWORD nLine)
 									if(eax==-1)
 									{
 										temp1 = edi;
-										edi *= 4;
+										edi *= sizeof(LINE);
 										edi += pMem->hLine;
-										edi = *(DWORD *)edi;
+										edi = *(REG_T *)edi;
 										edi += pMem->hChars;
 										if(!(((CHARS *)edi)->state&STATE_HIDDEN))
 										{
@@ -1124,7 +1124,7 @@ Ex:
 			pMem->edtb.topcp = eax;
 		} // endif
 		eax = pMem->rpLineFree;
-		eax /= 4;
+		eax /= sizeof(LINE);
 		eax -= pMem->nHidden;
 		ecx = pMem->fntinfo.fntht;
 		eax *= ecx;
@@ -1155,7 +1155,7 @@ REG_T CollapseAll(EDIT *pMem)
 	eax = GetCharPtr(pMem, pMem->cpMin, &ecx, &edx);
 	esi = 0;
 	edi = pMem->rpLineFree;
-	edi /= 4;
+	edi /= sizeof(LINE);
 anon_14:
 	eax = PreviousBookMark(pMem, edi, 1);
 	if(eax!=-1)
@@ -1193,7 +1193,7 @@ REG_T Expand(EDIT *pMem, DWORD nLine)
 		pMem->edtb.topln = eax;
 		pMem->edtb.topcp = eax;
 	} // endif
-	esi *= 4;
+	esi *= sizeof(LINE);
 	if(esi>=pMem->rpLineFree)
 	{
 		goto Ex;
@@ -1330,14 +1330,14 @@ anon_16:
 
 } // TestExpand
 
-REG_T SetCommentBlocks(EDIT *pMem, DWORD lpStart, DWORD lpEnd)
+REG_T SetCommentBlocks(EDIT *pMem, REG_T lpStart, REG_T lpEnd)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1;
 	DWORD nLine;
 	DWORD nCmnt;
 	DWORD fCmnt;
-	DWORD cmntchar;
+	BYTE cmntchar;
 	DWORD fChanged;
 
 	auto void TestWrd(void);
@@ -1356,13 +1356,13 @@ REG_T SetCommentBlocks(EDIT *pMem, DWORD lpStart, DWORD lpEnd)
 		nCmnt = ecx;
 		fChanged = ecx;
 		edi = pMem->rpLineFree;
-		edi /= 4;
+		edi /= sizeof(LINE);
 		while(nLine<edi)
 		{
 			esi = nLine;
-			esi *= 4;
+			esi *= sizeof(LINE);
 			esi += pMem->hLine;
-			esi = *(DWORD *)esi;
+			esi = *(REG_T *)esi;
 			esi += pMem->hChars;
 			temp1 = ((CHARS *)esi)->state;
 			ecx = 0;
@@ -1417,13 +1417,13 @@ REG_T SetCommentBlocks(EDIT *pMem, DWORD lpStart, DWORD lpEnd)
 		nCmnt = ecx;
 		fChanged = ecx;
 		edi = pMem->rpLineFree;
-		edi /= 4;
+		edi /= sizeof(LINE);
 		while(nLine<edi)
 		{
 			esi = nLine;
-			esi *= 4;
+			esi *= sizeof(LINE);
 			esi += pMem->hLine;
-			esi = *(DWORD *)esi;
+			esi = *(REG_T *)esi;
 			esi += pMem->hChars;
 			temp1 = ((CHARS *)esi)->state;
 			ecx = 0;
@@ -1505,13 +1505,13 @@ REG_T SetCommentBlocks(EDIT *pMem, DWORD lpStart, DWORD lpEnd)
 		fChanged = ecx;
 		fCmnt = ecx;
 		edi = pMem->rpLineFree;
-		edi /= 4;
+		edi /= sizeof(LINE);
 		while(nLine<edi)
 		{
 			esi = nLine;
-			esi *= 4;
+			esi *= sizeof(LINE);
 			esi += pMem->hLine;
-			esi = *(DWORD *)esi;
+			esi = *(REG_T *)esi;
 			esi += pMem->hChars;
 			temp1 = ((CHARS *)esi)->state;
 			edx = lpStart;
@@ -1586,12 +1586,12 @@ TestWrd1:
 			{
 				goto TestWrd1;
 			} // endif
-			*(BYTE *)(&cmntchar) = RBYTE_HIGH(eax);
+			cmntchar = RBYTE_HIGH(eax);
 			goto anon_18;
 		}
 		else if(RBYTE_LOW(eax)=='-')
 		{
-			RBYTE_LOW(eax) = (BYTE)cmntchar;
+			RBYTE_LOW(eax) = cmntchar;
 		} // endif
 		if(RBYTE_LOW(eax)>='a' && RBYTE_LOW(eax)<='z')
 		{
@@ -1692,13 +1692,13 @@ REG_T SetChangedState(EDIT *pMem, DWORD fUpdate)
 	fChanged = edx;
 	edx = fUpdate;
 	edi = pMem->rpLineFree;
-	edi /= 4;
+	edi /= sizeof(LINE);
 	while(nLine<edi)
 	{
 		esi = nLine;
-		esi *= 4;
+		esi *= sizeof(LINE);
 		esi += pMem->hLine;
-		esi = *(DWORD *)esi;
+		esi = *(REG_T *)esi;
 		esi += pMem->hChars;
 		ecx = ((CHARS *)esi)->state;
 		if(((CHARS *)esi)->state&STATE_CHANGED)

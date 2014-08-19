@@ -248,7 +248,7 @@ extern DWORD SBWT; // Scroll bar width, GetSystemMetrics(SM_CXVSCROLL)
 extern WNDPROC OldStateProc;
 extern WNDPROC OldSplittBtnProc;
 extern WNDPROC OldFakeToolTipProc;
-extern void *hWrdMem;
+extern HANDLE hWrdMem;
 extern ULONG_PTR cbWrdMem;
 extern ULONG_PTR rpWrdFree;
 extern DWORD fSelState;

@@ -5,14 +5,14 @@
 #include "Misc.h"
 #include "Position.h"
 
-REG_T DrawLine(EDIT *pMem, DWORD lpChars, DWORD nLine, DWORD cp, DWORD hDC, DWORD lpRect)
+REG_T DrawLine(EDIT *pMem, REG_T lpChars, DWORD nLine, DWORD cp, REG_T hDC, REG_T lpRect)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2;
 	DRAWTEXTPARAMS dtp;
 	DWORD cpMin;
 	DWORD cpMax;
-	DWORD lpCR;
+	REG_T lpCR;
 	RECT rect;
 	RECT srect;
 	DWORD lCol;
@@ -1248,8 +1248,8 @@ REG_T SetBlockMarkers(EDIT *pMem, DWORD nLine, DWORD nMax)
 	DWORD nLnMax;
 	DWORD nLnSt;
 	DWORD nLnEn;
-	DWORD lpBlockDef;
-	DWORD fcmnt;
+	REG_T lpBlockDef;
+	REG_T fcmnt;
 
 	auto void BlockRoot(void);
 
@@ -1258,7 +1258,7 @@ REG_T SetBlockMarkers(EDIT *pMem, DWORD nLine, DWORD nMax)
 		fcmnt = 0;
 		// Clear block markers
 		edx = pMem->rpLineFree;
-		edx /= 4;
+		edx /= sizeof(LINE);
 		edx--;
 		nLnMax = edx;
 		eax = nLine;
@@ -1267,9 +1267,9 @@ REG_T SetBlockMarkers(EDIT *pMem, DWORD nLine, DWORD nMax)
 		while(eax<=nLnMax && nLines)
 		{
 			edx = eax;
-			edx *= 4;
+			edx *= sizeof(LINE);
 			edx += pMem->hLine;
-			edx = *(DWORD *)edx;
+			edx = *(REG_T *)edx;
 			edx += pMem->hChars;
 			((CHARS *)edx)->state &= -1 ^ (STATE_BLOCKSTART | STATE_BLOCK | STATE_BLOCKEND);
 			if(!(((CHARS *)edx)->state&STATE_HIDDEN))
@@ -1295,9 +1295,9 @@ Nxt:
 			while(esi<=nLnEn && nLines)
 			{
 				edi = esi;
-				edi *= 4;
+				edi *= sizeof(LINE);
 				edi += pMem->hLine;
-				edi = *(DWORD *)edi;
+				edi = *(REG_T *)edi;
 				edi += pMem->hChars;
 				if(!(((CHARS *)edi)->state&STATE_HIDDEN))
 				{
@@ -1323,7 +1323,7 @@ Nxt:
 					eax = TestBlockEnd(pMem, esi);
 					edx = esi;
 					edx++;
-					edx *= 4;
+					edx *= sizeof(LINE);
 					if(eax!=-1 || edx==pMem->rpLineFree)
 					{
 						((CHARS *)edi)->state |= STATE_BLOCKEND;
@@ -1341,9 +1341,9 @@ Nxt:
 					nLines++;
 					edi = esi;
 					edi--;
-					edi *= 4;
+					edi *= sizeof(LINE);
 					edi += pMem->hLine;
-					edi = *(DWORD *)edi;
+					edi = *(REG_T *)edi;
 					edi += pMem->hChars;
 					((CHARS *)edi)->state &= -1 ^ (STATE_BLOCKSTART | STATE_BLOCK | STATE_BLOCKEND);
 					((CHARS *)edi)->state |= STATE_BLOCKEND;
@@ -1401,7 +1401,7 @@ BlockRootStart:
 
 } // SetBlockMarkers
 
-REG_T DrawChangedState(EDIT *pMem, HDC hDC, DWORD lpLine, DWORD x, DWORD y)
+REG_T DrawChangedState(EDIT *pMem, HDC hDC, REG_T lpLine, DWORD x, DWORD y)
 {
 	REG_T eax = 0, ebx, edi;
 	HBRUSH hBr;
@@ -1465,7 +1465,7 @@ REG_T RAEditPaint(HWND hWin)
 	RECT rect1;
 	DWORD cp;
 	BYTE buffer[32];
-	DWORD hRgn1;
+	REG_T hRgn1;
 	RECT rcRgn1;
 	POINT pt;
 	EDIT *pMem;
@@ -1474,7 +1474,7 @@ REG_T RAEditPaint(HWND hWin)
 	auto void DrawPageBreak(void);
 
 	// Get the memory pointer
-	eax = GetWindowLong(hWin, 0);
+	eax = GetWindowLongPtr(hWin, 0);
 	pMem = eax;
 	eax = GetFocus();
 	if(eax==hWin)
@@ -1497,7 +1497,7 @@ REG_T RAEditPaint(HWND hWin)
 			eax = SelectObject(ps.hdc, pMem->fnt.hLnrFont);
 			temp1 = eax;
 			edx = pMem->rpLineFree;
-			edx /= 4;
+			edx /= sizeof(LINE);
 			eax = DwToAscii(edx, &buffer);
 			eax = DrawText(ps.hdc, &buffer, -1, &rect1, DT_CALCRECT | DT_SINGLELINE);
 			eax = temp1;
@@ -1626,7 +1626,7 @@ anon_7:
 		rect1.right -= eax;
 anon_8:
 		edi = esi;
-		edi *= 4;
+		edi *= sizeof(LINE);
 		if(edi>=pMem->rpLineFree)
 		{
 			goto anon_9;
@@ -1868,7 +1868,7 @@ REG_T RAEditPaintNoBuff(HWND hWin)
 	RECT rect1;
 	DWORD cp;
 	BYTE buffer[32];
-	DWORD hRgn1;
+	REG_T hRgn1;
 	POINT pt;
 	EDIT *pMem;
 
@@ -1876,7 +1876,7 @@ REG_T RAEditPaintNoBuff(HWND hWin)
 	auto void DrawPageBreak(void);
 
 	// Get the memory pointer
-	eax = GetWindowLong(hWin, 0);
+	eax = GetWindowLongPtr(hWin, 0);
 	pMem = eax;
 	eax = GetFocus();
 	if(eax==hWin)
@@ -1899,7 +1899,7 @@ REG_T RAEditPaintNoBuff(HWND hWin)
 			eax = SelectObject(ps.hdc, pMem->fnt.hLnrFont);
 			temp1 = eax;
 			edx = pMem->rpLineFree;
-			edx /= 4;
+			edx /= sizeof(LINE);
 			eax = DwToAscii(edx, &buffer);
 			eax = DrawText(ps.hdc, &buffer, -1, &rect1, DT_CALCRECT | DT_SINGLELINE);
 			eax = temp1;
@@ -2008,7 +2008,7 @@ REG_T RAEditPaintNoBuff(HWND hWin)
 anon_10:
 		edx = pMem->fntinfo.fntht;
 		edi = esi;
-		edi *= 4;
+		edi *= sizeof(LINE);
 		if(edi>=pMem->rpLineFree)
 		{
 			goto anon_11;

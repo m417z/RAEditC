@@ -6,7 +6,7 @@
 #include "Position.h"
 #include "Undo.h"
 
-REG_T InsertNewLine(EDIT *pMem, DWORD nLine, DWORD nSize)
+REG_T InsertNewLine(EDIT *pMem, DWORD nLine, REG_T nSize)
 {
 	REG_T eax = 0, ecx, ebx, esi, edi;
 	REG_T temp1;
@@ -16,7 +16,7 @@ REG_T InsertNewLine(EDIT *pMem, DWORD nLine, DWORD nSize)
 	eax = ExpandCharMem(pMem, eax);
 	eax = ExpandLineMem(pMem);
 	eax = nLine;
-	eax *= 4;
+	eax *= sizeof(LINE);
 	esi = pMem->hLine;
 	esi += eax;
 	if(eax<pMem->rpLineFree)
@@ -28,7 +28,7 @@ REG_T InsertNewLine(EDIT *pMem, DWORD nLine, DWORD nSize)
 		ecx -= esi;
 		esi = edi;
 		esi -= sizeof(LINE);
-		ecx /= 4;
+		ecx /= sizeof(LINE);
 		while(ecx > 0)
 		{
 			*(DWORD *)edi = *(DWORD *)esi;
@@ -41,7 +41,7 @@ REG_T InsertNewLine(EDIT *pMem, DWORD nLine, DWORD nSize)
 	pMem->rpLineFree += sizeof(LINE);
 	eax = pMem->rpCharsFree;
 	((LINE *)esi)->rpChars = eax;
-	esi -= (ULONG_PTR)pMem->hLine;
+	esi -= (REG_T)pMem->hLine;
 	pMem->rpLine = esi;
 	esi = eax;
 	esi += pMem->hChars;
@@ -54,13 +54,13 @@ REG_T InsertNewLine(EDIT *pMem, DWORD nLine, DWORD nSize)
 	pMem->rpCharsFree += eax;
 	((CHARS *)esi)->len = 0;
 	((CHARS *)esi)->state = STATE_CHANGED;
-	esi -= (ULONG_PTR)pMem->hChars;
+	esi -= (REG_T)pMem->hChars;
 	pMem->rpChars = esi;
 	return eax;
 
 } // InsertNewLine
 
-REG_T AddNewLine(EDIT *pMem, DWORD lpLine, DWORD nSize)
+REG_T AddNewLine(EDIT *pMem, REG_T lpLine, REG_T nSize)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 
@@ -131,7 +131,7 @@ REG_T ExpandCharLine(EDIT *pMem)
 		edx = pMem->rpLine;
 		edx += pMem->hLine;
 		eax = edi;
-		eax -= (ULONG_PTR)pMem->hChars;
+		eax -= (REG_T)pMem->hChars;
 		((LINE *)edx)->rpChars = eax;
 		pMem->rpChars = eax;
 		temp1 = esi;
@@ -160,13 +160,13 @@ REG_T DeleteLine(EDIT *pMem, DWORD nLine)
 	esi = pMem->hLine;
 	edi = 0;
 	eax = nLine;
-	eax *= 4;
+	eax *= sizeof(LINE);
 	if(eax<pMem->rpLineFree)
 	{
 		edi = pMem->hChars;
-		edx = *(DWORD *)(esi+eax+sizeof(LINE));
+		edx = *(REG_T *)(esi+eax+sizeof(LINE));
 		pMem->rpChars = edx;
-		edi += *(DWORD *)(esi+eax);
+		edi += *(REG_T *)(esi+eax);
 		if(((CHARS *)edi)->state&STATE_HIDDEN)
 		{
 			pMem->nHidden--;
@@ -174,8 +174,8 @@ REG_T DeleteLine(EDIT *pMem, DWORD nLine)
 		((CHARS *)edi)->state |= STATE_GARBAGE;
 		while(eax<pMem->rpLineFree)
 		{
-			ecx = *(DWORD *)(esi+eax+sizeof(LINE));
-			*(DWORD *)(esi+eax) = ecx;
+			ecx = *(REG_T *)(esi+eax+sizeof(LINE));
+			*(REG_T *)(esi+eax) = ecx;
 			eax += sizeof(LINE);
 		} // endw
 		pMem->rpLineFree -= sizeof(LINE);
@@ -275,7 +275,7 @@ REG_T InsertChar(EDIT *pMem, DWORD cp, DWORD nChr)
 	{
 		// Break the line
 		eax = pMem->rpLine;
-		eax /= 4;
+		eax /= sizeof(LINE);
 		ecx = ((CHARS *)esi)->state;
 		ecx &= STATE_BMMASK;
 		if(ecx==STATE_BM2 || ecx==STATE_BM8)
@@ -295,9 +295,9 @@ REG_T InsertChar(EDIT *pMem, DWORD cp, DWORD nChr)
 		eax = InsertNewLine(pMem, eax, ecx);
 		// Find the pointer to old line characters
 		esi = temp1;
-		esi *= 4;
+		esi *= sizeof(LINE);
 		esi += pMem->hLine;
-		esi = *(DWORD *)esi;
+		esi = *(REG_T *)esi;
 		esi += pMem->hChars;
 		ecx = edi;
 		edx = 0;
@@ -425,7 +425,7 @@ REG_T DeleteChar(EDIT *pMem, DWORD cp)
 					temp3 = eax;
 					eax = GlobalFree(esi);
 					esi = pMem->line;
-					esi *= 4;
+					esi *= sizeof(LINE);
 					esi += pMem->hLine;
 					esi = ((LINE *)esi)->rpChars;
 					esi += pMem->hChars;
@@ -586,7 +586,7 @@ anon_1:
 
 } // DeleteSelectionBlock
 
-REG_T EditInsert(EDIT *pMem, DWORD cp, DWORD lpBuff)
+REG_T EditInsert(EDIT *pMem, DWORD cp, REG_T lpBuff)
 {
 	REG_T eax = 0, ebx, esi, edi;
 

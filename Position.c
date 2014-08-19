@@ -124,7 +124,7 @@ REG_T GetCharPtr(EDIT *pMem, DWORD cp, DWORD *pdwCharIndex, DWORD *pdwLineNumber
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1;
-	DWORD rpLineMax;
+	REG_T rpLineMax;
 
 	esi = pMem->hLine;
 	eax = pMem->rpLineFree;
@@ -192,11 +192,11 @@ anon_3:
 		pMem->cpLine = ecx;
 		ecx = ((CHARS *)edi)->len;
 	} // endif
-	esi -= (ULONG_PTR)pMem->hLine;
+	esi -= (REG_T)pMem->hLine;
 	pMem->rpLine = esi;
 	edx = esi;
-	edx /= 4;
-	edi -= (ULONG_PTR)pMem->hChars;
+	edx /= sizeof(LINE);
+	edi -= (REG_T)pMem->hChars;
 	pMem->rpChars = edi;
 	pMem->line = edx;
 	eax = ecx;
@@ -215,13 +215,13 @@ REG_T GetCpFromLine(EDIT *pMem, DWORD nLine)
 	esi = pMem->hLine;
 	edi = pMem->hChars;
 	ecx = nLine;
-	ecx *= 4;
+	ecx *= sizeof(LINE);
 	if(ecx>=pMem->rpLineFree)
 	{
 		ecx = pMem->rpLineFree;
 		ecx -= sizeof(LINE);
 	} // endif
-	ecx /= 4;
+	ecx /= sizeof(LINE);
 	nLine = ecx;
 	if(ecx>=pMem->edtb.topln)
 	{
@@ -262,7 +262,7 @@ REG_T GetLineFromCp(EDIT *pMem, DWORD cp)
 		ecx = pMem->edtb.topln;
 		while(eax<cp)
 		{
-			edx = ecx*4;
+			edx = ecx*sizeof(LINE);
 			if(edx>=pMem->rpLineFree)
 			{
 				break;
@@ -276,11 +276,11 @@ REG_T GetLineFromCp(EDIT *pMem, DWORD cp)
 			ecx--;
 		} // endif
 		eax = ecx;
-		eax *= 4;
+		eax *= sizeof(LINE);
 		if(eax>=pMem->rpLineFree)
 		{
 			ecx = pMem->rpLineFree;
-			ecx /= 4;
+			ecx /= sizeof(LINE);
 			ecx--;
 		} // endif
 	}
@@ -307,13 +307,13 @@ REG_T GetYpFromLine(EDIT *pMem, DWORD nLine)
 	esi = pMem->hLine;
 	edi = pMem->hChars;
 	ecx = nLine;
-	ecx *= 4;
+	ecx *= sizeof(LINE);
 	if(ecx>=pMem->rpLineFree)
 	{
 		ecx = pMem->rpLineFree;
 		ecx -= sizeof(LINE);
 	} // endif
-	ecx /= 4;
+	ecx /= sizeof(LINE);
 	nLine = ecx;
 	if(ecx>=pMem->edtb.topln)
 	{
@@ -358,10 +358,10 @@ anon_5: ;
 REG_T GetLineFromYp(EDIT *pMem, DWORD y)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
-	DWORD maxln;
+	REG_T maxln;
 
 	eax = pMem->rpLineFree;
-	eax /= 4;
+	eax /= sizeof(LINE);
 	eax--;
 	maxln = eax;
 	esi = pMem->hLine;
@@ -416,11 +416,11 @@ anon_7: ;
 
 } // GetLineFromYp
 
-REG_T GetCpFromXp(EDIT *pMem, DWORD lpChars, DWORD x, DWORD fNoAdjust)
+REG_T GetCpFromXp(EDIT *pMem, REG_T lpChars, DWORD x, DWORD fNoAdjust)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi, edi;
 	REG_T temp1, temp2, temp3;
-	DWORD hDC;
+	REG_T hDC;
 	RECT rect;
 	DWORD lastright;
 
@@ -522,7 +522,7 @@ anon_8:
 
 } // GetCpFromXp
 
-REG_T GetPosFromChar(EDIT *pMem, DWORD cp, DWORD lpPoint)
+REG_T GetPosFromChar(EDIT *pMem, DWORD cp, REG_T lpPoint)
 {
 	REG_T eax = 0, ebx, esi;
 	REG_T temp1;
@@ -538,7 +538,7 @@ REG_T GetPosFromChar(EDIT *pMem, DWORD cp, DWORD lpPoint)
 	eax = GetCpFromLine(pMem, ln);
 	cp -= eax;
 	esi = ln;
-	esi *= 4;
+	esi *= sizeof(LINE);
 	esi += pMem->hLine;
 	esi = ((LINE *)esi)->rpChars;
 	esi += pMem->hChars;
@@ -587,14 +587,14 @@ REG_T GetCharFromPos(EDIT *pMem, DWORD cpy, DWORD x, DWORD y)
 	cp = eax;
 	pMem->cpLine = eax;
 	edx = temp1;
-	edx *= 4;
+	edx *= sizeof(LINE);
 	if(edx>=pMem->rpLineFree)
 	{
 		edx = pMem->rpLineFree;
 		edx -= sizeof(LINE);
 	} // endif
 	eax = edx;
-	eax /= 4;
+	eax /= sizeof(LINE);
 	pMem->line = eax;
 	pMem->rpLine = edx;
 	edx += pMem->hLine;
@@ -617,7 +617,7 @@ Ex:
 
 } // GetCharFromPos
 
-REG_T GetCaretPoint(EDIT *pMem, DWORD cp, DWORD cpy, DWORD lpPoint)
+REG_T GetCaretPoint(EDIT *pMem, DWORD cp, DWORD cpy, REG_T lpPoint)
 {
 	REG_T eax = 0, ecx, ebx, esi;
 	POINT pt;
@@ -853,7 +853,7 @@ REG_T SetCaretVisible(HWND hWin, DWORD cpy)
 	DWORD fExpand;
 	EDIT *pMem;
 
-	eax = GetWindowLong(hWin, 0);
+	eax = GetWindowLongPtr(hWin, 0);
 	pMem = eax;
 	eax = hWin;
 	if(eax==pMem->edta.hwnd)
@@ -1022,7 +1022,7 @@ REG_T GetBlockCp(EDIT *pMem, DWORD nLine, DWORD nPos)
 	eax += pMem->selbarwt;
 	eax -= pMem->cpx;
 	edx = nLine;
-	edx *= 4;
+	edx *= sizeof(LINE);
 	if(edx>=pMem->rpLineFree)
 	{
 		edx = pMem->rpLineFree;

@@ -123,7 +123,7 @@ DWORD SBWT; // Scroll bar width, GetSystemMetrics(SM_CXVSCROLL)
 WNDPROC OldStateProc;
 WNDPROC OldSplittBtnProc;
 WNDPROC OldFakeToolTipProc;
-void *hWrdMem;
+HANDLE hWrdMem;
 ULONG_PTR cbWrdMem;
 ULONG_PTR rpWrdFree;
 DWORD fSelState;

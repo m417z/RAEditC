@@ -3,7 +3,7 @@
 #include "Function.h"
 #include "Position.h"
 
-REG_T SetFont(EDIT *pMem, DWORD lpRafont)
+REG_T SetFont(EDIT *pMem, REG_T lpRafont)
 {
 	REG_T eax = 0, edx, ebx;
 	REG_T temp1, temp2;
@@ -89,7 +89,7 @@ REG_T SetFont(EDIT *pMem, DWORD lpRafont)
 
 } // SetFont
 
-REG_T SetColor(EDIT *pMem, DWORD lpRAColor)
+REG_T SetColor(EDIT *pMem, REG_T lpRAColor)
 {
 	REG_T eax = 0, edx, ebx;
 
@@ -182,7 +182,7 @@ REG_T CreateBrushes(EDIT *pMem)
 
 } // CreateBrushes
 
-REG_T DwToAscii(DWORD dwVal, DWORD lpAscii)
+REG_T DwToAscii(DWORD dwVal, REG_T lpAscii)
 {
 	REG_T eax = 0, edx, ebx, esi, edi;
 
@@ -225,7 +225,7 @@ anon_1:
 
 } // DwToAscii
 /*
-REG_T strlen(DWORD lpSource)
+REG_T strlen(REG_T lpSource)
 {
 	REG_T eax = 0, edx;
 
@@ -281,7 +281,7 @@ REG_T GetChar(EDIT *pMem, DWORD cp)
 	REG_T eax = 0, ecx, edx, ebx;
 
 	eax = GetCharPtr(pMem, cp, &ecx, &edx);
-	edx *= 4;
+	edx *= sizeof(LINE);
 	if(edx==pMem->rpLineFree)
 	{
 		eax = 0;
@@ -346,7 +346,7 @@ REG_T IsCharLeadByte(EDIT *pMem, DWORD cp)
 
 } // IsCharLeadByte
 
-REG_T GetTextWidth(EDIT *pMem, HDC hDC, DWORD lpText, DWORD nChars, DWORD lpRect)
+REG_T GetTextWidth(EDIT *pMem, HDC hDC, REG_T lpText, DWORD nChars, REG_T lpRect)
 {
 	REG_T eax = 0, ecx, edx, ebx, esi;
 	DRAWTEXTPARAMS dtp;
@@ -398,7 +398,7 @@ REG_T GetTextWidth(EDIT *pMem, HDC hDC, DWORD lpText, DWORD nChars, DWORD lpRect
 
 } // GetTextWidth
 
-REG_T GetBlockRange(DWORD lpSrc, DWORD lpDst)
+REG_T GetBlockRange(REG_T lpSrc, REG_T lpDst)
 {
 	REG_T eax = 0, edx, esi, edi;
 	REG_T temp1;
@@ -429,7 +429,7 @@ REG_T GetBlockRange(DWORD lpSrc, DWORD lpDst)
 
 } // GetBlockRange
 
-REG_T GetBlockRects(EDIT *pMem, DWORD lpRects)
+REG_T GetBlockRects(EDIT *pMem, REG_T lpRects)
 {
 	REG_T eax = 0, ecx, ebx, esi, edi;
 	BLOCKRANGE blrg;
@@ -475,7 +475,7 @@ REG_T GetBlockRects(EDIT *pMem, DWORD lpRects)
 
 } // GetBlockRects
 
-REG_T InvalidateBlock(EDIT *pMem, DWORD lpOldRects)
+REG_T InvalidateBlock(EDIT *pMem, REG_T lpOldRects)
 {
 	REG_T eax = 0, edx, ebx, esi, edi;
 	RECT newrects[2];
