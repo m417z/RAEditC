@@ -304,7 +304,7 @@ struct tagBLOCKRANGE {
 };
 typedef struct tagBLOCKRANGE BLOCKRANGE;
 
-extern void WINAPI InstallRAEdit(HINSTANCE hInst, BOOL fGlobal);
-extern void WINAPI UnInstallRAEdit(void);
+void WINAPI InstallRAEdit(HINSTANCE hInst, BOOL fGlobal);
+void WINAPI UnInstallRAEdit(void);
 
 #pragma pack(pop)

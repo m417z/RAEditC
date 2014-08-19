@@ -55,6 +55,35 @@
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
 			</Target>
+			<Target title="Release_x64">
+				<Option output="bin/Release x64/RAEditC" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release x64/" />
+				<Option type="3" />
+				<Option compiler="gnu_gcc_compiler_x64" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-Wall" />
+					<Add option="-DBUILD_DLL" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="user32" />
+					<Add library="comctl32" />
+					<Add library="gdi32" />
+					<Add library="libuuid" />
+					<Add library="ole32" />
+				</Linker>
+			</Target>
+			<Target title="Release_static_x64">
+				<Option output="bin/Release_static x64/RAEditC" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/Release_static x64/" />
+				<Option type="2" />
+				<Option compiler="gnu_gcc_compiler_x64" />
+				<Option createDefFile="1" />
+			</Target>
 		</Build>
 		<Unit filename="Block.c">
 			<Option compilerVar="CC" />
@@ -104,10 +133,12 @@
 			<Option compilerVar="CC" />
 			<Option target="Debug" />
 			<Option target="Release" />
+			<Option target="Release_x64" />
 		</Unit>
 		<Unit filename="RAEditDll.h">
 			<Option target="Debug" />
 			<Option target="Release" />
+			<Option target="Release_x64" />
 		</Unit>
 		<Unit filename="RegisterTypes.h" />
 		<Unit filename="Undo.c">
