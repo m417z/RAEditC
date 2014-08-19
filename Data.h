@@ -5,8 +5,6 @@
 #include "RegisterTypes.h"
 #include "include/RAEdit.h"
 
-#pragma pack(push, 1)
-
 #define MAXLINEMEM				(8*1024)
 #define MAXCHARMEM				(24*1024)
 //#define MAXCHARMEM				(32*1024)
@@ -276,5 +274,3 @@ extern BYTE bracketstart[16];
 extern BYTE bracketend[16];
 extern BYTE bracketcont[16];
 extern BOOL fNoSaveUndo;
-
-#pragma pack(pop)
