@@ -51,7 +51,7 @@ void WINAPI InstallRAEdit(HINSTANCE hInst, BOOL fGlobal)
 	} // endif
 	wc.lpfnWndProc = RAWndProc;
 	wc.cbClsExtra = NULL;
-	wc.cbWndExtra = 4; // Holds memory handle
+	wc.cbWndExtra = sizeof(ULONG_PTR); // Holds memory handle
 	temp1 = hInst;
 	wc.hInstance = temp1;
 	wc.hbrBackground = NULL;
@@ -68,7 +68,7 @@ void WINAPI InstallRAEdit(HINSTANCE hInst, BOOL fGlobal)
 	wc.style = CS_DBLCLKS | CS_HREDRAW | CS_VREDRAW;
 	wc.lpfnWndProc = RAEditProc;
 	wc.cbClsExtra = NULL;
-	wc.cbWndExtra = 4; // Holds memory handle
+	wc.cbWndExtra = sizeof(ULONG_PTR); // Holds memory handle
 	temp1 = hInst;
 	wc.hInstance = temp1;
 	wc.hbrBackground = NULL;
