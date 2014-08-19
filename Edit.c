@@ -164,9 +164,9 @@ REG_T DeleteLine(EDIT *pMem, DWORD nLine)
 	if(eax<pMem->rpLineFree)
 	{
 		edi = pMem->hChars;
-		edx = *(REG_T *)(esi+eax+sizeof(LINE));
+		edx = ((LINE *)(esi+eax+sizeof(LINE)))->rpChars;
 		pMem->rpChars = edx;
-		edi += *(REG_T *)(esi+eax);
+		edi += ((LINE *)(esi+eax))->rpChars;
 		if(((CHARS *)edi)->state&STATE_HIDDEN)
 		{
 			pMem->nHidden--;
@@ -174,8 +174,8 @@ REG_T DeleteLine(EDIT *pMem, DWORD nLine)
 		((CHARS *)edi)->state |= STATE_GARBAGE;
 		while(eax<pMem->rpLineFree)
 		{
-			ecx = *(REG_T *)(esi+eax+sizeof(LINE));
-			*(REG_T *)(esi+eax) = ecx;
+			ecx = ((LINE *)(esi+eax+sizeof(LINE)))->rpChars;
+			((LINE *)(esi+eax))->rpChars = ecx;
 			eax += sizeof(LINE);
 		} // endw
 		pMem->rpLineFree -= sizeof(LINE);
@@ -297,7 +297,7 @@ REG_T InsertChar(EDIT *pMem, DWORD cp, DWORD nChr)
 		esi = temp1;
 		esi *= sizeof(LINE);
 		esi += pMem->hLine;
-		esi = *(REG_T *)esi;
+		esi = ((LINE *)(esi))->rpChars;
 		esi += pMem->hChars;
 		ecx = edi;
 		edx = 0;

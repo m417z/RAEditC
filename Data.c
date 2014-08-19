@@ -125,7 +125,7 @@ WNDPROC OldSplittBtnProc;
 WNDPROC OldFakeToolTipProc;
 HANDLE hWrdMem;
 ULONG_PTR cbWrdMem;
-ULONG_PTR rpWrdFree;
+DWORD rpWrdFree;
 DWORD fSelState;
 DWORD iYp;
 BOOL fOnBM;

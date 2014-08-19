@@ -653,7 +653,7 @@ REG_T TestBlockStart(EDIT *pMem, DWORD nLine)
 	if(esi<pMem->rpLineFree)
 	{
 		esi += pMem->hLine;
-		esi = *(REG_T *)esi;
+		esi = ((LINE *)esi)->rpChars;
 		esi += pMem->hChars;
 		if(!(((CHARS *)esi)->state&STATE_NOBLOCK))
 		{
@@ -784,7 +784,7 @@ REG_T CollapseGetEnd(EDIT *pMem, DWORD nLine)
 				esi = edi;
 				esi *= sizeof(LINE);
 				esi += pMem->hLine;
-				esi = *(REG_T *)esi;
+				esi = ((LINE *)esi)->rpChars;
 				esi += pMem->hChars;
 				if(((CHARS *)esi)->state&STATE_SEGMENTBLOCK)
 				{
@@ -904,7 +904,7 @@ REG_T Collapse(EDIT *pMem, DWORD nLine)
 				esi = edi;
 				esi *= sizeof(LINE);
 				esi += pMem->hLine;
-				esi = *(REG_T *)esi;
+				esi = ((LINE *)esi)->rpChars;
 				esi += pMem->hChars;
 				if(((CHARS *)esi)->state&STATE_SEGMENTBLOCK)
 				{
@@ -975,7 +975,7 @@ REG_T Collapse(EDIT *pMem, DWORD nLine)
 						temp1 = edi;
 						edi *= sizeof(LINE);
 						edi += pMem->hLine;
-						edi = *(REG_T *)edi;
+						edi = ((LINE *)edi)->rpChars;
 						edi += pMem->hChars;
 						if(!(((CHARS *)edi)->state&STATE_HIDDEN))
 						{
@@ -1088,7 +1088,7 @@ REG_T Collapse(EDIT *pMem, DWORD nLine)
 										temp1 = edi;
 										edi *= sizeof(LINE);
 										edi += pMem->hLine;
-										edi = *(REG_T *)edi;
+										edi = ((LINE *)edi)->rpChars;
 										edi += pMem->hChars;
 										if(!(((CHARS *)edi)->state&STATE_HIDDEN))
 										{
@@ -1362,7 +1362,7 @@ REG_T SetCommentBlocks(EDIT *pMem, REG_T lpStart, REG_T lpEnd)
 			esi = nLine;
 			esi *= sizeof(LINE);
 			esi += pMem->hLine;
-			esi = *(REG_T *)esi;
+			esi = ((LINE *)esi)->rpChars;
 			esi += pMem->hChars;
 			temp1 = ((CHARS *)esi)->state;
 			ecx = 0;
@@ -1423,7 +1423,7 @@ REG_T SetCommentBlocks(EDIT *pMem, REG_T lpStart, REG_T lpEnd)
 			esi = nLine;
 			esi *= sizeof(LINE);
 			esi += pMem->hLine;
-			esi = *(REG_T *)esi;
+			esi = ((LINE *)esi)->rpChars;
 			esi += pMem->hChars;
 			temp1 = ((CHARS *)esi)->state;
 			ecx = 0;
@@ -1511,7 +1511,7 @@ REG_T SetCommentBlocks(EDIT *pMem, REG_T lpStart, REG_T lpEnd)
 			esi = nLine;
 			esi *= sizeof(LINE);
 			esi += pMem->hLine;
-			esi = *(REG_T *)esi;
+			esi = ((LINE *)esi)->rpChars;
 			esi += pMem->hChars;
 			temp1 = ((CHARS *)esi)->state;
 			edx = lpStart;
@@ -1698,7 +1698,7 @@ REG_T SetChangedState(EDIT *pMem, DWORD fUpdate)
 		esi = nLine;
 		esi *= sizeof(LINE);
 		esi += pMem->hLine;
-		esi = *(REG_T *)esi;
+		esi = ((LINE *)esi)->rpChars;
 		esi += pMem->hChars;
 		ecx = ((CHARS *)esi)->state;
 		if(((CHARS *)esi)->state&STATE_CHANGED)

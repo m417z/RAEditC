@@ -48,8 +48,8 @@ struct tagRABRUSH {
 typedef struct tagRABRUSH RABRUSH;
 
 struct tagWORDINFO {
-	ULONG_PTR len;		// Length
-	ULONG_PTR rpprev;		// Relative pointer to previous
+	DWORD len;		// Length
+	DWORD rpprev;		// Relative pointer to previous
 	DWORD color;		// Color (high byte is font 0-3)
 	DWORD fend;		// End flag
 };
@@ -69,13 +69,13 @@ struct tagRAFONTINFO {
 typedef struct tagRAFONTINFO RAFONTINFO;
 
 struct tagLINE {
-	ULONG_PTR rpChars;		// Relative pointer to CHARS
+	DWORD rpChars;		// Relative pointer to CHARS
 };
 typedef struct tagLINE LINE;
 
 struct tagCHARS {
-	ULONG_PTR len;		// Actual String len
-	ULONG_PTR max;		// Max String len
+	DWORD len;		// Actual String len
+	DWORD max;		// Max String len
 	DWORD state;		// Line state
 	DWORD bmid;		// Bookmark ID
 	DWORD errid;		// Error ID
@@ -83,10 +83,10 @@ struct tagCHARS {
 typedef struct tagCHARS CHARS;
 
 struct tagRAUNDO {
-	ULONG_PTR rpPrev;		// Relative pointer to previous
+	DWORD rpPrev;		// Relative pointer to previous
 	DWORD undoid;		// Undo ID
-	ULONG_PTR cp;		// Character position
-	ULONG_PTR cb;		// Size in bytes
+	DWORD cp;		// Character position
+	DWORD cb;		// Size in bytes
 	BYTE fun;		// Function
 };
 typedef struct tagRAUNDO RAUNDO;
@@ -128,15 +128,15 @@ struct tagEDIT {
 	HANDLE hHeap;	// Handle of heap
 	HANDLE hLine;		// Handle of line pointer mem
 	ULONG_PTR cbLine;		// Size of line pointer mem
-	ULONG_PTR rpLine;		// Relative pointer into line pointer mem
-	ULONG_PTR rpLineFree;		// Pointer to free line pointer
+	DWORD rpLine;		// Relative pointer into line pointer mem
+	DWORD rpLineFree;		// Pointer to free line pointer
 	HANDLE hChars;		// Handle of character mem
 	ULONG_PTR cbChars;		// Size of character mem
-	ULONG_PTR rpChars;		// Relative pointer into character mem
-	ULONG_PTR rpCharsFree;		// Relative pointer to free character
+	DWORD rpChars;		// Relative pointer into character mem
+	DWORD rpCharsFree;		// Relative pointer to free character
 	HANDLE hUndo;		// Handle of undo memory
 	ULONG_PTR cbUndo;		// Size of undo memory
-	ULONG_PTR rpUndo;		// Relative pointer to free (last)
+	DWORD rpUndo;		// Relative pointer to free (last)
 	DWORD line;		// Linenumber
 	DWORD cpLine;		// Character position for start of line
 
@@ -250,7 +250,7 @@ extern WNDPROC OldSplittBtnProc;
 extern WNDPROC OldFakeToolTipProc;
 extern HANDLE hWrdMem;
 extern ULONG_PTR cbWrdMem;
-extern ULONG_PTR rpWrdFree;
+extern DWORD rpWrdFree;
 extern DWORD fSelState;
 extern DWORD iYp;
 extern BOOL fOnBM;

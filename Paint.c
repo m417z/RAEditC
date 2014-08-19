@@ -1269,7 +1269,7 @@ REG_T SetBlockMarkers(EDIT *pMem, DWORD nLine, DWORD nMax)
 			edx = eax;
 			edx *= sizeof(LINE);
 			edx += pMem->hLine;
-			edx = *(REG_T *)edx;
+			edx = ((LINE *)(edx))->rpChars;
 			edx += pMem->hChars;
 			((CHARS *)edx)->state &= -1 ^ (STATE_BLOCKSTART | STATE_BLOCK | STATE_BLOCKEND);
 			if(!(((CHARS *)edx)->state&STATE_HIDDEN))
@@ -1297,7 +1297,7 @@ Nxt:
 				edi = esi;
 				edi *= sizeof(LINE);
 				edi += pMem->hLine;
-				edi = *(REG_T *)edi;
+				edi = ((LINE *)(edi))->rpChars;
 				edi += pMem->hChars;
 				if(!(((CHARS *)edi)->state&STATE_HIDDEN))
 				{
@@ -1343,7 +1343,7 @@ Nxt:
 					edi--;
 					edi *= sizeof(LINE);
 					edi += pMem->hLine;
-					edi = *(REG_T *)edi;
+					edi = ((LINE *)(edi))->rpChars;
 					edi += pMem->hChars;
 					((CHARS *)edi)->state &= -1 ^ (STATE_BLOCKSTART | STATE_BLOCK | STATE_BLOCKEND);
 					((CHARS *)edi)->state |= STATE_BLOCKEND;
