@@ -6175,8 +6175,7 @@ anon_8:
 		eax = xHeapAlloc(eax, HEAP_GENERATE_EXCEPTIONS | HEAP_ZERO_MEMORY, edx);
 		pMem = eax;
 		// Save the pointer
-		eax = SetWindowLongPtr(hWin, 0,
-                         pMem);
+		eax = SetWindowLongPtr(hWin, 0, pMem);
 		eax = hWin;
 		pMem->hwnd = eax;
 		eax = GetParent(eax);
@@ -6672,26 +6671,25 @@ ErrBeep:
 		// Line
 		eax = xHeapAlloc(pMem->hHeap, HEAP_GENERATE_EXCEPTIONS | HEAP_ZERO_MEMORY, MAXLINEMEM*8);
 		pMem->hLine = eax;
-		pMem->cbLine = MAXLINEMEM;
+		pMem->cbLine = MAXLINEMEM*8;
 		pMem->rpLine = 0;
 		pMem->rpLineFree = sizeof(LINE);
 		// Chars
 		eax = xHeapAlloc(pMem->hHeap, HEAP_GENERATE_EXCEPTIONS | HEAP_ZERO_MEMORY, MAXCHARMEM*8);
 		pMem->hChars = eax;
-		eax = 0;
 		pMem->cbChars = MAXCHARMEM*8;
-		pMem->rpChars = eax;
+		pMem->rpChars = 0;
 		pMem->rpCharsFree = MAXFREE+sizeof(CHARS);
 		edx = pMem->hLine;
-		((LINE *)edx)->rpChars = eax;
+		((LINE *)edx)->rpChars = 0;
 		edx = pMem->hChars;
 		((CHARS *)edx)->max = MAXFREE;
-		((CHARS *)edx)->len = eax;
-		((CHARS *)edx)->state = eax;
+		((CHARS *)edx)->len = 0;
+		((CHARS *)edx)->state = 0;
 		// Undo
 		eax = xHeapAlloc(pMem->hHeap, HEAP_GENERATE_EXCEPTIONS | HEAP_ZERO_MEMORY, MAXUNDOMEM);
 		pMem->hUndo = eax;
-		pMem->cbUndo = MAXCHARMEM;
+		pMem->cbUndo = MAXUNDOMEM;
 		pMem->rpUndo = 0;
 		// Misc
 		eax = 0;
