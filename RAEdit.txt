@@ -1,0 +1,701 @@
+RAEdit is an attemt to create a custom code edit control
+as a replacement for the richedit control.
+If it gets any good I will replace the richedit in RadASM.
+
+IMPORTANT:
+Version 1.1.0.0 introduces collapse/expand blocks that are not backwards compatible.
+- Use REM_ADDBLOCKDEF message or call SetBlockDef to set block definitions.
+  A parameter of 0 resets the block definitions.
+  There can be a maximum of 32 block definitions.
+- REM_SETBLOCKS does not have any lpRABLOCKDEF parameter and needs only be called once
+  for a newly opened file.
+- REM_COLLAPSE and REM_COLLAPSEALL does not have any lpRABLOCKDEF parameter.
+
+Features:
+---------
+
+- Syntax hiliting with colors, bold and italic.
+- Syntax word list with color and font options for each group.
+- Line hiliting.
+- Selection bar with optional line numbers.
+- Bookmarks.
+- Collapse/expand blocks.
+- Access to internal structures for fast on the fly code analysis/modify.
+- Unlimitted undo/redo, not lost on save.
+- EN_SELCHANGE reports selection, line number, line start character
+  position and a pointer to line structure for line analysis. No waste of
+  time to get these things.
+- Button in upper right corner is a splitter bar.
+- Buttons in lower left corner:
+   1. Show/hide line numbers.
+   2. Collapse all blocks
+   3. Expand all blocks
+   4. Lock.
+
+Todo:
+-----
+
+- Speed optimizing block insert/delete
+
+Build.
+------
+To build the dll, use Release build.
+To build the library, use Debug build.
+
+Styles.
+-------
+
+STYLE_NOSPLITT				No splitt button
+STYLE_NOLINENUMBER			No linenumber button
+STYLE_NOCOLLAPSE			No expand/collapse buttons
+STYLE_NOHSCROLL				No horizontal scrollbar
+STYLE_NOVSCROLL				No vertical scrollbar
+STYLE_NOHILITE				No color hiliting
+STYLE_NOSIZEGRIP			No size grip
+STYLE_NODBLCLICK			No action on double clicks
+STYLE_READONLY				Text is locked
+STYLE_NODIVIDERLINE			Blocks are not divided by line
+STYLE_NOBACKBUFFER			Drawing directly to screen DC
+STYLE_NOSTATE				No state indicator
+STYLE_DRAGDROP				Drag & Drop support, app must load ole
+STYLE_SCROLLTIP				Scrollbar tooltip
+STYLE_HILITECOMMENT			Comments are hilited
+STYLE_AUTOSIZELINENUM		Line number column autosizes
+STYLE_NOLOCK				No lock button
+
+Messages:
+---------
+
+REM_SETHILITEWORDS
+wParam=Color
+lParam=lpszWords
+Color	gggg0sff cccccccc cccccccc cccccccc
+		g=Word group, s=Case sensitive, f=Font style, c=Color
+The return value is zero.
+
+REM_SETFONT
+wParam=0
+lParam=lpRAFONT
+The return value is zero.
+
+REM_GETFONT
+wParam=0
+lParam=lpRAFONT
+The return value is the linespace.
+
+REM_SETCOLOR
+wParam=0
+lParam=lpRACOLOR
+The return value is zero.
+
+REM_GETCOLOR
+wParam=0
+lParam=lpRACOLOR
+The return value is zero.
+
+REM_SETHILITELINE
+wParam=Line
+lParam=nColor
+nColor 0 to 3
+The return value is zero.
+
+REM_GETHILITELINE
+wParam=Line
+lParam=0
+The return value is the hilite index (0 to 3) or -1 if the line number is greater than the number of lines in the edit control.
+
+REM_SETBOOKMARK
+wParam=Line
+lParam=nType
+nType 0 to 15
+The return value is the bookmark id or zero if the line number is greater than the number of lines in the edit control.
+
+REM_GETBOOKMARK
+wParam=Line
+lParam=0
+The return value is the bookmark type (0 to 15) or  -1 if the line number is greater than the number of lines in the edit control.
+
+REM_CLRBOOKMARKS
+wParam=0
+lParam=nType
+The return value is zero.
+
+REM_NXTBOOKMARK
+wParam=Line
+lParam=nType
+nType 0 to 15
+The return value is the next line number or -1 if there are no more bookmarks of the specified type.
+
+REM_PRVBOOKMARK
+wParam=Line
+lParam=nType
+nType 0 to 15
+The return value is the previous line number or -1 if there are no more bookmarks of the specified type.
+
+REM_FINDBOOKMARK
+wParam=BmID
+lParam=0
+The return value is the line number of the bookmark or -1 if not found.
+
+REM_SETBLOCKS
+wParam=[lpLINERANGE]
+lParam=0
+The return value is zero.
+
+REM_ISLINE
+wParam=Line
+lParam=lpszDef
+Returns zero if conditions are met, otherwise the return value is -1.
+
+REM_GETWORD
+wParam=BuffSize
+lParam=lpBuff
+Returns the number of characters copied.
+
+
+REM_COLLAPSE
+wParam=Line
+lParam=0
+This message does not return a value.
+
+REM_COLLAPSEALL
+wParam=0
+lParam=0
+This message does not return a value.
+
+REM_EXPAND
+wParam=Line
+lParam=0
+Returns the number of lines expanded.
+
+REM_EXPANDALL
+wParam=0
+lParam=0
+This message does not return a value.
+
+REM_LOCKLINE
+wParam=Line
+lParam=TRUE/FALSE
+This message does not return a value.
+
+REM_ISLINELOCKED
+wParam=Line
+lParam=0
+Returns TRUE if locked, otherwise the return value is zero.
+
+REM_HIDELINE
+wParam=Line
+lParam=TRUE/FALSE
+Returns TRUE if the line was hidden, otherwise the return value is zero.
+
+REM_ISLINEHIDDEN
+wParam=Line
+lParam=0
+Returns TRUE if hidden, otherwise the return value is zero.
+
+REM_AUTOINDENT
+wParam=0
+lParam=TRUE/FALSE
+The return value is lParam
+
+REM_TABWIDTH
+wParam=nChars
+lParam=0
+The return value is zero.
+
+REM_SELBARWIDTH
+wParam=nWidth
+lParam=0
+The return value is zero.
+
+REM_LINENUMBERWIDTH
+wParam=nWidth
+lParam=0
+The return value is zero.
+
+REM_MOUSEWHEEL
+wParam=nLines
+lParam=0
+The return value is wParam
+
+REM_SUBCLASS
+wParam=0
+lParam=lpWndProc
+The return value is the previous WndProc.
+
+REM_SETSPLIT
+wParam=nSplit
+lParam=0
+This message does not return a value.
+
+REM_GETSPLIT
+wParam=0
+lParam=0
+The return value is the splitt size.
+
+REM_VCENTER
+wParam=0
+lParam=0
+The return value is zero.
+
+REM_REPAINT
+wParam=0
+lParam=TRUE/FALSE (Paint Now)
+The return value is zero.
+
+REM_BMCALLBACK
+wParam=0
+lParam=lpBmProc
+The return value is lParam
+
+REM_READONLY
+wParam=0
+lParam=TRUE/FALSE
+The return value is zero.
+
+REM_INVALIDATELINE
+wParam=Line
+lParam=0
+The return value is zero.
+
+REM_SETPAGESIZE
+wParam=nLines
+lParam=0
+The return value is zero.
+
+REM_GETPAGESIZE
+wParam=0
+lParam=0
+The return value is the number of lines in a page.
+
+REM_GETCHARTAB
+wParam=nChar
+lParam=0
+The return value is the character type.
+
+REM_SETCHARTAB
+wParam=nChar
+lParam=nValue
+The return value is lParam.
+
+REM_SETCOMMENTBLOCKS
+wParam=lpStart
+lParam=lpEnd
+This message does not return a value.
+
+REM_SETWORDGROUP
+wParam=0
+lParam=nGroup (0-15)
+The return value is lParam.
+
+REM_GETWORDGROUP
+wParam=0
+lParam=0
+The return value is the word group.
+
+REM_SETBMID
+wParam=nLine
+lParam=nBmID
+This message does not return a value.
+
+REM_GETBMID
+wParam=nLine
+lParam=0
+The return value is the bookmark id.
+
+REM_ISCHARPOS
+wParam=CP
+lParam=0
+returns:
+0 if normal
+1 if comment block
+2 if comment
+3 if string
+
+REM_HIDELINES
+wParam=nLine
+lParam=nLines
+The return value is the number of lines hidden.
+
+REM_SETDIVIDERLINE
+wParam=nLine
+lParam=TRUE/FALSE
+The return value is zero.
+
+REM_ISINBLOCK
+wParam=nLine
+lParam=lpRABLOCKDEF
+The return value is TRUE if in the block, otherwise the return value is zero.
+
+REM_TRIMSPACE
+wParam=nLine
+lParam=fLeft
+This message does not return a value.
+
+REM_SAVESEL
+wParam=0
+lParam=0
+The return value is zero.
+
+REM_RESTORESEL
+wParam=0
+lParam=0
+The return value is zero.
+
+REM_GETCURSORWORD
+wParam=BuffSize
+lParam=lpBuff
+The return value is the line number.
+
+REM_SETSEGMENTBLOCK
+wParam=nLine
+lParam=TRUE/FALSE
+The return value is zero.
+
+REM_GETMODE
+wParam=0
+lParam=0
+The return value is the mode.
+
+REM_SETMODE
+wParam=nMode
+lParam=0
+The return value is zero.
+
+REM_GETBLOCK
+wParam=0
+lParam=lpBLOCKRANGE
+The return value is zero.
+
+REM_SETBLOCK
+wParam=0
+lParam=lpBLOCKRANGE
+The return value is zero.
+
+REM_BLOCKINSERT
+wParam=0
+lParam=lpText
+The return value is zero.
+
+REM_LOCKUNDOID
+wParam=TRUE/FALSE
+lParam=0
+The return value is zero.
+
+REM_ADDBLOCKDEF
+wParam=0
+lParam=lpRABLOCKDEF
+The return value is zero.
+
+REM_CONVERT
+wParam=nType
+lParam=0
+Convert types
+CONVERT_TABTOSPACE
+CONVERT_SPACETOTAB
+CONVERT_UPPERCASE
+CONVERT_LOWERCASE
+The return value is zero.
+
+REM_BRACKETMATCH
+wParam=0
+lParam=lpDef {[(,}]),_
+The return value is zero.
+
+REM_COMMAND
+wParam=nCommand
+lParam=0
+The return value is zero.
+
+REM_CASEWORD
+wParam=0
+lParam=lpWord
+The return value is zero.
+
+REM_GETBLOCKEND
+wParam=nLine
+lParam=0
+The return value is the line number if in block, otherwise the return value is -1.
+
+REM_SETLOCK
+wParam=TRUE/FALSE
+lParam=0
+The return value is zero.
+
+REM_GETLOCK
+wParam=0
+lParam=0
+The return value is TRUE if locked, otherwise the return value is zero.
+
+REM_GETWORDFROMPOS
+wParam=cp
+lParam=lpBuff
+The return value is the number of characters copied.
+
+REM_SETNOBLOCKLINE
+wParam=Line
+lParam=TRUE/FALSE
+This message does not return a value.
+
+REM_ISLINENOBLOCK
+wParam=Line
+lParam=0
+The return value is TRUE if the line is noblock, otherwise the return value is zero.
+
+REM_SETALTHILITELINE
+wParam=nLine
+lParam=TRUE/FALSE
+This message does not return a value.
+
+REM_ISLINEALTHILITE
+wParam=nLine
+lParam=0
+The return value is TRUE if the line is althilite, otherwise the return value is zero.
+
+REM_SETCURSORWORDTYPE
+wParam=Type
+lParam=0
+The return value is wParam.
+
+REM_SETBREAKPOINT
+wParam=nLine
+lParam=TRUE/FALSE
+This message does not return a value.
+
+REM_NEXTBREAKPOINT
+wParam=nLine
+lParam=0
+The return value is the line number of the next breakpoint, otherwise the return value is -1.
+
+REM_GETLINESTATE
+wParam=nLine
+lParam=0
+The return value is the linestate.
+
+REM_SETERROR
+wParam=nLine
+lParam=nErrID
+This message does not return a value.
+
+REM_GETERROR
+wParam=nLine
+lParam=0
+The return value is the error id.
+
+REM_NEXTERROR
+wParam=nLine
+lParam=0
+The return value is the line number of the next error, otherwise the return value is -1.
+
+REM_CHARTABINIT
+wParam=0
+lParam=0
+This message does not return a value.
+
+EM_EXLINEFROMCHAR
+wParam=0
+lParam=cp
+Returns the zero-based index of the line.
+
+EM_EXSETSEL
+wParam=0
+lParam=lpCHARRANGE
+Returns the zero-based index of the line or -1 if in block mode.
+
+EM_EXGETSEL
+wParam=0
+lParam=lpCHARRANGE
+No return value.
+
+EM_FINDTEXTEX
+wParam=Flags
+lParam=lpFINDTEXTEX
+Returns the zero-based character position of the next match or -1 if there are no more matches.
+
+EM_FORMATRANGE
+wParam=fRender
+lParam=lpFORMATRANGE
+Returns the index of the last character that fits in the region plus one.
+
+EM_GETTEXTRANGE
+wParam=0
+lParam=lpTEXTRANGE
+Returns the number of characters copied, not including the terminating null character.
+
+EM_FINDWORDBREAK
+wParam=uFlags (WB_MOVEWORDLEFT or WB_MOVEWORDRIGHT)
+lParam=cp
+Returns the character index of the word break.
+
+EM_CANREDO
+wParam=0
+lParam=0
+If the edit control can correctly process the EM_REDO message, the return value is TRUE; otherwise, it is FALSE.
+
+EM_REDO
+wParam=0
+lParam=0
+The return value is TRUE if the redo operation is successful, or FALSE if the redo operation fails.
+
+EM_HIDESELECTION
+wParam=TRUE/FALSE
+lParam=0
+No return value.
+
+EM_GETSELTEXT
+wParam=0
+lParam=lpBuff
+Returns the number of characters copied, not including the terminating null character.
+
+EM_CANPASTE
+wParam=CF_TEXT
+lParam=0
+Returns a nonzero value if the clipboard format can be pasted or zero otherwise.
+
+EM_STREAMIN
+wParam=SF_TEXT
+lParam=lpStream
+Returns the number of characters read.
+
+EM_STREAMOUT
+wParam=SF_TEXT
+lParam=lpStream
+Returns the number of characters written to the data stream.
+
+EM_CHARFROMPOS
+wParam=0
+lParam=lpPoint
+The return value specifies the character index in the low-order word and the line index in the high-order word.
+The return value is the last character in the edit control if the given point is beyond the last character in the control.
+The return value is -1 if the specified point is outside the client area of the edit control.
+
+EM_POSFROMCHAR
+wParam=lpPoint
+lParam=cp
+This message does not return a value.
+
+EM_LINEFROMCHAR
+wParam=cp
+lParam=0
+The return value is the zero-based line number of the line containing the character index specified by cp.
+
+EM_LINEINDEX
+wParam=line
+lParam=0
+The return value is the character index of the line specified in the line parameter,
+or it is -1 if the specified line number is greater than the number of lines in the edit control.
+
+EM_LINELENGTH
+wParam=cp
+lParam=0
+The return value is the length, in characters, of the line specified by the cp parameter.
+
+EM_GETLINE
+wParam=Line
+lParam=lpBuff
+The return value is the number of characters copied.
+The return value is zero if the line number specified by the line parameter is greater than the number of lines in the edit control.
+
+EM_GETFIRSTVISIBLELINE
+wParam=0
+lParam=0
+The return value is the zero-based index of the uppermost visible line.
+
+EM_LINESCROLL
+wParam=cxScroll
+lParam=cyScroll
+The return value is TRUE.
+
+EM_SCROLLCARET
+wParam=0
+lParam=0
+The return value is nonzero.
+
+EM_SETSEL
+wParam=cpMin
+lParam=cpMax
+This message does not return a value.
+
+EM_GETSEL
+wParam=lpcpMin
+lParam=lpcpMax
+The return value is a zero-based 32-bit value with the starting position of the selection in the low-order word and the position of the first character after the last selected character in the high-order word.
+If either of these values exceeds 65535, the return value is -1.
+
+EM_GETMODIFY
+wParam=0
+lParam=0
+If the content of edit control has been modified, the return value is TRUE; otherwise, it is FALSE.
+
+EM_SETMODIFY
+wParam=TRUE/FALSE
+lParam=0
+This message does not return a value.
+
+EM_REPLACESEL
+wParam=TRUE/FALSE
+lParam=lpText
+This message does not return a value.
+
+EM_GETLINECOUNT
+wParam=0
+lParam=0
+The return value is an integer specifying the number of lines in the edit control.
+If no text is in the edit control, the return value is 1.
+
+EM_GETRECT
+wParam=0
+lParam=lpRECT
+The return value is not a meaningful value.
+
+EM_CANUNDO
+wParam=0
+lParam=0
+If the edit control can correctly process the EM_UNDO message, the return value is TRUE; otherwise, it is FALSE.
+
+EM_UNDO
+wParam=0
+lParam=0
+The return value is TRUE if the undo operation is successful, or FALSE if the undo operation fails.
+
+EM_EMPTYUNDOBUFFER
+wParam=0
+lParam=0
+This message does not return a value.
+
+WM_COPY
+wParam=0
+lParam=0
+This message does not return a value.
+
+WM_CUT
+wParam=0
+lParam=0
+This message does not return a value.
+
+WM_PASTE
+wParam=0
+lParam=0
+This message does not return a value.
+
+WM_CLEAR
+wParam=0
+lParam=0
+This message does not return a value.
+
+WM_SETTEXT
+wParam=0
+lParam=lpszText
+The return value is TRUE.
+
+WM_GETTEXT
+wParam=cbBuff
+lParam=lpBuff
+The return value is the number of characters copied.
+
+WM_GETTEXTLENGTH
+wParam=0
+lParam=0
+The return value is the length, in characters, of the text.
+
+KetilO
