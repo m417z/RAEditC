@@ -261,8 +261,8 @@ struct tagRASELCHANGE {
 	NMHDR       nmhdr;
 	CHARRANGE   chrg;                       // Current selection
 	WORD        seltyp;                     // SEL_TEXT or SEL_OBJECT
-	int         line;                       // Line number
-	int         cpLine;                     // Character position of first character
+	DWORD       line;                       // Line number
+	DWORD       cpLine;                     // Character position of first character
 	HANDLE      lpLine;                     // Pointer to line
 	DWORD       nlines;                     // Total number of lines
 	DWORD       nhidden;                    // Total number of hidden lines
