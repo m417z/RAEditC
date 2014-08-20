@@ -952,11 +952,8 @@ anon_10:
 				ecx = pMem->fntinfo.fntwt;
 				ecx <<= 3;
 				eax -= ecx;
-				if(pMem->cpx<eax)
-				{
-					pMem->cpx += eax;
-				}
-				else
+                pMem->cpx += eax;
+				if(pMem->cpx>=RDWORD(eax))
 				{
 					pMem->cpx = 0;
 				} // endif
