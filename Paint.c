@@ -516,7 +516,7 @@ anon_1:
 			dw += rcleft;
 			while(*(BYTE *)(esi+edi)==VK_TAB && edi<((CHARS *)(esi-sizeof(CHARS)))->len)
 			{
-			    eax = dw;
+				eax = dw;
 				DrawTabMarker();
 				dw += ecx;
 				edi++;

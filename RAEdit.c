@@ -439,7 +439,7 @@ REG_T SetBlockDef(REG_T lpRABLOCKDEF)
 
 	if(!lpRABLOCKDEF)
 	{
-	    memset(blockdefs, 0, sizeof(blockdefs));
+		memset(blockdefs, 0, sizeof(blockdefs));
 	}
 	else
 	{
@@ -3469,9 +3469,9 @@ Ex:
 	return eax;
 
 ErrBeep:
-    eax = MessageBeep(MB_ICONHAND);
-    eax = 0;
-    return eax;
+	eax = MessageBeep(MB_ICONHAND);
+	eax = 0;
+	return eax;
 
 	void SetBlock(void)
 	{
@@ -5896,8 +5896,7 @@ anon_8:
 	{
 		// wParam=0
 		// lParam=0
-		eax = Copy(
-             pMem);
+		eax = Copy(pMem);
 		eax = 0;
 		goto Ex;
 	}
@@ -5968,10 +5967,8 @@ anon_8:
 			pMem->cpMax = eax;
 			eax = GetCharPtr(pMem, pMem->cpMin, &ecx, &edx);
 			eax = SetCaretVisible(hWin, ((RAEDT *)esi)->cpy);
-			eax = SetCaret(
-                  pMem, ((RAEDT *)esi)->cpy);
-			eax = InvalidateEdit(
-                        pMem, pMem->edta.hwnd);
+			eax = SetCaret(pMem, ((RAEDT *)esi)->cpy);
+			eax = InvalidateEdit(pMem, pMem->edta.hwnd);
 			eax = InvalidateEdit(pMem, pMem->edtb.hwnd);
 		} // endif
 		eax = SetCpxMax(pMem, ((RAEDT *)esi)->hwnd);
@@ -6009,10 +6006,8 @@ anon_8:
 		pMem->cpLine = eax;
 		pMem->rpLine = eax;
 		pMem->rpChars = eax;
-		eax = GetCharPtr(
-                   pMem, 0, &ecx, &edx);
-		eax = InvalidateEdit(
-                       pMem, pMem->edta.hwnd);
+		eax = GetCharPtr(pMem, 0, &ecx, &edx);
+		eax = InvalidateEdit(pMem, pMem->edta.hwnd);
 		eax = InvalidateEdit(pMem, pMem->edtb.hwnd);
 		eax = SetCaret(pMem, 0);
 		eax = SelChange(pMem, SEL_TEXT);
@@ -6204,8 +6199,7 @@ anon_8:
 		pMem->clr.oprback = OPRBCK;
 		pMem->clr.changed = CHANGEDCLR;
 		pMem->clr.changesaved = CHANGESAVEDCLR;
-		eax = CreateBrushes(
-                      pMem);
+		eax = CreateBrushes(pMem);
 
 		eax = CreateWindowEx(NULL, szToolTips, NULL, TTS_ALWAYSTIP, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, hInstance, NULL);
 		pMem->htt = eax;

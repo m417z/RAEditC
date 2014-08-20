@@ -7,13 +7,13 @@
 // IDropTarget
 
 static const IDropTargetVtbl vtIDropTarget = {
-    IDropTarget_QueryInterface,
-    IDropTarget_AddRef,
-    IDropTarget_Release,
-    IDropTarget_DragEnter,
-    IDropTarget_DragOver,
-    IDropTarget_DragLeave,
-    IDropTarget_Drop
+	IDropTarget_QueryInterface,
+	IDropTarget_AddRef,
+	IDropTarget_Release,
+	IDropTarget_DragEnter,
+	IDropTarget_DragOver,
+	IDropTarget_DragLeave,
+	IDropTarget_Drop
 };
 
 IDropTargetImpl DropTarget = { &vtIDropTarget, 0, 0, 0, 0 };
@@ -21,11 +21,11 @@ IDropTargetImpl DropTarget = { &vtIDropTarget, 0, 0, 0, 0 };
 // IDropSource
 
 static const IDropSourceVtbl vtIDropSource = {
-    IDropSource_QueryInterface,
-    IDropSource_AddRef,
-    IDropSource_Release,
-    IDropSource_QueryContinueDrag,
-    IDropSource_GiveFeedback
+	IDropSource_QueryInterface,
+	IDropSource_AddRef,
+	IDropSource_Release,
+	IDropSource_QueryContinueDrag,
+	IDropSource_GiveFeedback
 };
 
 IDropSourceImpl DropSource = { &vtIDropSource, 0 };
@@ -33,18 +33,18 @@ IDropSourceImpl DropSource = { &vtIDropSource, 0 };
 // IDataObject
 
 static const IDataObjectVtbl vtIDataObject = {
-    IDO_QueryInterface,
-    IDO_AddRef,
-    IDO_Release,
-    IDO_GetData,
-    IDO_GetDataHere,
-    IDO_QueryGetData,
-    IDO_GetCanonicalFormatEtc,
-    IDO_SetData,
-    IDO_EnumFormatEtc,
-    IDO_DAdvise,
-    IDO_DUnadvise,
-    IDO_EnumDAdvise
+	IDO_QueryInterface,
+	IDO_AddRef,
+	IDO_Release,
+	IDO_GetData,
+	IDO_GetDataHere,
+	IDO_QueryGetData,
+	IDO_GetCanonicalFormatEtc,
+	IDO_SetData,
+	IDO_EnumFormatEtc,
+	IDO_DAdvise,
+	IDO_DUnadvise,
+	IDO_EnumDAdvise
 };
 
 IDataObjectImpl DataObject = { &vtIDataObject, 0 };
@@ -52,18 +52,18 @@ IDataObjectImpl DataObject = { &vtIDataObject, 0 };
 // IEnumFORMATETC
 
 static const IEnumFORMATETCVtbl vtIEnumFORMATETCVtbl = {
-    IEnumFORMATETC_QueryInterface,
-    IEnumFORMATETC_AddRef,
-    IEnumFORMATETC_Release,
-    IEnumFORMATETC_Next,
-    IEnumFORMATETC_Skip,
-    IEnumFORMATETC_Reset,
-    IEnumFORMATETC_Clone
+	IEnumFORMATETC_QueryInterface,
+	IEnumFORMATETC_AddRef,
+	IEnumFORMATETC_Release,
+	IEnumFORMATETC_Next,
+	IEnumFORMATETC_Skip,
+	IEnumFORMATETC_Reset,
+	IEnumFORMATETC_Clone
 };
 
 typedef struct
 {
-    const IEnumFORMATETCVtbl *lpVtbl;
+	const IEnumFORMATETCVtbl *lpVtbl;
 	DWORD refcount;
 	DWORD ifmt;
 	DWORD ifmtmax;

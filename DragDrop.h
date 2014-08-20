@@ -7,7 +7,7 @@
 
 typedef struct
 {
-    const IDropTargetVtbl *lpVtbl;
+	const IDropTargetVtbl *lpVtbl;
 	DWORD refcount;
 	BOOL valid;
 	HWND hwnd;
@@ -20,7 +20,7 @@ extern IDropTargetImpl DropTarget;
 
 typedef struct
 {
-    const IDropSourceVtbl *lpVtbl;
+	const IDropSourceVtbl *lpVtbl;
 	DWORD refcount;
 } IDropSourceImpl;
 
@@ -30,7 +30,7 @@ extern IDropSourceImpl DropSource;
 
 typedef struct
 {
-    const IDataObjectVtbl *lpVtbl;
+	const IDataObjectVtbl *lpVtbl;
 	DWORD refcount;
 } IDataObjectImpl;
 

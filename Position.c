@@ -201,8 +201,8 @@ anon_3:
 	pMem->line = edx;
 	eax = ecx;
 	ecx = temp1;
-    *pdwCharIndex = ecx;
-    *pdwLineNumber = edx;
+	*pdwCharIndex = ecx;
+	*pdwLineNumber = edx;
 	return eax;
 
 } // GetCharPtr
@@ -952,7 +952,7 @@ anon_10:
 				ecx = pMem->fntinfo.fntwt;
 				ecx <<= 3;
 				eax -= ecx;
-                pMem->cpx += eax;
+				pMem->cpx += eax;
 				if(pMem->cpx>=RDWORD(eax))
 				{
 					pMem->cpx = 0;

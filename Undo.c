@@ -354,7 +354,7 @@ REG_T Undo(RAEDT *raedt, EDIT *pMem, HWND hWin)
 {
 	REG_T eax = 0, ecx, edx, esi;
 
-    esi = raedt;
+	esi = raedt;
 	if(!(pMem->nMode&MODE_BLOCK))
 	{
 		eax = DoUndo(pMem);
@@ -379,7 +379,7 @@ REG_T Redo(RAEDT *raedt, EDIT *pMem, HWND hWin)
 {
 	REG_T eax = 0, ecx, edx, esi;
 
-    esi = raedt;
+	esi = raedt;
 	if(!(pMem->nMode&MODE_BLOCK))
 	{
 		eax = DoRedo(pMem);
