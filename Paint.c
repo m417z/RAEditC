@@ -496,6 +496,7 @@ anon_1:
 	void DrawWord(void)
 	{
 		REG_T temp1, temp2, temp3, temp4;
+		DWORD dw;
 		temp1 = eax;
 		eax = TRANSPARENT;
 		if(fBack)
@@ -508,17 +509,18 @@ anon_1:
 		if(edx==VK_TAB)
 		{
 			ecx = pMem->fntinfo.tabwt;
-			eax = rect.left;
-			eax -= rcleft;
-			eax /= ecx;
-			eax *= ecx;
-			eax += rcleft;
+			dw = rect.left;
+			dw -= rcleft;
+			dw /= ecx;
+			dw *= ecx;
+			dw += rcleft;
 			while(*(BYTE *)(esi+edi)==VK_TAB && edi<((CHARS *)(esi-sizeof(CHARS)))->len)
 			{
+			    eax = dw;
 				DrawTabMarker();
-				eax += ecx;
+				dw += ecx;
 				edi++;
-				rect.right = eax;
+				rect.right = dw;
 				if(fBack && (edi<=cpMin || edi>cpMax))
 				{
 					temp1 = eax;
