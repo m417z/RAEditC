@@ -566,7 +566,7 @@ REG_T GetPosFromChar(EDIT *pMem, DWORD cp, REG_T lpPoint)
 
 } // GetPosFromChar
 
-REG_T GetCharFromPos(EDIT *pMem, DWORD cpy, DWORD x, DWORD y)
+REG_T GetCharFromPos(EDIT *pMem, DWORD cpy, SDWORD x, SDWORD y)
 {
 	REG_T eax = 0, edx;
 	REG_T temp1;
