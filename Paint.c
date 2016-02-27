@@ -16,7 +16,7 @@ REG_T DrawLine(EDIT *pMem, REG_T lpChars, DWORD nLine, DWORD cp, REG_T hDC, REG_
 	RECT rect;
 	RECT srect;
 	DWORD lCol;
-	DWORD rcleft;
+	SDWORD rcleft;
 	DWORD fCmnt;
 	DWORD fStr;
 	DWORD fWrd;
