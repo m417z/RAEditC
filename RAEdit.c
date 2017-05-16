@@ -3177,7 +3177,7 @@ anon_5:
 				edx = pMem->fntinfo.fntht;
 				eax *= edx;
 				edx = eax;
-				eax = wParam;
+				eax = RDWORD_SIGNED(wParam);
 				if(R_SIGNED(eax) > 0)
 				{
 					if(((RAEDT *)esi)->cpy>edx)
@@ -3217,7 +3217,7 @@ anon_6: ;
 			}
 			else if(eax==(MK_CONTROL | MK_SHIFT))
 			{
-				eax = wParam;
+				eax = RDWORD_SIGNED(wParam);
 				if(R_SIGNED(eax) > 0)
 				{
 					eax = SB_LINELEFT;
