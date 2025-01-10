@@ -332,7 +332,7 @@ Found:
 			}
 			else
 			{
-					// carry with add operation
+				// carry with add operation
 				if(edi<pMem->hChars)
 				{
 					goto NotFoundUp;
