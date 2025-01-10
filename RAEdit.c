@@ -6048,6 +6048,7 @@ anon_8:
 					}
 					break;
 				} // endif
+				chrg.cpMax -= ecx;
 				chrg.cpMin += ecx;
 				while(ecx > 0)
 				{
