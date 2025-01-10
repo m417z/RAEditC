@@ -6084,6 +6084,11 @@ anon_8:
 		} // endw
 		goto Ex;
 	}
+	else if(eax==WM_GETDLGCODE)
+	{
+		eax = DLGC_WANTCHARS | DLGC_WANTALLKEYS;
+		goto Ex;
+	}
 	else if(eax==WM_MOUSEMOVE)
 	{
 		// Get mouse position
